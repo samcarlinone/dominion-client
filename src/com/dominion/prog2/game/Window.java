@@ -1,3 +1,7 @@
+package com.dominion.prog2.game;
+
+import com.dominion.prog2.Driver;
+
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -9,8 +13,6 @@ public class Window extends Canvas
 {
 	private int width = 600;
 	private int height = 400;
-
-	private static final long serialVersionUID = 4157042182766335151L;
 
 	private Driver d;
 	private String title;

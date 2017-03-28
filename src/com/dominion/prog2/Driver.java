@@ -1,3 +1,8 @@
+package com.dominion.prog2;
+
+import com.dominion.prog2.input.Mouse;
+import com.dominion.prog2.game.Window;
+
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -17,6 +22,7 @@ public class Driver extends Canvas implements Runnable
 	
 	private Window window;
 	private Mouse mouse;
+	private BufferedImage img;
 	
 	
 	public Driver()
@@ -24,7 +30,13 @@ public class Driver extends Canvas implements Runnable
 		window = new Window("Dominion", this);
 		mouse = new Mouse(this);
 		this.addMouseListener(mouse);
-		
+
+		try {
+            img = ImageIO.read(Driver.class.getResourceAsStream("Test.jpg"));
+        } catch(IOException e) {
+		    System.out.println("Image fail!");
+		    System.exit(1);
+        }
 	}
 	
 	public void tick()
@@ -32,8 +44,8 @@ public class Driver extends Canvas implements Runnable
 		
 	}
 	
-	public void render() throws IOException
-	{
+	public void render()
+    {
 		BufferStrategy bs = this.getBufferStrategy();
 		if (bs == null)
 		{
@@ -45,9 +57,8 @@ public class Driver extends Canvas implements Runnable
 		
 		g.setColor(Color.RED);
 		g.fillRect(0, 0, window.getWidth(), window.getHeight());
-		
-		BufferedImage specific = ImageIO.read(Driver.class.getResourceAsStream("Test.jpg"));
-		g.drawImage(specific, 0, 0, this);
+
+		g.drawImage(img, 0, 0, this);
 		
 		//End Graphics
 		g.dispose();
@@ -59,6 +70,7 @@ public class Driver extends Canvas implements Runnable
 		thread.start();
 		running = true;
 	}
+
 	public synchronized void stop() {
 		try {
 			thread.join();
@@ -66,6 +78,7 @@ public class Driver extends Canvas implements Runnable
 			e.printStackTrace();
 		}
 	}
+
 	public void run() {
 		this.requestFocus();
 		long lastTime = System.nanoTime();
@@ -83,12 +96,8 @@ public class Driver extends Canvas implements Runnable
 				delta--;
 			}
 			if (running)
-				try {
-					render();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			    render();
+
 			frames++;
 
 			if (System.currentTimeMillis() - timer > 1000) {
@@ -103,6 +112,4 @@ public class Driver extends Canvas implements Runnable
 	{
 		new Driver();
 	}
-	
-	
 }
