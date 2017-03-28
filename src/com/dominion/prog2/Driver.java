@@ -3,11 +3,10 @@ package com.dominion.prog2;
 import com.dominion.prog2.input.Mouse;
 import com.dominion.prog2.game.Window;
 
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -30,18 +29,11 @@ public class Driver extends Canvas implements Runnable
 		window = new Window("Dominion", this);
 		mouse = new Mouse(this);
 		this.addMouseListener(mouse);
-
-		try {
-            img = ImageIO.read(Driver.class.getResourceAsStream("Test.jpg"));
-        } catch(IOException e) {
-		    System.out.println("Image fail!");
-		    System.exit(1);
-        }
 	}
 	
 	public void tick()
 	{
-		
+
 	}
 	
 	public void render()
@@ -49,7 +41,7 @@ public class Driver extends Canvas implements Runnable
 		BufferStrategy bs = this.getBufferStrategy();
 		if (bs == null)
 		{
-			this.createBufferStrategy(2);	
+			this.createBufferStrategy(2);
 			return;
 		}
 		Graphics g = bs.getDrawGraphics();
@@ -58,13 +50,46 @@ public class Driver extends Canvas implements Runnable
 		g.setColor(Color.RED);
 		g.fillRect(0, 0, window.getWidth(), window.getHeight());
 
-		g.drawImage(img, 0, 0, this);
-		
+		getSpecificImage("copper");
+		g.drawImage(img, 0,0, this);
+		getSpecificImage("silver");
+
+		g.drawImage(img, 0,200, this);
+
+
+
+
 		//End Graphics
 		g.dispose();
 		bs.show();
 	}
-	
+
+	public void getSpecificImage(String imageName)
+	{
+		try {
+			if(imageName == "copper")
+				img = ImageIO.read(new File("res/Copper.jpg"));
+			if(imageName == "silver")
+				img = ImageIO.read(new File("res/Silver.jpg"));
+		} catch(IOException e) {
+			System.out.println("Image fail!");
+			System.exit(1);
+		}
+		img = resize(img, 125, 200);
+
+	}
+	public static BufferedImage resize(BufferedImage img, int newW, int newH) {
+		int w = img.getWidth();
+		int h = img.getHeight();
+		BufferedImage dimg = new BufferedImage(newW, newH, img.getType());
+		Graphics2D g = dimg.createGraphics();
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g.drawImage(img, 0, 0, newW, newH, 0, 0, w, h, null);
+		g.dispose();
+		return dimg;
+	}
+
 	public synchronized void start() {
 		thread = new Thread(this);
 		thread.start();
