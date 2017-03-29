@@ -1,5 +1,6 @@
 package com.dominion.prog2;
 
+import com.dominion.prog2.input.Keyboard;
 import com.dominion.prog2.input.Mouse;
 import com.dominion.prog2.game.Window;
 
@@ -17,25 +18,38 @@ public class Driver extends Canvas implements Runnable
 	private boolean running = false;
 	private Integer frames;
 	private Thread thread;
-	public JFrame frame;
 	
 	private Window window;
 	private Mouse mouse;
+	private Keyboard keyboard;
 	private BufferedImage img;
-	
-	
+
+	/**
+	 *	Constructor of Driver
+	 *	Initiates Window, Mouse, Keyboard, handlers
+	 */
 	public Driver()
 	{
 		window = new Window("Dominion", this);
 		mouse = new Mouse(this);
 		this.addMouseListener(mouse);
+		keyboard = new Keyboard(this);
+		this.addKeyListener(keyboard);
+
 	}
-	
+
+	/**
+	 *	updates classes/variables that change per frame
+	 */
 	public void tick()
 	{
 
 	}
-	
+
+	/**
+	 *	Draws the game onto the window
+	 *	Calls other hanlder render to draw their parts
+	 */
 	public void render()
     {
 		BufferStrategy bs = this.getBufferStrategy();
@@ -64,6 +78,9 @@ public class Driver extends Canvas implements Runnable
 		bs.show();
 	}
 
+	/**
+	 *	Gets an image to draw based off what is being drawn
+	 */
 	public void getSpecificImage(String imageName)
 	{
 		try {
@@ -78,6 +95,10 @@ public class Driver extends Canvas implements Runnable
 		img = resize(img, 125, 200);
 
 	}
+
+	/**
+	 *	resize image to wanted size
+	 */
 	public static BufferedImage resize(BufferedImage img, int newW, int newH) {
 		int w = img.getWidth();
 		int h = img.getHeight();
@@ -90,12 +111,18 @@ public class Driver extends Canvas implements Runnable
 		return dimg;
 	}
 
+	/**
+	 *	Starts thread
+	 */
 	public synchronized void start() {
 		thread = new Thread(this);
 		thread.start();
 		running = true;
 	}
 
+	/**
+	 *	Stops thread
+	 */
 	public synchronized void stop() {
 		try {
 			thread.join();
@@ -104,6 +131,9 @@ public class Driver extends Canvas implements Runnable
 		}
 	}
 
+	/**
+	 *	Important game function that calls the render and tick methods
+	 */
 	public void run() {
 		this.requestFocus();
 		long lastTime = System.nanoTime();
@@ -133,6 +163,10 @@ public class Driver extends Canvas implements Runnable
 		}
 		stop();
 	}
+
+	/**
+	 *	Starts up the whole Client side of things
+	 */
 	public static void main(String[] args)
 	{
 		new Driver();

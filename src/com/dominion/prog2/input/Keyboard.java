@@ -5,9 +5,7 @@ import com.dominion.prog2.Driver;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-/**
- * Created by cobra on 3/27/2017.
- */
+
 public class Keyboard implements KeyListener {
     private Driver d;
 
