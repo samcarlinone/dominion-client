@@ -65,10 +65,24 @@ public class Driver extends Canvas implements Runnable
 		g.fillRect(0, 0, window.getWidth(), window.getHeight());
 
 		getSpecificImage("copper");
-		g.drawImage(img, 0,0, this);
+		g.drawImage(img, window.getWidth()/2 - 164/2 - 164 -10,0, this);
 		getSpecificImage("silver");
+		g.drawImage(img, window.getWidth()/2 - 164/2,0, this);
+		getSpecificImage("gold");
+		g.drawImage(img, window.getWidth()/2 - 164/2 + 164 + 10,0, this);
+		getSpecificImage("estate");
+		g.drawImage(img, window.getWidth()/2 - 164/2 - 164 - 10,243 +10, this);
+		getSpecificImage("duchy");
+		g.drawImage(img, window.getWidth()/2 - 164/2,243 + 10, this);
+		getSpecificImage("province");
+		g.drawImage(img, window.getWidth()/2 - 164/2 + 164 + 10,243 +10, this);
 
-		g.drawImage(img, 0,200, this);
+		getSpecificImage("trash");
+		g.drawImage(img, window.getWidth()/2 - 164/2 + 164*5 + 10*5,243/2 +10, this);
+		getSpecificImage("back");
+		g.drawImage(img, window.getWidth()/2 - 164/2 - 164*5 - 10*5,243/2 +10, this);
+
+
 
 
 
@@ -85,14 +99,32 @@ public class Driver extends Canvas implements Runnable
 	{
 		try {
 			if(imageName == "copper")
-				img = ImageIO.read(new File("res/Copper.jpg"));
-			if(imageName == "silver")
-				img = ImageIO.read(new File("res/Silver.jpg"));
+				img = ImageIO.read(new File("res/cards/Copper.jpg"));
+			else if(imageName == "silver")
+				img = ImageIO.read(new File("res/cards/Silver.jpg"));
+			else if(imageName == "gold")
+				img = ImageIO.read(new File("res/cards/Gold.jpg"));
+			else if(imageName == "estate")
+				img = ImageIO.read(new File("res/cards/Estate.jpg"));
+			else if(imageName == "duchy")
+				img = ImageIO.read(new File("res/cards/Duchy.jpg"));
+			else if(imageName == "province")
+				img = ImageIO.read(new File("res/cards/Province.jpg"));
+			else if(imageName == "trash")
+				img = ImageIO.read(new File("res/cards/Trash.jpg"));
+			else if(imageName == "back")
+				img = ImageIO.read(new File("res/cards/Card_back.jpg"));
+
+
 		} catch(IOException e) {
 			System.out.println("Image fail!");
 			System.exit(1);
 		}
-		img = resize(img, 125, 200);
+		int height = (window.getHeight()/4);
+		int width = ((height*125)/200);
+		img = resize(img, width, height-20);
+
+		//card ratio: 125:200
 
 	}
 

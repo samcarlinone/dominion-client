@@ -31,8 +31,8 @@ public class Window extends Canvas
 		frame = new JFrame(this.title);
 		frame.pack();
 
-		width = 1000;
-		height = 1000 + frame.getInsets().top;
+		width = 1800;
+		height = ((width/16)*9) + frame.getInsets().top;
 
 		Dimension dim = new Dimension(width, height);
 		frame.setSize(dim);
