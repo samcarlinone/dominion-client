@@ -3,6 +3,7 @@ package com.dominion.prog2;
 import com.dominion.prog2.input.Keyboard;
 import com.dominion.prog2.input.Mouse;
 import com.dominion.prog2.game.Window;
+import com.dominion.prog2.game.Game;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -11,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
 
 public class Driver extends Canvas implements Runnable
 {
@@ -23,6 +23,8 @@ public class Driver extends Canvas implements Runnable
 	private Mouse mouse;
 	private Keyboard keyboard;
 	private BufferedImage img;
+	private Game game;
+
 
 	/**
 	 *	Constructor of Driver
@@ -35,7 +37,7 @@ public class Driver extends Canvas implements Runnable
 		this.addMouseListener(mouse);
 		keyboard = new Keyboard(this);
 		this.addKeyListener(keyboard);
-
+		game = new Game(this);
 	}
 
 	/**
@@ -64,24 +66,8 @@ public class Driver extends Canvas implements Runnable
 		g.setColor(Color.RED);
 		g.fillRect(0, 0, window.getWidth(), window.getHeight());
 
-		getSpecificImage("copper");
-		g.drawImage(img, window.getWidth()/2 - 164/2 - 164 -10,0, this);
-		getSpecificImage("silver");
-		g.drawImage(img, window.getWidth()/2 - 164/2,0, this);
-		getSpecificImage("gold");
-		g.drawImage(img, window.getWidth()/2 - 164/2 + 164 + 10,0, this);
-		getSpecificImage("estate");
-		g.drawImage(img, window.getWidth()/2 - 164/2 - 164 - 10,243 +10, this);
-		getSpecificImage("duchy");
-		g.drawImage(img, window.getWidth()/2 - 164/2,243 + 10, this);
-		getSpecificImage("province");
-		g.drawImage(img, window.getWidth()/2 - 164/2 + 164 + 10,243 +10, this);
-
-		getSpecificImage("trash");
-		g.drawImage(img, window.getWidth()/2 - 164/2 + 164*5 + 10*5,243/2 +10, this);
-		getSpecificImage("back");
-		g.drawImage(img, window.getWidth()/2 - 164/2 - 164*5 - 10*5,243/2 +10, this);
-
+		if(game != null)
+			game.render(g);
 
 
 
@@ -90,57 +76,6 @@ public class Driver extends Canvas implements Runnable
 		//End Graphics
 		g.dispose();
 		bs.show();
-	}
-
-	/**
-	 *	Gets an image to draw based off what is being drawn
-	 */
-	public void getSpecificImage(String imageName)
-	{
-		try {
-			if(imageName == "copper")
-				img = ImageIO.read(new File("res/cards/Copper.jpg"));
-			else if(imageName == "silver")
-				img = ImageIO.read(new File("res/cards/Silver.jpg"));
-			else if(imageName == "gold")
-				img = ImageIO.read(new File("res/cards/Gold.jpg"));
-			else if(imageName == "estate")
-				img = ImageIO.read(new File("res/cards/Estate.jpg"));
-			else if(imageName == "duchy")
-				img = ImageIO.read(new File("res/cards/Duchy.jpg"));
-			else if(imageName == "province")
-				img = ImageIO.read(new File("res/cards/Province.jpg"));
-			else if(imageName == "trash")
-				img = ImageIO.read(new File("res/cards/Trash.jpg"));
-			else if(imageName == "back")
-				img = ImageIO.read(new File("res/cards/Card_back.jpg"));
-
-
-		} catch(IOException e) {
-			System.out.println("Image fail!");
-			System.exit(1);
-		}
-		int height = (window.getHeight()/4);
-		int width = ((height*125)/200);
-		img = resize(img, width, height-20);
-
-		//card ratio: 125:200
-
-	}
-
-	/**
-	 *	resize image to wanted size
-	 */
-	public static BufferedImage resize(BufferedImage img, int newW, int newH) {
-		int w = img.getWidth();
-		int h = img.getHeight();
-		BufferedImage dimg = new BufferedImage(newW, newH, img.getType());
-		Graphics2D g = dimg.createGraphics();
-		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		g.drawImage(img, 0, 0, newW, newH, 0, 0, w, h, null);
-		g.dispose();
-		return dimg;
 	}
 
 	/**
@@ -194,6 +129,11 @@ public class Driver extends Canvas implements Runnable
 			}
 		}
 		stop();
+	}
+
+	public Window getWindow()
+	{
+		return window;
 	}
 
 	/**
