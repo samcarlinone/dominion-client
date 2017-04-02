@@ -2,12 +2,14 @@ package com.dominion.prog2.ui;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 /**
  * Created by cobra on 3/27/2017.
  */
 public class Button extends UIElement {
     private String text;
+    private BufferedImage Image;
     private boolean pressed;
     private boolean clicked=false;
     private boolean startedInside;
@@ -17,6 +19,11 @@ public class Button extends UIElement {
         //TODO: Implement
     }
 
+    public Button(String img_name, int x, int y, BufferedImage image) {
+        super(0, 0, 0, 0);
+        this.Image = image;
+        //TODO: Implement
+    }
     /**
      * Render the button
      */
