@@ -14,14 +14,14 @@ import java.util.HashMap;
  */
 public class ImageCache {
     public static HashMap<String, BufferedImage> cardImage;
-    public static int CardHeight,CardWidth;
+    public static int cardHeight, cardWidth;
 
     public static void readImages(Driver d) {
         cardImage = new HashMap<>();
 
-        CardHeight = (d.getWindow().getHeight()/4);
-        CardWidth = ((CardHeight*125)/200);
-        System.out.println("w: "+ CardWidth +"||h: " + CardHeight);
+        cardHeight = (d.getWindow().getHeight()/4);
+        cardWidth = ((cardHeight *125)/200);
+        System.out.println("w: "+ cardWidth +"||h: " + cardHeight);
 
         String[] CardNames =
                 {
@@ -45,7 +45,7 @@ public class ImageCache {
             for(int i = 0; i < CardNames.length; i ++)
             {
                 String n = CardNames[i];
-                cardImage.put(n, resize(ImageIO.read(new File("res/Cards/"+n+".jpg")), CardWidth, CardHeight));
+                cardImage.put(n, resize(ImageIO.read(new File("res/Cards/"+n+".jpg")), cardWidth, cardHeight));
             }
         }
         catch(IOException e)

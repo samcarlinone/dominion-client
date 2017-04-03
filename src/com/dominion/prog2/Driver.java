@@ -35,7 +35,6 @@ public class Driver extends Canvas implements Runnable
 	{
 		window = new Window("Dominion", this);
 		mouse = new Mouse(this);
-		this.addMouseListener(mouse);
 		keyboard = new Keyboard(this);
 		this.addKeyListener(keyboard);
 		game = new Game(this);

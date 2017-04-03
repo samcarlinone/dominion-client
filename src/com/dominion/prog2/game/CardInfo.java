@@ -13,6 +13,8 @@ public class CardInfo {
         if(data != null)
             return;
 
+        data = new HashMap<>();
+
         //Base Cards
         data.put("Curse", genData(CardType.VICTORY, 0, -1, 0, 0, 0, 0));
         data.put("Estate", genData(CardType.VICTORY, 2, 1, 0, 0, 0, 0));

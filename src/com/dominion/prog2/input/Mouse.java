@@ -1,15 +1,18 @@
 package com.dominion.prog2.input;
 
 import com.dominion.prog2.Driver;
+import com.dominion.prog2.ui.UIManager;
 
 import java.awt.event.*;
 
 public class Mouse implements MouseListener, MouseMotionListener, MouseWheelListener{
 	private Driver d;
 	
-	public Mouse(Driver driver)
-	{
+	public Mouse(Driver driver) {
 		this.d = driver;
+        d.addMouseListener(this);
+        d.addMouseMotionListener(this);
+        d.addMouseWheelListener(this);
 	}
 
 	/**
@@ -58,7 +61,7 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 	 */
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-
+        UIManager.get().mouseWheelMoved(e);
 	}
 
 	/**
@@ -74,6 +77,6 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 	 */
 	@Override
 	public void mouseMoved(MouseEvent e) {
-
+        UIManager.get().mouseMove(e);
 	}
 }

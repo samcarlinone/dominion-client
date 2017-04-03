@@ -3,6 +3,7 @@ package com.dominion.prog2.ui;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 
 /**
@@ -13,7 +14,9 @@ public class UIManager {
      * This is a singleton that handles rendering and input management
      */
     private static UIManager instance = null;
-    protected UIManager() {}
+    protected UIManager() {
+        elements = new ArrayList<>();
+    }
 
     public static UIManager get(){
         if(instance == null) {
@@ -24,6 +27,9 @@ public class UIManager {
 
     private ArrayList<UIElement> elements;
     private UIElement focused;
+
+    private int mX;
+    private int mY;
 
     /**
      * Add a new UIElement
@@ -69,7 +75,17 @@ public class UIManager {
     }
 
     public void mouseMove(MouseEvent e) {
-        //TODO: Handle Mouse Move
+        mX = e.getX();
+        mY = e.getY();
+    }
+
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        for(int i=0; i<elements.size(); i++) {
+            UIElement elem = elements.get(i);
+            if(elem instanceof CardGrid) {
+                ((CardGrid) elem).scroll(e.getWheelRotation());
+            }
+        }
     }
 
     public void keyDown(KeyEvent e) {
@@ -78,5 +94,16 @@ public class UIManager {
 
     public void keyUp(KeyEvent e) {
         //TODO: Handle Key Up
+    }
+
+    /**
+     * Getters
+     */
+    public int getMX() {
+        return mX;
+    }
+
+    public int getMY() {
+        return mY;
     }
 }
