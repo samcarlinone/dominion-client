@@ -1,5 +1,6 @@
 package com.dominion.prog2.ui;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -45,6 +46,15 @@ public class UIManager {
     public void removeAll() {
         elements.clear();
         //TODO: Handle additional logic
+    }
+
+    /**
+     * Render all elements
+     */
+    public void render(Graphics g) {
+        for(UIElement e : elements) {
+            e.render(g);
+        }
     }
 
     /**
