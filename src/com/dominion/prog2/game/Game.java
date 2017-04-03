@@ -24,7 +24,6 @@ public class Game
     {
         this.d = d;
         this.window = d.getWindow();
-        ImageCache.readImages(d);
         buttonList = new ArrayList<Button>();
     }
 
