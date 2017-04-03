@@ -21,12 +21,12 @@ public class CardStack {
 
     public void add(ArrayList<Card> cards) {
         for(Card c : cards) {
-            this.cards.add(new Card(c));
+            this.cards.add(c);
         }
     }
 
     public void add(Card c) {
-        this.cards.add(new Card(c));
+        this.cards.add(c);
     }
 
     public void remove(Card c) {
@@ -59,8 +59,18 @@ public class CardStack {
 
         for(Card c : cards) {
             if(c.getType() == type) {
-                result.add(new Card(c));
+                result.add(c);
             }
+        }
+
+        return result;
+    }
+
+    public ArrayList<Card> getAll() {
+        ArrayList<Card> result = new ArrayList<>();
+
+        for(Card c : cards) {
+            result.add(c);
         }
 
         return result;
