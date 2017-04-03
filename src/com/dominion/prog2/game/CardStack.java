@@ -2,6 +2,7 @@ package com.dominion.prog2.game;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 /**
  * Created by cobra on 4/1/2017.
@@ -78,5 +79,27 @@ public class CardStack {
 
     public int getSize() {
         return cards.size();
+    }
+
+    public HashMap<String, Integer> getCounts() {
+        HashMap<String, Integer> result = new HashMap<>();
+
+        for(Card c : cards) {
+            result.put(c.getName(), result.getOrDefault(c.getName(), 0)+1);
+        }
+
+        return result;
+    }
+
+    public static HashMap<String, Integer> mergeCounts(HashMap<String, Integer> map1, HashMap<String, Integer> map2) {
+        HashMap<String, Integer> result = new HashMap<>();
+
+        result.putAll(map1);
+
+        map2.forEach((k, v) -> {
+            result.merge(k, v, (v1, v2) -> v1 + v2);
+        });
+
+        return result;
     }
 }
