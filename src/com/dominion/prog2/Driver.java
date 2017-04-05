@@ -4,15 +4,12 @@ import com.dominion.prog2.input.Keyboard;
 import com.dominion.prog2.input.Mouse;
 import com.dominion.prog2.game.Window;
 import com.dominion.prog2.game.Game;
+import com.dominion.prog2.network.NodeCommunicator;
 import com.dominion.prog2.ui.ImageCache;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 public class Driver extends Canvas implements Runnable
 {
@@ -25,7 +22,7 @@ public class Driver extends Canvas implements Runnable
 	private Keyboard keyboard;
 	private BufferedImage img;
 	private Game game;
-
+	private NodeCommunicator comm;
 
 	/**
 	 *	Constructor of Driver
@@ -37,8 +34,13 @@ public class Driver extends Canvas implements Runnable
 		mouse = new Mouse(this);
 		keyboard = new Keyboard(this);
 		this.addKeyListener(keyboard);
-		game = new Game(this);
+
+		comm = new NodeCommunicator();
+
+		game = new Game(this, comm);
 		ImageCache.readImages(this);
+
+
 	}
 
 	/**
@@ -48,6 +50,7 @@ public class Driver extends Canvas implements Runnable
 	{
 		game.tick();
 	}
+
 
 	/**
 	 *	Draws the game onto the window
@@ -69,10 +72,6 @@ public class Driver extends Canvas implements Runnable
 
 		if(game != null)
 			game.render(g);
-
-
-
-
 
 		//End Graphics
 		g.dispose();

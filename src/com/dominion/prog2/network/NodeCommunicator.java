@@ -1,19 +1,20 @@
 package com.dominion.prog2.network;
 
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
-/**
- * Created by CARLINSE1 on 3/27/2017.
- */
+
 public class NodeCommunicator {
     private String url;
 
-    /**
-     * Communicates through a node server
-     * @param url The url of the node server
-     */
-    public NodeCommunicator(String url) {
+
+    public NodeCommunicator() {
+        this.url = "http://localhost";
     }
 
     /**
@@ -22,7 +23,20 @@ public class NodeCommunicator {
      * @return JSON response or "Error"
      */
     public String getMessage(String data) {
-        return "";
+        try {
+            URLConnection connection = new URL(url + "?data=" + URLEncoder.encode(data, "UTF-8")).openConnection();
+            connection.setRequestProperty("Accept-Charset", "UTF-8");
+            InputStream response = connection.getInputStream();
+
+            try (Scanner scanner = new Scanner(response)) {
+                String responseBody = scanner.useDelimiter("\\A").next();
+                return responseBody;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "Error";
     }
 
     /**
@@ -31,7 +45,18 @@ public class NodeCommunicator {
      * @return Encoded JSON
      */
     public String mapToJSON(HashMap<String, String> map) {
-        return "";
+        StringBuilder result = new StringBuilder();
+
+        result.append("{");
+
+        for(HashMap.Entry<String, String> e : map.entrySet()) {
+            result.append("\"" + e.getKey() + "\":\"" + e.getValue() +"\",");
+        }
+
+        result.deleteCharAt(result.length()-1);
+        result.append("}");
+
+        return result.toString();
     }
 
     /**
@@ -40,7 +65,20 @@ public class NodeCommunicator {
      * @return ArrayList of HashMaps of String key and Object value
      */
     public ArrayList<HashMap<String, String>> JSONToMap(String data) {
-        return new ArrayList<>();
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
+
+        if(data.charAt(0) == '[')
+            data = data.substring(1, data.length()-2);
+
+        for(int i=0; i<data.length(); i++) {
+            if(data.charAt(i) == '{') {
+                HashMap<String, String> obj = new HashMap<>();
+                i = parseObject(data, i, obj);
+                result.add(obj);
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -51,7 +89,24 @@ public class NodeCommunicator {
      * @return
      */
     private int parseObject(String data, int index, HashMap<String, String> out) {
-        return 0;
+        StringBuilder key = new StringBuilder();
+        StringBuilder val = new StringBuilder();
+
+        for(int i=index; i<data.length(); i++) {
+            switch(data.charAt(i)) {
+                case '}':
+                    return i+1;
+                case '{':
+                case ',':
+                    i = parseString(data, i+1, key);
+                    break;
+                case ':':
+                    i = parseString(data, i+1, val);
+                    out.put(key.toString(), val.toString());
+            }
+        }
+
+        return data.length();
     }
 
     /**
@@ -62,6 +117,25 @@ public class NodeCommunicator {
      * @return the ending index after closing double quote
      */
     private int parseString(String data, int index, StringBuilder out) {
-        return 0;
+        int valueStart = index;
+
+        for(int i=index; i<data.length(); i++) {
+            if(data.charAt(i) == '"') {
+                //First actual value
+                if(valueStart == index) {
+                    valueStart = i+1;
+                } else {
+                    out.setLength(0);
+                    out.append(data.substring(valueStart, i));
+                    return i;
+                }
+            }
+
+            //Skip the character after a control sequence
+            if(data.charAt(i) == '\\')
+                i++;
+        }
+
+        return data.length();
     }
 }

@@ -2,6 +2,7 @@ package com.dominion.prog2.game;
 
 
 import com.dominion.prog2.Driver;
+import com.dominion.prog2.network.NodeCommunicator;
 import com.dominion.prog2.ui.Button;
 import com.dominion.prog2.ui.CardGrid;
 import com.dominion.prog2.ui.ImageCache;
@@ -9,6 +10,7 @@ import com.dominion.prog2.ui.UIManager;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Game
 {
@@ -19,10 +21,19 @@ public class Game
     private CardGrid grid1;
     private CardGrid grid2;
 
-    public Game(Driver d) {
+    private NodeCommunicator comm;
+    private HashMap<String, String> dataSent;
+    private ArrayList<HashMap<String, String>> dataReceived;
+    private int timer;
+
+    public Game(Driver d, NodeCommunicator comm) {
         this.d = d;
         this.window = d.getWindow();
+        this.comm = comm;
         buttonList = new ArrayList<Button>();
+
+        dataSent = new HashMap<>();
+        dataReceived = new ArrayList<>();
 
         CardStack s = new CardStack();
         s.add(new Card("Gold"));
@@ -50,6 +61,18 @@ public class Game
             grid2.stack.add(grid1.stack.remove(grid1.lastClicked));
             grid1.lastClicked = null;
         }
+
+        timer ++;
+        //Send and get info from server
+        if(timer % 10 == 0)
+        {
+            System.out.println();
+            comm.getMessage(comm.mapToJSON(dataSent));
+            String msg = comm.getMessage(comm.mapToJSON(dataSent));
+            dataReceived = comm.JSONToMap(msg);
+        }
+
+
     }
 
     /**
