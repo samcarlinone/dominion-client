@@ -1,5 +1,6 @@
 package com.dominion.prog2.ui;
 
+import com.dominion.prog2.game.Card;
 import com.dominion.prog2.game.CardStack;
 
 import java.awt.*;
@@ -10,48 +11,35 @@ import java.util.HashMap;
  * Created by CARLINSE1 on 4/3/2017.
  */
 public class CardGrid extends UIElement {
-    public ArrayList<CardStack> stacks;
+    public CardStack stack;
+    public Card lastClicked;
     public boolean scrollable;
     public boolean border;
     public Color backgroundColor;
 
     private double scrollTop;
     private double contentHeight;
+    private HashMap<String, Integer> cardCounts;
+    private String[] names;
+    private int columns;
+    private double borderSpace;
+    private int rows;
 
-    public CardGrid(int x, int y, int w, int h) {
+    public CardGrid(CardStack s, int x, int y, int w, int h) {
         super(x, y, w, h);
 
-        stacks = new ArrayList<>();
+        stack = s;
+
         scrollable = true;
         border = false;
     }
 
     public void render(Graphics g) {
-        HashMap<String, Integer> cardCounts = new HashMap<>();
-
-        for(CardStack s : stacks) {
-            cardCounts = CardStack.mergeCounts(cardCounts, s.getCounts());
-        }
-
-        String[] names = new String[cardCounts.size()];
-        int index=0;
-        for(HashMap.Entry<String, Integer> entry : cardCounts.entrySet()) {
-            names[index++] = entry.getKey();
-        }
-
-        int columns = (int) Math.floor(width / ImageCache.cardWidth);
-        double borderSpace = (width - columns*ImageCache.cardWidth) / (double)(columns+1);
-        int rows = (int) Math.ceil(cardCounts.size() / (double) columns);
-
-        contentHeight = (rows+1)*borderSpace + rows*ImageCache.cardHeight;
-
-        if(scrollTop + height > contentHeight) {
-            scrollTop = contentHeight - height;
-        }
+        updateCardVars();
 
         Shape prevClip = g.getClip();
-
         g.setClip(this);
+        Graphics2D g2 = (Graphics2D) g;
 
         if(backgroundColor == null)
             g.setColor(new Color(0));
@@ -71,12 +59,22 @@ public class CardGrid extends UIElement {
                 int xPos = (int)Math.round(x*(ImageCache.cardWidth+borderSpace)+borderSpace);
                 int yPos = (int)Math.round(y*(ImageCache.cardHeight+borderSpace)+borderSpace - scrollTop);
                 g.drawImage(ImageCache.cardImage.get(name), xPos, yPos, null);
+
+
+                yPos += ImageCache.cardHeight/2 - 15;
+                g.setColor(new Color(0));
+                g.fillRect(xPos, yPos, 30, 30);
+                g.setColor(new Color(0xFFFFFF));
+                g.setFont(new Font("default", Font.BOLD, 25));
+
+                FontMetrics f = g.getFontMetrics();
+                String text = "x"+cardCounts.get(name);
+                g.drawString(text, xPos+15-f.stringWidth(text)/2, yPos+23);
             }
         }
 
         if(border) {
             g.setColor(new Color(255, 255, 255));
-            Graphics2D g2 = (Graphics2D) g;
             g2.setStroke(new BasicStroke(5));
             g2.drawRect(x, y, width, height);
         }
@@ -84,13 +82,64 @@ public class CardGrid extends UIElement {
         g.setClip(prevClip);
     }
 
-    public void scroll(int scrollTicks) {
+    private void updateCardVars() {
+        cardCounts = stack.getCounts();
+
+        names = new String[cardCounts.size()];
+        int index=0;
+        for(HashMap.Entry<String, Integer> entry : cardCounts.entrySet()) {
+            names[index++] = entry.getKey();
+        }
+
+        columns = (int) Math.floor(width / ImageCache.cardWidth);
+        borderSpace = (width - columns*ImageCache.cardWidth) / (double)(columns+1);
+        rows = (int) Math.ceil(cardCounts.size() / (double) columns);
+
+        contentHeight = (rows+1)*borderSpace + rows*ImageCache.cardHeight;
+
+        if(scrollTop + height > contentHeight) {
+            scrollTop = contentHeight - height;
+        }
+    }
+
+    public void scroll(int scrollTicks, int scrollAmount) {
         if(!this.contains(UIManager.get().getMX(), UIManager.get().getMY()))
             return;
 
-        scrollTop += scrollTicks * 10;
+        scrollTop += scrollTicks * scrollAmount * 10;
 
         if(scrollTop < 0)
             scrollTop = 0;
+    }
+
+    public void click(int mX, int mY) {
+        if(!this.contains(UIManager.get().getMX(), UIManager.get().getMY()))
+            return;
+
+        mX -= x;
+        mY -= y;
+
+        System.out.println(mX);
+
+        updateCardVars();
+
+//        int xPos = (int)Math.round(x*(ImageCache.cardWidth+borderSpace)+borderSpace);
+//        int yPos = (int)Math.round(y*(ImageCache.cardHeight+borderSpace)+borderSpace - scrollTop);
+
+        int column = (int)Math.round((mX-borderSpace)/(ImageCache.cardWidth+borderSpace));
+        int row = (int)Math.round((mY+scrollTop-borderSpace)/(ImageCache.cardWidth+borderSpace));
+
+        int nameNum = column+row*columns;
+
+        if(nameNum >= names.length)
+            return;
+
+        String name = names[nameNum];
+
+        for(int i=0; i<stack.size(); i++) {
+            if(name.equals(stack.get(i).getName())) {
+                lastClicked = stack.get(i);
+            }
+        }
     }
 }

@@ -16,6 +16,8 @@ public class Game
     private Driver d;
     private Window window;
 
+    private CardGrid grid1;
+    private CardGrid grid2;
 
     public Game(Driver d) {
         this.d = d;
@@ -24,19 +26,30 @@ public class Game
 
         CardStack s = new CardStack();
         s.add(new Card("Gold"));
+        s.add(new Card("Gold"));
         s.add(new Card("Copper"));
         s.add(new Card("Silver"));
 
-        CardGrid grid = new CardGrid(0, 0, 400, 300);
-        grid.border = true;
-        grid.backgroundColor = new Color(40, 84, 168);
-        grid.stacks.add(s);
+        grid1 = new CardGrid(s, 0, 0, 400, 300);
+        grid1.border = true;
+        grid1.backgroundColor = new Color(40, 84, 168);
+        UIManager.get().addElement(grid1);
 
-        UIManager.get().addElement(grid);
+        grid2 = new CardGrid(s, 500, 0, 400, 300);
+        grid2.border = true;
+        grid2.backgroundColor = new Color(40, 84, 168);
+        UIManager.get().addElement(grid2);
     }
 
     public void render(Graphics g) {
         UIManager.get().render(g);
+    }
+
+    public void tick() {
+        if(grid1.lastClicked != null) {
+            grid2.stack.add(grid1.stack.remove(grid1.lastClicked));
+            grid1.lastClicked = null;
+        }
     }
 
     /**

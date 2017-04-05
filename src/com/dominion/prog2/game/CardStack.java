@@ -30,8 +30,9 @@ public class CardStack {
         this.cards.add(c);
     }
 
-    public void remove(Card c) {
+    public Card remove(Card c) {
         this.cards.remove(c);
+        return c;
     }
 
     public ArrayList<Card> splice(int startIndex, int number) {
@@ -55,6 +56,8 @@ public class CardStack {
         return cards.get(i);
     }
 
+    public boolean has(Card c) { return cards.contains(c); }
+
     public ArrayList<Card> get(CardType type) {
         ArrayList<Card> result = new ArrayList<>();
 
@@ -77,7 +80,7 @@ public class CardStack {
         return result;
     }
 
-    public int getSize() {
+    public int size() {
         return cards.size();
     }
 

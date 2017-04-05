@@ -46,7 +46,7 @@ public class Driver extends Canvas implements Runnable
 	 */
 	public void tick()
 	{
-
+		game.tick();
 	}
 
 	/**

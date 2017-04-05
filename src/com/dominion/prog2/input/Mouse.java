@@ -29,7 +29,7 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
-
+		UIManager.get().mouseDown(e);
 	}
 
 	/**

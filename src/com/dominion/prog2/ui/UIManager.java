@@ -67,7 +67,12 @@ public class UIManager {
      * Relay input events to relevant UIElements
      */
     public void mouseDown(MouseEvent e) {
-        //TODO: Handle Mouse Down
+        for(int i=0; i<elements.size(); i++) {
+            UIElement elem = elements.get(i);
+            if(elem instanceof CardGrid) {
+                ((CardGrid) elem).click(e.getX(), e.getY());
+            }
+        }
     }
 
     public void mouseUp(MouseEvent e) {
@@ -83,7 +88,7 @@ public class UIManager {
         for(int i=0; i<elements.size(); i++) {
             UIElement elem = elements.get(i);
             if(elem instanceof CardGrid) {
-                ((CardGrid) elem).scroll(e.getWheelRotation());
+                ((CardGrid) elem).scroll(e.getWheelRotation(), e.getScrollAmount());
             }
         }
     }
