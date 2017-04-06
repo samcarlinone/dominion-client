@@ -48,29 +48,35 @@ public class CardGrid extends UIElement {
 
         g.fillRect(x, y, width, height);
 
-        for(int x=0; x<columns; x++) {
-            for(int y=0; y<rows; y++) {
-                if(x+y*columns >= names.length) {
-                    x = columns;
-                    break;
+        if(stack.size() > 0) {
+            g2.translate(x, y);
+
+            for (int x = 0; x < columns; x++) {
+                for (int y = 0; y < rows; y++) {
+                    if (x + y * columns >= names.length) {
+                        x = columns;
+                        break;
+                    }
+
+                    String name = names[x + y * columns];
+                    int xPos = (int) Math.round(x * (ImageCache.cardWidth + borderSpace) + borderSpace);
+                    int yPos = (int) Math.round(y * (ImageCache.cardHeight + borderSpace) + borderSpace - scrollTop);
+                    g2.drawImage(ImageCache.cardImage.get(name), xPos, yPos, null);
+
+
+                    yPos += ImageCache.cardHeight / 2 - 15;
+                    g2.setColor(new Color(0));
+                    g2.fillRect(xPos, yPos, 30, 30);
+                    g2.setColor(new Color(0xFFFFFF));
+                    g2.setFont(new Font("default", Font.BOLD, 25));
+
+                    FontMetrics f = g2.getFontMetrics();
+                    String text = "x" + cardCounts.get(name);
+                    g2.drawString(text, xPos + 15 - f.stringWidth(text) / 2, yPos + 23);
                 }
-
-                String name = names[x+y*columns];
-                int xPos = (int)Math.round(x*(ImageCache.cardWidth+borderSpace)+borderSpace);
-                int yPos = (int)Math.round(y*(ImageCache.cardHeight+borderSpace)+borderSpace - scrollTop);
-                g.drawImage(ImageCache.cardImage.get(name), xPos, yPos, null);
-
-
-                yPos += ImageCache.cardHeight/2 - 15;
-                g.setColor(new Color(0));
-                g.fillRect(xPos, yPos, 30, 30);
-                g.setColor(new Color(0xFFFFFF));
-                g.setFont(new Font("default", Font.BOLD, 25));
-
-                FontMetrics f = g.getFontMetrics();
-                String text = "x"+cardCounts.get(name);
-                g.drawString(text, xPos+15-f.stringWidth(text)/2, yPos+23);
             }
+
+            g2.translate(-x, -y);
         }
 
         if(border) {
@@ -100,6 +106,9 @@ public class CardGrid extends UIElement {
         if(scrollTop + height > contentHeight) {
             scrollTop = contentHeight - height;
         }
+
+        if(scrollTop < 0)
+            scrollTop = 0;
     }
 
     public void scroll(int scrollTicks, int scrollAmount) {
@@ -123,11 +132,15 @@ public class CardGrid extends UIElement {
 
         updateCardVars();
 
-//        int xPos = (int)Math.round(x*(ImageCache.cardWidth+borderSpace)+borderSpace);
-//        int yPos = (int)Math.round(y*(ImageCache.cardHeight+borderSpace)+borderSpace - scrollTop);
-
         int column = (int)Math.round((mX-borderSpace)/(ImageCache.cardWidth+borderSpace));
-        int row = (int)Math.round((mY+scrollTop-borderSpace)/(ImageCache.cardWidth+borderSpace));
+
+        if(column == columns)
+            column --;
+
+        int row = (int)Math.round((mY+scrollTop-borderSpace)/(ImageCache.cardHeight+borderSpace));
+
+        if(row == rows)
+            row --;
 
         int nameNum = column+row*columns;
 

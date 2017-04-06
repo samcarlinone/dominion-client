@@ -41,12 +41,13 @@ public class Game
         s.add(new Card("Copper"));
         s.add(new Card("Silver"));
 
-        grid1 = new CardGrid(s, 0, 0, 400, 300);
+        grid1 = new CardGrid(s, 20, 0, 400, 300);
         grid1.border = true;
         grid1.backgroundColor = new Color(40, 84, 168);
         UIManager.get().addElement(grid1);
 
-        grid2 = new CardGrid(s, 500, 0, 400, 300);
+        CardStack s2 = new CardStack();
+        grid2 = new CardGrid(s2, 500, 0, 400, 300);
         grid2.border = true;
         grid2.backgroundColor = new Color(40, 84, 168);
         UIManager.get().addElement(grid2);
@@ -60,6 +61,11 @@ public class Game
         if(grid1.lastClicked != null) {
             grid2.stack.add(grid1.stack.remove(grid1.lastClicked));
             grid1.lastClicked = null;
+        }
+
+        if(grid2.lastClicked != null) {
+            grid1.stack.add(grid2.stack.remove(grid2.lastClicked));
+            grid2.lastClicked = null;
         }
 
         timer ++;
