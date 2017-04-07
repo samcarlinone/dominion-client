@@ -3,13 +3,19 @@ package com.dominion.prog2;
 import com.dominion.prog2.input.Keyboard;
 import com.dominion.prog2.input.Mouse;
 import com.dominion.prog2.game.Window;
-import com.dominion.prog2.game.Game;
+import com.dominion.prog2.modules.ChooseName;
+import com.dominion.prog2.modules.Game;
+import com.dominion.prog2.modules.Module;
 import com.dominion.prog2.network.NodeCommunicator;
 import com.dominion.prog2.ui.ImageCache;
+import com.dominion.prog2.ui.UIManager;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Driver extends Canvas implements Runnable
 {
@@ -21,8 +27,10 @@ public class Driver extends Canvas implements Runnable
 	private Mouse mouse;
 	private Keyboard keyboard;
 	private BufferedImage img;
-	private Game game;
-	private NodeCommunicator comm;
+	private Module currentModule;
+	private int timeSincePing;
+    public NodeCommunicator comm;
+	public String name;
 
 	/**
 	 *	Constructor of Driver
@@ -33,12 +41,21 @@ public class Driver extends Canvas implements Runnable
 		window = new Window("Dominion", this);
 		mouse = new Mouse(this);
 		keyboard = new Keyboard(this);
-		this.addKeyListener(keyboard);
+        ImageCache.readImages(this);
 
 		comm = new NodeCommunicator();
+		timeSincePing = 15;
 
-		game = new Game(this, comm);
-		ImageCache.readImages(this);
+        HashMap<String, String> name = new HashMap<>();
+        name.put("type", "connect");
+        name.put("name", "fred");
+
+		String json = comm.mapToJSON(name);
+
+		System.out.println(comm.getMessage(json));
+
+		currentModule = new ChooseName();
+
 
 
 	}
@@ -46,9 +63,16 @@ public class Driver extends Canvas implements Runnable
 	/**
 	 *	updates classes/variables that change per frame
 	 */
-	public void tick()
-	{
-		game.tick();
+	public void tick() {
+	    if(currentModule != null) {
+            ArrayList<HashMap<String, String>> server_msg=null;
+
+	        if(!name.equals("")) {
+                //Ping server
+            }
+
+	        currentModule = currentModule.tick(server_msg);
+        }
 	}
 
 
@@ -70,8 +94,10 @@ public class Driver extends Canvas implements Runnable
 		g.setColor(Color.RED);
 		g.fillRect(0, 0, window.getWidth(), window.getHeight());
 
-		if(game != null)
-			game.render(g);
+		if(currentModule != null)
+			currentModule.render(g);
+
+        UIManager.get().render(g);
 
 		//End Graphics
 		g.dispose();

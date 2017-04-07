@@ -1,7 +1,8 @@
-package com.dominion.prog2.game;
+package com.dominion.prog2.modules;
 
 
 import com.dominion.prog2.Driver;
+import com.dominion.prog2.game.*;
 import com.dominion.prog2.network.NodeCommunicator;
 import com.dominion.prog2.ui.Button;
 import com.dominion.prog2.ui.CardGrid;
@@ -12,11 +13,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Game
-{
+public class Game implements Module {
     private ArrayList<Button> buttonList;
     private Driver d;
-    private Window window;
+    private com.dominion.prog2.game.Window window;
 
     private CardGrid grid1;
     private CardGrid grid2;
@@ -53,11 +53,13 @@ public class Game
         UIManager.get().addElement(grid2);
     }
 
+    @Override
     public void render(Graphics g) {
-        UIManager.get().render(g);
+        //Nothing for now
     }
 
-    public void tick() {
+    @Override
+    public Module tick(ArrayList<HashMap<String, String>> server_msg) {
         if(grid1.lastClicked != null) {
             grid2.stack.add(grid1.stack.remove(grid1.lastClicked));
             grid1.lastClicked = null;
@@ -68,17 +70,7 @@ public class Game
             grid2.lastClicked = null;
         }
 
-        timer ++;
-        //Send and get info from server
-        if(timer % 10 == 0)
-        {
-            System.out.println();
-            comm.getMessage(comm.mapToJSON(dataSent));
-            String msg = comm.getMessage(comm.mapToJSON(dataSent));
-            dataReceived = comm.JSONToMap(msg);
-        }
-
-
+        return this;
     }
 
     /**

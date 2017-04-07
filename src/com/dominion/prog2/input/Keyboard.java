@@ -9,9 +9,9 @@ import java.awt.event.KeyListener;
 public class Keyboard implements KeyListener {
     private Driver d;
 
-    public Keyboard(Driver driver)
-    {
+    public Keyboard(Driver driver) {
         this.d = driver;
+        this.d.addKeyListener(this);
     }
 
 
