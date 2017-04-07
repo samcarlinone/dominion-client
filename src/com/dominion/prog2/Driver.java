@@ -63,13 +63,20 @@ public class Driver extends Canvas implements Runnable
 	 */
 	public void tick() {
 	    if(currentModule != null) {
-            ArrayList<HashMap<String, String>> server_msg=null;
+            ArrayList<HashMap<String, String>> server_msg = null;
 
 	        if(name != null && !name.equals("")) {
                 //Ping server
             }
 
 	        currentModule = currentModule.tick(server_msg);
+
+	        //Resizes the Window based off of the Game State
+			if(currentModule instanceof ChooseName && window.getWidth() != 500)
+				window.resizeWindow(500,700);
+			else if(currentModule instanceof Game && window.getWidth() != 1800)
+				window.resizeWindow(1800,1100);
+
         }
 
         UIManager.get().tick();

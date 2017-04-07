@@ -31,11 +31,10 @@ public class Window extends Canvas
 		frame = new JFrame(this.title);
 		frame.pack();
 
-		width = 1800;
-		height = 1100 + frame.getInsets().top;
+		width = 500;
+		height = 700 + frame.getInsets().top;
 
-		Dimension dim = new Dimension(width, height);
-		frame.setSize(dim);
+		frame.setSize(width,height);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
@@ -48,7 +47,7 @@ public class Window extends Canvas
 	}
 
 	/**
-	 *
+	 * Finds location of the window in relation to screen
 	 */
 	public Point getLocation()
 	{
@@ -56,9 +55,19 @@ public class Window extends Canvas
 	}
 
 	/**
+	 *	Resizes window
+	 */
+	public void resizeWindow(int w, int h)
+	{
+		System.out.println("Resizing");
+		frame.resize(w, h+frame.getInsets().top);
+		frame.setLocationRelativeTo(null);
+	}
+
+
+	/**
 	 * Access the Height and Width of the window
 	 */
-
 	public int getHeight()
 	{
 		return height;
