@@ -107,7 +107,7 @@ public class Textbox extends UIElement {
             return;
         }
 
-        System.out.println(e.getKeyCode());
+        //System.out.println(e.getKeyCode());
 
         switch(e.getKeyCode()) {
             case KeyEvent.VK_SHIFT:
