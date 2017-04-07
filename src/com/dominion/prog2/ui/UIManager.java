@@ -5,6 +5,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by cobra on 3/27/2017.
@@ -32,11 +34,15 @@ public class UIManager {
     private int mX;
     private int mY;
 
+    private int resort=20;
+
     /**
      * Add a new UIElement
      */
     public void addElement(UIElement element) {
         elements.add(element);
+
+        sortElements();
     }
 
     /**
@@ -53,6 +59,15 @@ public class UIManager {
     public void removeAll() {
         elements.clear();
         //TODO: Handle additional logic
+    }
+
+    private void sortElements() {
+        Collections.sort(elements, new Comparator<UIElement>() {
+            @Override
+            public int compare(UIElement o1, UIElement o2) {
+                return o1.depth-o2.depth;
+            }
+        });
     }
 
     /**
@@ -76,6 +91,11 @@ public class UIManager {
         for(UIElement e : elements) {
             e.tick();
         }
+
+        if(--resort == 0) {
+            resort = 20;
+            sortElements();
+        }
     }
 
     /**
@@ -84,17 +104,19 @@ public class UIManager {
     public void mouseDown(MouseEvent e) {
         focusedTextbox = null;
 
-        for(int i=0; i<elements.size(); i++) {
+        for(int i=elements.size()-1; i>=0; i--) {
             UIElement elem = elements.get(i);
 
-            if(elem instanceof CardGrid) {
-                ((CardGrid) elem).click(e.getX(), e.getY());
-            }
+            if(elem.contains(e.getPoint())) {
+                if (elem instanceof CardGrid) {
+                    ((CardGrid) elem).click(e.getX(), e.getY());
+                }
 
-            if(elem instanceof Textbox) {
-                if(elem.contains(e.getPoint())) {
+                if (elem instanceof Textbox) {
                     focusedTextbox = (Textbox) elem;
                 }
+
+                break;
             }
         }
     }
@@ -109,10 +131,15 @@ public class UIManager {
     }
 
     public void mouseWheelMoved(MouseWheelEvent e) {
-        for(int i=0; i<elements.size(); i++) {
+        for(int i=elements.size()-1; i>=0; i--) {
             UIElement elem = elements.get(i);
-            if(elem instanceof CardGrid) {
-                ((CardGrid) elem).scroll(e.getWheelRotation(), e.getScrollAmount());
+
+            if(elem.contains(e.getPoint())) {
+                if (elem instanceof CardGrid) {
+                    ((CardGrid) elem).scroll(e.getWheelRotation(), e.getScrollAmount());
+                }
+
+                break;
             }
         }
     }
@@ -132,5 +159,12 @@ public class UIManager {
 
     public int getMY() {
         return mY;
+    }
+
+    /**
+     * Static Helper Functions
+     */
+    public static float lerp(float x1, float x2, float percent) {
+        return x1 + percent * (x2 - x1);
     }
 }

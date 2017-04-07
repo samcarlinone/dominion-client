@@ -6,6 +6,7 @@ import java.awt.*;
  * Created by cobra on 3/27/2017.
  */
 public abstract class UIElement extends Rectangle {
+    public int depth=0;
     public UIElement(int x, int y, int width, int height) {
         super(x, y, width, height);
     }

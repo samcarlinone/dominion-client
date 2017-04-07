@@ -23,6 +23,7 @@ public class Driver extends Canvas implements Runnable
 	private boolean running = false;
 	private Integer frames;
 	private Thread thread;
+	private boolean ready = false;
 	
 	private Window window;
 	private Mouse mouse;
@@ -56,13 +57,15 @@ public class Driver extends Canvas implements Runnable
 //		System.out.println(comm.getMessage(json));
 
 		currentModule = new ChooseName();
+
+		ready = true;
 	}
 
 	/**
 	 *	updates classes/variables that change per frame
 	 */
 	public void tick() {
-	    if(currentModule != null) {
+	    if(ready) {
             ArrayList<HashMap<String, String>> server_msg = null;
 
 	        if(name != null && !name.equals("")) {
@@ -77,15 +80,14 @@ public class Driver extends Canvas implements Runnable
 			else if(currentModule instanceof Game && window.getWidth() != 1800)
 				window.resizeWindow(1800,1100);
 
+            UIManager.get().tick();
         }
-
-        UIManager.get().tick();
 	}
 
 
 	/**
 	 *	Draws the game onto the window
-	 *	Calls other hanlder render to draw their parts
+	 *	Calls other handler render to draw their parts
 	 */
 	public void render()
     {
@@ -98,13 +100,14 @@ public class Driver extends Canvas implements Runnable
 		Graphics g = bs.getDrawGraphics();
 		//Start Graphics
 		
-		g.setColor(Color.RED);
+		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, window.getWidth(), window.getHeight());
 
-		if(currentModule != null)
-			currentModule.render(g);
+		if(ready) {
+            currentModule.render(g);
 
-        UIManager.get().render(g);
+            UIManager.get().render(g);
+        }
 
 		//End Graphics
 		g.dispose();
