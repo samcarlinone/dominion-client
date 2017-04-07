@@ -26,7 +26,8 @@ public class UIManager {
     }
 
     private ArrayList<UIElement> elements;
-    private UIElement focused;
+
+    public Textbox focusedTextbox;
 
     private int mX;
     private int mY;
@@ -58,8 +59,22 @@ public class UIManager {
      * Render all elements
      */
     public void render(Graphics g) {
+        Shape oldRect = g.getClip();
+
         for(UIElement e : elements) {
+            g.setClip(e);
             e.render(g);
+        }
+
+        g.setClip(oldRect);
+    }
+
+    /**
+     * Tick all elements
+     */
+    public void tick() {
+        for(UIElement e : elements) {
+            e.tick();
         }
     }
 
@@ -67,10 +82,19 @@ public class UIManager {
      * Relay input events to relevant UIElements
      */
     public void mouseDown(MouseEvent e) {
+        focusedTextbox = null;
+
         for(int i=0; i<elements.size(); i++) {
             UIElement elem = elements.get(i);
+
             if(elem instanceof CardGrid) {
                 ((CardGrid) elem).click(e.getX(), e.getY());
+            }
+
+            if(elem instanceof Textbox) {
+                if(elem.contains(e.getPoint())) {
+                    focusedTextbox = (Textbox) elem;
+                }
             }
         }
     }
@@ -93,12 +117,10 @@ public class UIManager {
         }
     }
 
-    public void keyDown(KeyEvent e) {
-        //TODO: Handle Key Down
-    }
-
-    public void keyUp(KeyEvent e) {
-        //TODO: Handle Key Up
+    public void keyPressed(KeyEvent e) {
+        if(focusedTextbox != null) {
+            focusedTextbox.keyTyped(e);
+        }
     }
 
     /**

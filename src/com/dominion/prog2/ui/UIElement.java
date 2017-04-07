@@ -14,4 +14,9 @@ public abstract class UIElement extends Rectangle {
      * Render this element, pass in graphics object
      */
     public abstract void render(Graphics g);
+
+    /**
+     * Called 60 times a second
+     */
+    public void tick(){}
 }

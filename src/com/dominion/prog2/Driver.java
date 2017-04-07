@@ -8,6 +8,7 @@ import com.dominion.prog2.modules.Game;
 import com.dominion.prog2.modules.Module;
 import com.dominion.prog2.network.NodeCommunicator;
 import com.dominion.prog2.ui.ImageCache;
+import com.dominion.prog2.ui.UIElement;
 import com.dominion.prog2.ui.UIManager;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 
@@ -46,18 +47,15 @@ public class Driver extends Canvas implements Runnable
 		comm = new NodeCommunicator();
 		timeSincePing = 15;
 
-        HashMap<String, String> name = new HashMap<>();
-        name.put("type", "connect");
-        name.put("name", "fred");
-
-		String json = comm.mapToJSON(name);
-
-		System.out.println(comm.getMessage(json));
+//        HashMap<String, String> name = new HashMap<>();
+//        name.put("type", "connect");
+//        name.put("name", "fred");
+//
+//		String json = comm.mapToJSON(name);
+//
+//		System.out.println(comm.getMessage(json));
 
 		currentModule = new ChooseName();
-
-
-
 	}
 
 	/**
@@ -67,12 +65,14 @@ public class Driver extends Canvas implements Runnable
 	    if(currentModule != null) {
             ArrayList<HashMap<String, String>> server_msg=null;
 
-	        if(!name.equals("")) {
+	        if(name != null && !name.equals("")) {
                 //Ping server
             }
 
 	        currentModule = currentModule.tick(server_msg);
         }
+
+        UIManager.get().tick();
 	}
 
 

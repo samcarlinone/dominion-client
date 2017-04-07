@@ -1,6 +1,7 @@
 package com.dominion.prog2.input;
 
 import com.dominion.prog2.Driver;
+import com.dominion.prog2.ui.UIManager;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -30,7 +31,7 @@ public class Keyboard implements KeyListener {
      */
     @Override
     public void keyPressed(KeyEvent e) {
-
+        UIManager.get().keyPressed(e);
     }
 
     /**
