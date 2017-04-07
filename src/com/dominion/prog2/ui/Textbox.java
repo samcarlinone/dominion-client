@@ -81,7 +81,7 @@ public class Textbox extends UIElement {
      */
     @Override
     public void tick() {
-        if(UIManager.get().focusedTextbox != this)
+        if(UIManager.get().focusedElement != this)
             cursorAnim = 120;
 
         if(cursorAnim-- == 0)

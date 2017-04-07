@@ -37,7 +37,7 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 	 */
 	@Override
 	public void mouseReleased(MouseEvent e) {
-
+		UIManager.get().mouseUp(e);
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 	 */
 	@Override
 	public void mouseDragged(MouseEvent e) {
-
+		UIManager.get().mouseMove(e);
 	}
 
 	/**

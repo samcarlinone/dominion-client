@@ -29,10 +29,12 @@ public class UIManager {
 
     private ArrayList<UIElement> elements;
 
-    public Textbox focusedTextbox;
+    public UIElement focusedElement;
+    public UIElement hoveredElement;
 
     private int mX;
     private int mY;
+    private boolean mDown;
 
     private int resort=20;
 
@@ -50,6 +52,10 @@ public class UIManager {
      */
     public UIElement removeElement(UIElement element) {
         elements.remove(element);
+
+        if(focusedElement == element)
+            focusedElement = null;
+
         return element;
     }
 
@@ -58,7 +64,7 @@ public class UIManager {
      */
     public void removeAll() {
         elements.clear();
-        //TODO: Handle additional logic
+        focusedElement = null;
     }
 
     private void sortElements() {
@@ -102,7 +108,8 @@ public class UIManager {
      * Relay input events to relevant UIElements
      */
     public void mouseDown(MouseEvent e) {
-        focusedTextbox = null;
+        focusedElement = null;
+        mDown = true;
 
         for(int i=elements.size()-1; i>=0; i--) {
             UIElement elem = elements.get(i);
@@ -112,22 +119,40 @@ public class UIManager {
                     ((CardGrid) elem).click(e.getX(), e.getY());
                 }
 
-                if (elem instanceof Textbox) {
-                    focusedTextbox = (Textbox) elem;
-                }
-
+                focusedElement = elem;
                 break;
             }
         }
     }
 
     public void mouseUp(MouseEvent e) {
-        //TODO: Handle Mouse Down
+        mDown = false;
+
+        if(focusedElement instanceof Button) {
+            if(focusedElement.contains(e.getPoint()))
+                ((Button) focusedElement).setClicked(true);
+
+            focusedElement = null;
+        }
     }
 
     public void mouseMove(MouseEvent e) {
         mX = e.getX();
         mY = e.getY();
+
+        hoveredElement = null;
+
+        for(int i=elements.size()-1; i>=0; i--) {
+            UIElement elem = elements.get(i);
+
+            if(elem.contains(e.getPoint())) {
+                if(focusedElement instanceof Button && elem != focusedElement)
+                    break;
+
+                hoveredElement = elem;
+                break;
+            }
+        }
     }
 
     public void mouseWheelMoved(MouseWheelEvent e) {
@@ -145,8 +170,8 @@ public class UIManager {
     }
 
     public void keyPressed(KeyEvent e) {
-        if(focusedTextbox != null) {
-            focusedTextbox.keyTyped(e);
+        if(focusedElement != null && focusedElement instanceof Textbox) {
+            ((Textbox) focusedElement).keyTyped(e);
         }
     }
 
@@ -160,6 +185,8 @@ public class UIManager {
     public int getMY() {
         return mY;
     }
+
+    public boolean getMDown() { return mDown; }
 
     /**
      * Static Helper Functions
