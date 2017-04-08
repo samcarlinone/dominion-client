@@ -67,6 +67,9 @@ public class NodeCommunicator {
     public ArrayList<HashMap<String, String>> JSONToMap(String data) {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
 
+        if(data.length() == 2)
+            return result;
+
         if(data.charAt(0) == '[')
             data = data.substring(1, data.length()-2);
 

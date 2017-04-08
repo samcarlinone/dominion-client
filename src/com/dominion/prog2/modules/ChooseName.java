@@ -1,7 +1,8 @@
 package com.dominion.prog2.modules;
 
+import com.dominion.prog2.Driver;
 import com.dominion.prog2.ui.Textbox;
-import com.dominion.prog2.ui.UIElement;
+import com.dominion.prog2.ui.Label;
 import com.dominion.prog2.ui.UIManager;
 import com.dominion.prog2.ui.Button;
 
@@ -14,32 +15,65 @@ import java.util.HashMap;
  */
 public class ChooseName implements Module {
     private Font ui_font = new Font("Arial", Font.PLAIN, 30);
+    private Label name_label;
+    private Label error_label;
     private Textbox name;
     private Button submit;
 
-    public ChooseName() {
-        name = new Textbox(10, 200, 200, 150, 40);
+    private Driver d;
+
+    public ChooseName(Driver d) {
+        this.d = d;
+
+        name_label = new Label("Username", 100, 205, 150, 40);
+        name_label.font = ui_font;
+        name_label.borderWidth = 0;
+        name_label.depth = 1;
+        UIManager.get().addElement(name_label);
+
+        name = new Textbox(10, 100, 200, 300, 40);
         name.font = ui_font;
         UIManager.get().addElement(name);
 
-        name = new Textbox(10, 220, 220, 150, 40);
-        name.font = ui_font;
-        name.depth = 1;
-        UIManager.get().addElement(name);
-
-        submit = new Button("Submit", 200, 400, 150, 40);
+        submit = new Button("Submit", 100, 239, 300, 40);
         submit.font = ui_font;
         UIManager.get().addElement(submit);
 
-        submit = new Button("Submit", 220, 420, 150, 40);
-        submit.font = ui_font;
-        submit.depth = 1;
-        UIManager.get().addElement(submit);
+        error_label = new Label("That name is unavailable", 50, 278, 400, 40);
+        error_label.color = Color.WHITE;
+        error_label.font = ui_font;
+        UIManager.get().addElement(error_label);
     }
 
     @Override
     public Module tick(ArrayList<HashMap<String, String>> server_msg) {
-        //TODO: Implement
+        if(name.getText().length() > 0) {
+            name_label.color = new Color(0, 0, 0, 0);
+        } else {
+            name_label.color = Color.LIGHT_GRAY;
+        }
+
+        if(submit.wasClicked()) {
+            submit.setClicked(false);
+
+            if(name.getText().length() == 0)
+                return this;
+
+            HashMap<String, String> name_msg = new HashMap<>();
+            name_msg.put("type", "connect");
+            name_msg.put("name", name.getText());
+
+            String json = d.comm.getMessage(d.comm.mapToJSON(name_msg));
+
+            if(json.contains("invalid")) {
+                error_label.color = Color.RED;
+            } else {
+                d.name = name.getText();
+                UIManager.get().removeAll();
+                return new LobbyList(d);
+            }
+        }
+
         return this;
     }
 

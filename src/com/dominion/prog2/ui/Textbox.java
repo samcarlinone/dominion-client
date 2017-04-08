@@ -14,6 +14,8 @@ public class Textbox extends UIElement {
     public Color color = Color.BLACK;
     public Font font = new Font("default", Font.PLAIN, 12);
 
+    public boolean submitted;
+
     private int maxChars;
     private int cursorPos;
     private int cursorAnim;
@@ -112,6 +114,10 @@ public class Textbox extends UIElement {
         switch(e.getKeyCode()) {
             case KeyEvent.VK_SHIFT:
                 //Ignore Shift
+                break;
+
+            case KeyEvent.VK_ENTER:
+                submitted = true;
                 break;
 
             case KeyEvent.VK_DELETE:

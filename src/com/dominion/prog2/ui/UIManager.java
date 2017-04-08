@@ -115,6 +115,9 @@ public class UIManager {
             UIElement elem = elements.get(i);
 
             if(elem.contains(e.getPoint())) {
+                if(elem instanceof Label)
+                    continue;
+
                 if (elem instanceof CardGrid) {
                     ((CardGrid) elem).click(e.getX(), e.getY());
                 }
@@ -146,6 +149,9 @@ public class UIManager {
             UIElement elem = elements.get(i);
 
             if(elem.contains(e.getPoint())) {
+                if(elem instanceof Label)
+                    continue;
+
                 if(focusedElement instanceof Button && elem != focusedElement)
                     break;
 
@@ -160,6 +166,9 @@ public class UIManager {
             UIElement elem = elements.get(i);
 
             if(elem.contains(e.getPoint())) {
+                if(elem instanceof Label)
+                    continue;
+
                 if (elem instanceof CardGrid) {
                     ((CardGrid) elem).scroll(e.getWheelRotation(), e.getScrollAmount());
                 }

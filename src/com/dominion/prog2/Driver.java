@@ -56,7 +56,7 @@ public class Driver extends Canvas implements Runnable
 //
 //		System.out.println(comm.getMessage(json));
 
-		currentModule = new ChooseName();
+		currentModule = new ChooseName(this);
 
 		ready = true;
 	}
@@ -70,6 +70,17 @@ public class Driver extends Canvas implements Runnable
 
 	        if(name != null && !name.equals("")) {
                 //Ping server
+				HashMap<String, String> msg = new HashMap<>();
+				msg.put("type", "ping");
+				msg.put("name", name);
+
+				String json = comm.getMessage(comm.mapToJSON(msg));
+
+				System.out.println(json);
+
+				if(!json.equals("Error")) {
+					server_msg = comm.JSONToMap(json);
+				}
             }
 
 	        currentModule = currentModule.tick(server_msg);
