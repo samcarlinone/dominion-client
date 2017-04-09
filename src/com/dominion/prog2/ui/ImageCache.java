@@ -9,13 +9,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-/**
- * Created by cobra on 4/2/2017.
- */
 public class ImageCache {
     public static HashMap<String, BufferedImage> cardImage;
     public static int cardHeight, cardWidth;
 
+    /**
+     * Puts images into a HashMap String, BufferedImage
+     * @param d Driver
+     */
     public static void readImages(Driver d) {
         cardImage = new HashMap<>();
 
@@ -55,6 +56,13 @@ public class ImageCache {
         }
     }
 
+    /**
+     * Resizes the image
+     * @param img
+     * @param newW
+     * @param newH
+     * @return the resized image
+     */
     public static BufferedImage resize(BufferedImage img, int newW, int newH) {
         int w = img.getWidth();
         int h = img.getHeight();

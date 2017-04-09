@@ -178,6 +178,10 @@ public class Driver extends Canvas implements Runnable
 		stop();
 	}
 
+	/**
+	 * getter for window
+	 * @return window
+	 */
 	public Window getWindow()
 	{
 		return window;

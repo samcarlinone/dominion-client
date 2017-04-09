@@ -26,6 +26,11 @@ public class Game implements Module {
     private ArrayList<HashMap<String, String>> dataReceived;
     private int timer;
 
+    /**
+     * Initiates all the different card stacks and
+     * @param d Driver
+     * @param comm NodeCommunicator
+    */
     public Game(Driver d, NodeCommunicator comm) {
         this.d = d;
         this.window = d.getWindow();
@@ -53,11 +58,20 @@ public class Game implements Module {
         UIManager.get().addElement(grid2);
     }
 
+    /**
+     * Renders everything
+     * @param g Graphics
+     */
     @Override
     public void render(Graphics g) {
         //Nothing for now
     }
 
+    /**
+     * updates the module
+     * @param server_msg
+     * @return Module
+     */
     @Override
     public Module tick(ArrayList<HashMap<String, String>> server_msg) {
         if(grid1.lastClicked != null) {
@@ -77,13 +91,22 @@ public class Game implements Module {
      * Custom Card Functions
      */
 
+    /**
+     * discards a CardStack
+     * @param s CardStack
+     */
     public void discard(CardStack s) {
         //TODO: Implement
     }
 
+    /**
+     * Trashes a CardStack
+     * @param s CardStack
+     */
     public void trash(CardStack s) {
         //TODO: Implement
     }
 
+    //TODO: decide how we want to do the game logic
 
 }

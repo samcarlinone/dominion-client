@@ -4,9 +4,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-/**
- * Created by cobra on 3/27/2017.
- */
 public class Button extends UIElement {
     public String text;
     public Color backgroundColor = Color.WHITE;
@@ -22,12 +19,24 @@ public class Button extends UIElement {
     private boolean pressed;
     private boolean clicked=false;
 
+    /**
+     * Creates Button Object
+     * @param text
+     * @param x pos
+     * @param y pos
+     * @param width
+     * @param height
+     */
     public Button(String text, int x, int y, int width, int height) {
         super(x, y, width, height);
 
         this.text = text;
     }
 
+    /**
+     * Renders everything
+     * @param g Graphics
+     */
     @Override
     public void render(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
@@ -64,6 +73,9 @@ public class Button extends UIElement {
         g2.drawString(text, tX - offset, tY+font.getAscent());
     }
 
+    /**
+     * Updates the Button
+     */
     @Override
     public void tick() {
         UIManager manager = UIManager.get();
@@ -72,13 +84,32 @@ public class Button extends UIElement {
         pressed = manager.focusedElement == this && hovered;
     }
 
+    /**
+     * getter for Hovered
+     * @return boolean
+     */
     public boolean isHovered() { return hovered; }
+
+    /**
+     * getter for Pressed
+     * @return boolean
+     */
     public boolean isPressed() {
         return pressed;
     }
+
+    /**
+     * getter for Clicked
+     * @return boolean
+     */
     public boolean wasClicked() {
         return clicked;
     }
+
+    /**
+     * setter for Clicked
+     * @param clicked boolean
+     */
     public void setClicked(boolean clicked) { this.clicked = clicked; }
 
 }

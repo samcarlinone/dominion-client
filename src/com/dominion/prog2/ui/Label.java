@@ -2,9 +2,6 @@ package com.dominion.prog2.ui;
 
 import java.awt.*;
 
-/**
- * Created by cobra on 3/27/2017.
- */
 public class Label extends UIElement {
     public String text;
     public Color backgroundColor = new Color(0, 0, 0, 0);
@@ -14,12 +11,24 @@ public class Label extends UIElement {
     public Color color = Color.BLACK;
     public Font font = new Font("default", Font.PLAIN, 12);
 
+    /**
+     * Creates the Label Object
+     * @param text
+     * @param x pos
+     * @param y pos
+     * @param width
+     * @param height
+     */
     public Label(String text, int x, int y, int width, int height) {
         super(x, y, width, height);
 
         this.text = text;
     }
 
+    /**
+     * Renders everything
+     * @param g Graphics
+     */
     @Override
     public void render(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;

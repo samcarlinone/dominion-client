@@ -10,9 +10,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by cobra on 4/8/2017.
- */
+
 public class LobbyList implements Module{
     private Driver d;
 
@@ -21,6 +19,10 @@ public class LobbyList implements Module{
     private Textbox msg;
     private Button send;
 
+    /**
+     * Creates LobbyList Object
+     * @param d Driver
+     */
     public LobbyList(Driver d) {
         this.d = d;
 
@@ -39,6 +41,11 @@ public class LobbyList implements Module{
         UIManager.get().addElement(send);
     }
 
+    /**
+     * Updates the Module
+     * @param server_msg
+     * @return Module
+     */
     @Override
     public Module tick(ArrayList<HashMap<String, String>> server_msg) {
         if(server_msg != null && server_msg.size() > 0) {
@@ -69,6 +76,10 @@ public class LobbyList implements Module{
         return this;
     }
 
+    /**
+     * Renders everything
+     * @param g Graphics
+     */
     @Override
     public void render(Graphics g) {
         //TODO: Implement

@@ -12,7 +12,9 @@ import java.util.Scanner;
 public class NodeCommunicator {
     private String url;
 
-
+    /**
+     * Creates the NodeCommunicator Object
+     */
     public NodeCommunicator() {
         //this.url = "http://localhost/";
         this.url = "https://dominion-server.herokuapp.com/";
@@ -90,7 +92,7 @@ public class NodeCommunicator {
      * @param data
      * @param index
      * @param out
-     * @return
+     * @return int (length of the data)
      */
     private int parseObject(String data, int index, HashMap<String, String> out) {
         StringBuilder key = new StringBuilder();

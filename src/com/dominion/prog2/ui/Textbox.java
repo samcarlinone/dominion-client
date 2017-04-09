@@ -3,9 +3,6 @@ package com.dominion.prog2.ui;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-/**
- * Created by cobra on 3/27/2017.
- */
 public class Textbox extends UIElement {
     public Color backgroundColor = Color.WHITE;
     public Color borderColor = Color.BLACK;
@@ -23,6 +20,14 @@ public class Textbox extends UIElement {
     private int feedbackAnim;
     private StringBuilder text;
 
+    /**
+     * Creates the Textbox Object
+     * @param maxChars
+     * @param x pos
+     * @param y pos
+     * @param width
+     * @param height
+     */
     public Textbox(int maxChars, int x, int y, int width, int height) {
         super(x, y, width, height);
 
@@ -34,7 +39,8 @@ public class Textbox extends UIElement {
     }
 
     /**
-     * Render the button
+     * Renders everything
+     * @param g Graphics
      */
     @Override
     public void render(Graphics g) {
@@ -80,7 +86,7 @@ public class Textbox extends UIElement {
     }
 
     /**
-     * Tick cursor
+     * Ticks the position of the cursor within the textbox
      */
     @Override
     public void tick() {
@@ -95,7 +101,8 @@ public class Textbox extends UIElement {
     }
 
     /**
-     * Gets current typed text
+     * Gets the text within the textbox
+     * @return text (String)
      */
     public String getText() { return text.toString(); }
 
@@ -110,6 +117,7 @@ public class Textbox extends UIElement {
 
     /**
      * Call when a character is typed
+     * @param e
      */
     public void keyTyped(KeyEvent e) {
         String chr = e.getKeyChar()+"";

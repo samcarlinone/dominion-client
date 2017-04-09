@@ -8,18 +8,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-/**
- * Created by cobra on 3/27/2017.
- */
 public class UIManager {
     /**
      * This is a singleton that handles rendering and input management
      */
     private static UIManager instance = null;
+
+    /**
+     * creates a new arrayList for the elements
+     */
     protected UIManager() {
         elements = new ArrayList<>();
     }
 
+    /**
+     * get the instance of UI Manager
+     */
     public static UIManager get(){
         if(instance == null) {
             instance = new UIManager();
@@ -40,6 +44,7 @@ public class UIManager {
 
     /**
      * Add a new UIElement
+     * @param element
      */
     public void addElement(UIElement element) {
         elements.add(element);
@@ -49,6 +54,7 @@ public class UIManager {
 
     /**
      * Remove an UIElement, returns the element
+     * @param element
      */
     public UIElement removeElement(UIElement element) {
         elements.remove(element);
@@ -67,6 +73,9 @@ public class UIManager {
         focusedElement = null;
     }
 
+    /**
+     * Sorts the elements based off their depth
+     */
     private void sortElements() {
         Collections.sort(elements, new Comparator<UIElement>() {
             @Override
@@ -78,6 +87,7 @@ public class UIManager {
 
     /**
      * Render all elements
+     * @param g Graphics
      */
     public void render(Graphics g) {
         Shape oldRect = g.getClip();
@@ -91,7 +101,7 @@ public class UIManager {
     }
 
     /**
-     * Tick all elements
+     * Updates all the elements
      */
     public void tick() {
         for(UIElement e : elements) {
@@ -106,6 +116,7 @@ public class UIManager {
 
     /**
      * Relay input events to relevant UIElements
+     * @param e
      */
     public void mouseDown(MouseEvent e) {
         focusedElement = null;
@@ -128,6 +139,10 @@ public class UIManager {
         }
     }
 
+    /**
+     * Mouse is unclicked
+     * @param e
+     */
     public void mouseUp(MouseEvent e) {
         mDown = false;
 
@@ -139,6 +154,10 @@ public class UIManager {
         }
     }
 
+    /**
+     * Mouse is moved
+     * @param e
+     */
     public void mouseMove(MouseEvent e) {
         mX = e.getX();
         mY = e.getY();
@@ -161,6 +180,10 @@ public class UIManager {
         }
     }
 
+    /**
+     * Mouse wheel is moved
+     * @param e
+     */
     public void mouseWheelMoved(MouseWheelEvent e) {
         for(int i=elements.size()-1; i>=0; i--) {
             UIElement elem = elements.get(i);
@@ -182,6 +205,10 @@ public class UIManager {
         }
     }
 
+    /**
+     * A key is pressed
+     * @param e
+     */
     public void keyPressed(KeyEvent e) {
         if(focusedElement != null && focusedElement instanceof Textbox) {
             ((Textbox) focusedElement).keyTyped(e);
@@ -189,20 +216,33 @@ public class UIManager {
     }
 
     /**
-     * Getters
+     * Get mouse Xpos
+     * @return
      */
     public int getMX() {
         return mX;
     }
 
+    /**
+     * Get mouse Ypos
+     * @return
+     */
     public int getMY() {
         return mY;
     }
 
+    /**
+     * get Mouse Down
+     * @return
+     */
     public boolean getMDown() { return mDown; }
 
     /**
      * Static Helper Functions
+     * @param x1
+     * @param x2
+     * @param percent
+     * @return float variable
      */
     public static float lerp(float x1, float x2, float percent) {
         return x1 + percent * (x2 - x1);

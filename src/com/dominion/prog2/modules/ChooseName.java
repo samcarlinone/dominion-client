@@ -10,9 +10,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by cobra on 4/6/2017.
- */
 public class ChooseName implements Module {
     private Font ui_font = new Font("Arial", Font.PLAIN, 30);
     private Label name_label;
@@ -22,6 +19,10 @@ public class ChooseName implements Module {
 
     private Driver d;
 
+    /**
+     * Module for the use to choose name, will check to make sure not already taken
+     * @param d Driver
+     */
     public ChooseName(Driver d) {
         this.d = d;
 
@@ -45,6 +46,11 @@ public class ChooseName implements Module {
         UIManager.get().addElement(error_label);
     }
 
+    /**
+     * updates the module
+     * @param server_msg
+     * @return the next module(if the user puts in valid name)
+     */
     @Override
     public Module tick(ArrayList<HashMap<String, String>> server_msg) {
         if(name.getText().length() > 0) {
@@ -78,6 +84,10 @@ public class ChooseName implements Module {
         return this;
     }
 
+    /**
+     * Renders everything
+     * @param g graphics
+     */
     @Override
     public void render(Graphics g) {
         //TODO: Implement

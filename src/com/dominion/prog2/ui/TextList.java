@@ -3,9 +3,6 @@ package com.dominion.prog2.ui;
 import java.awt.*;
 import java.util.ArrayList;
 
-/**
- * Created by cobra on 4/9/2017.
- */
 public class TextList extends UIElement {
     public Color backgroundColor = Color.WHITE;
     public Color hoveredColor = new Color(0xBDBDBD);
@@ -25,10 +22,21 @@ public class TextList extends UIElement {
 
     private int scrollTop=0;
 
+    /**
+     * Creates a textList Object
+     * @param x pos
+     * @param y pos
+     * @param width
+     * @param height
+     */
     public TextList(int x, int y, int width, int height) {
         super(x, y, width, height);
     }
 
+    /**
+     * Renders everything
+     * @param g Graphics
+     */
     @Override
     public void render(Graphics g) {
         normalizeScroll();
@@ -74,6 +82,9 @@ public class TextList extends UIElement {
         g2.fillRect(x+width-7, y+(borderWidth+paddingWidth)+(int)(height*sizeStart), 6, -(borderWidth+paddingWidth)*2+(int)(height*sizePercent));
     }
 
+    /**
+     * Changes the Scroll
+     */
     private void normalizeScroll() {
         if(scrollTop > stringHeight*strings.size()-(height-(borderWidth)*2))
             scrollTop = stringHeight*strings.size()-(height-(borderWidth)*2);
@@ -82,6 +93,11 @@ public class TextList extends UIElement {
             scrollTop = paddingWidth+borderWidth;
     }
 
+    /**
+     * creates the scroll
+     * @param scrollTicks
+     * @param scrollAmount
+     */
     public void scroll(int scrollTicks, int scrollAmount) {
         scrollTop += scrollTicks * scrollAmount * stringHeight/10;
     }

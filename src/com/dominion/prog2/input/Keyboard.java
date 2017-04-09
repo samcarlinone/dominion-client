@@ -6,10 +6,13 @@ import com.dominion.prog2.ui.UIManager;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-
 public class Keyboard implements KeyListener {
     private Driver d;
 
+    /**
+     * creates a keyboard object
+     * @param driver
+     */
     public Keyboard(Driver driver) {
         this.d = driver;
         this.d.addKeyListener(this);

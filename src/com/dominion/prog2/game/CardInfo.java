@@ -2,12 +2,13 @@ package com.dominion.prog2.game;
 
 import java.util.HashMap;
 
-/**
- * Created by cobra on 4/1/2017.
- */
+
 public class CardInfo {
     private static HashMap<String, int[]> data;
 
+    /**
+     * Sets the data of the card into hashMap
+     */
     private static void populate() {
         //[type, price, victoryValue, addCoins, addAction, addBuy, addCard]
         if(data != null)
@@ -53,10 +54,26 @@ public class CardInfo {
         data.put("Artisan", genData(CardType.ACTION, 6, 0, 0, 0, 0, 0));
     }
 
+    /**
+     * generates data based off the values of the card
+     * @param type
+     * @param price
+     * @param victoryValue
+     * @param addCoins
+     * @param addAction
+     * @param addBuy
+     * @param addCard
+     * @return list of int based off the data
+     */
     private static int[] genData(CardType type, int price, int victoryValue, int addCoins, int addAction, int addBuy, int addCard) {
         return new int[] {type.ordinal(), price, victoryValue, addCoins, addAction, addBuy, addCard};
     }
 
+    /**
+     * get the values based off the name
+     * @param name
+     * @return list of integers based on values
+     */
     public static int[] getVals(String name){
         populate();
         return data.get(name);

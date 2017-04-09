@@ -7,9 +7,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by CARLINSE1 on 4/3/2017.
- */
+
 public class CardGrid extends UIElement {
     public CardStack stack;
     public Card lastClicked;
@@ -25,6 +23,14 @@ public class CardGrid extends UIElement {
     private double borderSpace;
     private int rows;
 
+    /**
+     * Creates a CardGric Object
+     * @param s CardStack
+     * @param x pos
+     * @param y pos
+     * @param w
+     * @param h
+     */
     public CardGrid(CardStack s, int x, int y, int w, int h) {
         super(x, y, w, h);
 
@@ -34,6 +40,10 @@ public class CardGrid extends UIElement {
         border = false;
     }
 
+    /**
+     * Renders everything
+     * @param g Graphics
+     */
     public void render(Graphics g) {
         updateCardVars();
 
@@ -88,6 +98,9 @@ public class CardGrid extends UIElement {
         g.setClip(prevClip);
     }
 
+    /**
+     * Updates the values of the Card
+     */
     private void updateCardVars() {
         cardCounts = stack.getCounts();
 
@@ -111,6 +124,11 @@ public class CardGrid extends UIElement {
             scrollTop = 0;
     }
 
+    /**
+     * Scrolls so as to see other cards within the grid
+     * @param scrollTicks
+     * @param scrollAmount
+     */
     public void scroll(int scrollTicks, int scrollAmount) {
         scrollTop += scrollTicks * scrollAmount * 10;
 
@@ -118,6 +136,11 @@ public class CardGrid extends UIElement {
             scrollTop = 0;
     }
 
+    /**
+     * Clicks on a card based off the mouse position
+     * @param mX mouse X pos
+     * @param mY mouse Y pos
+     */
     public void click(int mX, int mY) {
         if(!this.contains(UIManager.get().getMX(), UIManager.get().getMY()))
             return;

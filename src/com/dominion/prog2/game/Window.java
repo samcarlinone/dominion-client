@@ -21,11 +21,13 @@ public class Window extends Canvas
 	 *	adds title and changes the size of the window
 	 *	set window into middle of screen
 	 *	starts the Driver
+	 * @param title for the window
+	 * @param gameDriver
 	 */
-	public Window(String title, Driver game)
+	public Window(String title, Driver gameDriver)
 	{
 		this.title = title;
-		this.d = game;
+		this.d = gameDriver;
 
 		
 		frame = new JFrame(this.title);
@@ -48,6 +50,7 @@ public class Window extends Canvas
 
 	/**
 	 * Finds location of the window in relation to screen
+	 * @return the location of the window
 	 */
 	public Point getLocation()
 	{
@@ -56,6 +59,8 @@ public class Window extends Canvas
 
 	/**
 	 *	Resizes window
+	 * @param w width of window
+	 * @param h height of window
 	 */
 	public void resizeWindow(int w, int h)
 	{
@@ -66,12 +71,18 @@ public class Window extends Canvas
 
 
 	/**
-	 * Access the Height and Width of the window
+	 * Access the Height of the window
+	 * @return int of height
 	 */
 	public int getHeight()
 	{
 		return height;
 	}
+
+	/**
+	 * Access the Width of the window
+	 * @return int of width
+	 */
 	public int getWidth()
 	{
 		return width;
