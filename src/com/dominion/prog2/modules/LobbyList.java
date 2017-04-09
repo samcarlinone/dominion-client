@@ -25,7 +25,7 @@ public class LobbyList implements Module{
         this.d = d;
 
         lobbies = new TextList(50, 100, 400, 200);
-        lobbies.stringHeight = 34;
+        lobbies.stringHeight = 36;
         lobbies.font = ui_font;
         UIManager.get().addElement(lobbies);
 
@@ -45,6 +45,7 @@ public class LobbyList implements Module{
             for(HashMap<String, String> map : server_msg) {
                 if(map.getOrDefault("type", "none").equals("message")) {
                     lobbies.strings.add("["+map.get("name")+"]> "+map.get("msg"));
+                    lobbies.scroll(100, 100);
                 }
             }
         }

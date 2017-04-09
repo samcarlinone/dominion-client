@@ -75,8 +75,8 @@ public class TextList extends UIElement {
     }
 
     private void normalizeScroll() {
-        if(scrollTop > stringHeight*strings.size()-height)
-            scrollTop = stringHeight*strings.size()-height;
+        if(scrollTop > stringHeight*strings.size()-(height-(borderWidth)*2))
+            scrollTop = stringHeight*strings.size()-(height-(borderWidth)*2);
 
         if(scrollTop < paddingWidth+borderWidth)
             scrollTop = paddingWidth+borderWidth;
