@@ -53,8 +53,9 @@ public class ChooseName implements Module {
             name_label.color = Color.LIGHT_GRAY;
         }
 
-        if(submit.wasClicked()) {
+        if(submit.wasClicked() || name.submitted) {
             submit.setClicked(false);
+            name.submitted = false;
 
             if(name.getText().length() == 0)
                 return this;

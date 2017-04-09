@@ -173,6 +173,10 @@ public class UIManager {
                     ((CardGrid) elem).scroll(e.getWheelRotation(), e.getScrollAmount());
                 }
 
+                if (elem instanceof TextList) {
+                    ((TextList) elem).scroll(e.getWheelRotation(), e.getScrollAmount());
+                }
+
                 break;
             }
         }

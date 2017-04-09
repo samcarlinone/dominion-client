@@ -14,7 +14,8 @@ public class NodeCommunicator {
 
 
     public NodeCommunicator() {
-        this.url = "http://localhost/";
+        //this.url = "http://localhost/";
+        this.url = "https://dominion-server.herokuapp.com/";
     }
 
     /**

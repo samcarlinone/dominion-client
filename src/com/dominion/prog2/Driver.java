@@ -68,7 +68,7 @@ public class Driver extends Canvas implements Runnable
 	    if(ready) {
             ArrayList<HashMap<String, String>> server_msg = null;
 
-	        if(name != null && !name.equals("")) {
+	        if(name != null && !name.equals("") && timeSincePing-- == 0) {
                 //Ping server
 				HashMap<String, String> msg = new HashMap<>();
 				msg.put("type", "ping");
@@ -76,11 +76,11 @@ public class Driver extends Canvas implements Runnable
 
 				String json = comm.getMessage(comm.mapToJSON(msg));
 
-				System.out.println(json);
-
 				if(!json.equals("Error")) {
 					server_msg = comm.JSONToMap(json);
 				}
+
+				timeSincePing = 15;
             }
 
 	        currentModule = currentModule.tick(server_msg);

@@ -112,9 +112,6 @@ public class CardGrid extends UIElement {
     }
 
     public void scroll(int scrollTicks, int scrollAmount) {
-        if(!this.contains(UIManager.get().getMX(), UIManager.get().getMY()))
-            return;
-
         scrollTop += scrollTicks * scrollAmount * 10;
 
         if(scrollTop < 0)

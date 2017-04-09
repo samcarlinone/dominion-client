@@ -14,6 +14,7 @@ public class Textbox extends UIElement {
     public Color color = Color.BLACK;
     public Font font = new Font("default", Font.PLAIN, 12);
 
+    public boolean allowSpaces=false;
     public boolean submitted;
 
     private int maxChars;
@@ -99,14 +100,25 @@ public class Textbox extends UIElement {
     public String getText() { return text.toString(); }
 
     /**
+     * Clears typed text
+     */
+    public void clearText() {
+        text.setLength(0);
+        cursorPos = 0;
+        submitted = false;
+    }
+
+    /**
      * Call when a character is typed
      */
     public void keyTyped(KeyEvent e) {
         String chr = e.getKeyChar()+"";
 
-        if(chr.matches("[\\w]") && text.length() < maxChars) {
-            text.insert(cursorPos++, chr);
-            return;
+        if(text.length() < maxChars) {
+            if(chr.matches("[\\w]") || (allowSpaces && chr.equals(" "))) {
+                text.insert(cursorPos++, chr);
+                return;
+            }
         }
 
         //System.out.println(e.getKeyCode());
