@@ -41,7 +41,7 @@ public class NodeCommunicator {
 
     /**
      * Converts a simple Map to JSON
-     * @param map <String, String> map
+     * @param map String, String map
      * @return Encoded JSON
      */
     public String mapToJSON(HashMap<String, String> map) {
