@@ -77,7 +77,7 @@ public class ChooseName implements Module {
             } else {
                 d.name = name.getText();
                 UIManager.get().removeAll();
-                return new LobbyList(d);
+                return new ChooseLobby(d);
             }
         }
 

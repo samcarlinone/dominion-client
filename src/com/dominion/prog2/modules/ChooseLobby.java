@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class LobbyList implements Module{
+public class ChooseLobby implements Module{
     private Driver d;
 
     private Font ui_font = new Font("Arial", Font.PLAIN, 30);
@@ -20,10 +20,10 @@ public class LobbyList implements Module{
     private Button send;
 
     /**
-     * Creates LobbyList Object
+     * Creates ChooseLobby Object
      * @param d Driver
      */
-    public LobbyList(Driver d) {
+    public ChooseLobby(Driver d) {
         this.d = d;
 
         lobbies = new TextList(50, 100, 400, 200);
