@@ -28,14 +28,14 @@ public class ImageCache {
                 {
                         "Artisan","Bandit","Bureaucrat",
                         "Card_back","Cellar","Chapel",
-                        "Copper","Council room","Curse",
+                        "Copper","Council Room","Curse",
                         "Duchy","Estate","Festival",
-                        "Gardens","Gold","Harbringer",
+                        "Gardens","Gold","Harbinger",
                         "Laboratory","Library","Market",
                         "Merchant","Militia","Mine",
                         "Moat","Moneylender","Poacher",
                         "Province","Remodel","Sentry",
-                        "Silver","Smithy","Throne room",
+                        "Silver","Smithy","Throne Room",
                         "Trash","Vassal","Village",
                         "Witch","Workshop"
                 };

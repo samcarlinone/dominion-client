@@ -41,7 +41,7 @@ public class ChooseName implements Module {
         UIManager.get().addElement(submit);
 
         error_label = new Label("That name is unavailable", 50, 278, 400, 40);
-        error_label.color = Color.WHITE;
+        error_label.fontColor = Color.WHITE;
         error_label.font = ui_font;
         UIManager.get().addElement(error_label);
     }
@@ -54,9 +54,9 @@ public class ChooseName implements Module {
     @Override
     public Module tick(ArrayList<HashMap<String, String>> server_msg) {
         if(name.getText().length() > 0) {
-            name_label.color = new Color(0, 0, 0, 0);
+            name_label.fontColor = new Color(0, 0, 0, 0);
         } else {
-            name_label.color = Color.LIGHT_GRAY;
+            name_label.fontColor = Color.LIGHT_GRAY;
         }
 
         if(submit.wasClicked() || name.submitted) {
@@ -73,11 +73,12 @@ public class ChooseName implements Module {
             String json = d.comm.getMessage(d.comm.mapToJSON(name_msg));
 
             if(json.contains("invalid")) {
-                error_label.color = Color.RED;
+                error_label.fontColor = Color.RED;
             } else {
                 d.name = name.getText();
                 UIManager.get().removeAll();
-                return new ChooseLobby(d);
+                //return new ChooseLobby(d);
+                return new WaitScreen(d, true);
             }
         }
 

@@ -3,9 +3,7 @@ package com.dominion.prog2;
 import com.dominion.prog2.input.Keyboard;
 import com.dominion.prog2.input.Mouse;
 import com.dominion.prog2.game.Window;
-import com.dominion.prog2.modules.ChooseName;
-import com.dominion.prog2.modules.Game;
-import com.dominion.prog2.modules.Module;
+import com.dominion.prog2.modules.*;
 import com.dominion.prog2.network.NodeCommunicator;
 import com.dominion.prog2.ui.ImageCache;
 import com.dominion.prog2.ui.UIElement;
@@ -84,10 +82,12 @@ public class Driver extends Canvas implements Runnable
             }
 
 	        currentModule = currentModule.tick(server_msg);
-
+	        
 	        //Resizes the Window based off of the Game State
-			if(currentModule instanceof ChooseName && window.getWidth() != 500)
+			if((currentModule instanceof ChooseName || currentModule instanceof ChooseLobby)&& window.getWidth() != 500)
 				window.resizeWindow(500,700);
+			else if(currentModule instanceof WaitScreen && window.getWidth() != 505)
+				window.resizeWindow(505,700);
 			else if(currentModule instanceof Game && window.getWidth() != 1800)
 				window.resizeWindow(1800,1100);
 

@@ -8,8 +8,9 @@ public class Label extends UIElement {
     public Color borderColor = Color.BLACK;
     public int borderWidth = 1;
     public int paddingWidth = 1;
-    public Color color = Color.BLACK;
+    public Color fontColor = Color.BLACK;
     public Font font = new Font("default", Font.PLAIN, 12);
+
 
     /**
      * Creates the Label Object
@@ -44,7 +45,7 @@ public class Label extends UIElement {
         g2.fillRect(x + borderWidth, y + borderWidth, width - borderWidth * 2, height - borderWidth * 2);
 
         //Draw Text
-        g2.setColor(color);
+        g2.setColor(fontColor);
         g2.setFont(font);
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 

@@ -29,9 +29,8 @@ public class Game implements Module {
     /**
      * Initiates all the different card stacks and
      * @param d Driver
-     * @param comm NodeCommunicator
     */
-    public Game(Driver d, NodeCommunicator comm) {
+    public Game(Driver d) {
         this.d = d;
         this.window = d.getWindow();
         this.comm = comm;
