@@ -6,9 +6,7 @@ import com.dominion.prog2.game.Window;
 import com.dominion.prog2.modules.*;
 import com.dominion.prog2.network.NodeCommunicator;
 import com.dominion.prog2.ui.ImageCache;
-import com.dominion.prog2.ui.UIElement;
 import com.dominion.prog2.ui.UIManager;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -86,8 +84,8 @@ public class Driver extends Canvas implements Runnable
 	        //Resizes the Window based off of the Game State
 			if((currentModule instanceof ChooseName || currentModule instanceof ChooseLobby)&& window.getWidth() != 500)
 				window.resizeWindow(500,700);
-			else if(currentModule instanceof WaitScreen && window.getWidth() != 505)
-				window.resizeWindow(505,700);
+			else if((currentModule instanceof HostWaitScreen || currentModule instanceof WaitScreen) && window.getWidth() != 745)
+				window.resizeWindow(745,700);
 			else if(currentModule instanceof Game && window.getWidth() != 1800)
 				window.resizeWindow(1800,1100);
 

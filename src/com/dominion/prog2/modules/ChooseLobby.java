@@ -19,6 +19,10 @@ public class ChooseLobby implements Module{
     private Textbox msg;
     private Button send;
 
+    private Button createLobby;
+    private Button joinLobby;
+
+
     /**
      * Creates ChooseLobby Object
      * @param d Driver
@@ -39,6 +43,15 @@ public class ChooseLobby implements Module{
         send = new Button("Send", 299, 299, 151, 40);
         send.font = ui_font;
         UIManager.get().addElement(send);
+
+        createLobby = new Button("Create Lobby",0,400,200,50);
+        createLobby.font = ui_font;
+        UIManager.get().addElement(createLobby);
+
+        joinLobby = new Button("Join Lobby",200,400,200,50);
+        joinLobby.font = ui_font;
+        UIManager.get().addElement(joinLobby);
+
     }
 
     /**
@@ -73,8 +86,16 @@ public class ChooseLobby implements Module{
             d.comm.getMessage(d.comm.mapToJSON(msg_map));
         }
 
+
+        if(joinLobby.wasClicked()) {
+            UIManager.get().removeAll();
+            return new WaitScreen(d);
+        }
+        if(createLobby.wasClicked()) {
+            UIManager.get().removeAll();
+            return new HostWaitScreen(d);
+        }
         return this;
-        //return new WaitScreen(d);
     }
 
     /**
