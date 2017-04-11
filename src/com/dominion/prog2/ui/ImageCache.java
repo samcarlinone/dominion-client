@@ -51,7 +51,7 @@ public class ImageCache {
         }
         catch(IOException e)
         {
-            System.out.println("Image fail!");
+            System.out.println("Can not read in a Card Image");
             System.exit(1);
         }
     }

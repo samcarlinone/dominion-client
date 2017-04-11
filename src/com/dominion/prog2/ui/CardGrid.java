@@ -12,6 +12,7 @@ public class CardGrid extends UIElement {
     public CardStack stack;
     public Card lastClicked;
     public boolean scrollable;
+    public boolean condense;
     public boolean border;
     public Color backgroundColor;
 
@@ -24,7 +25,7 @@ public class CardGrid extends UIElement {
     private int rows;
 
     /**
-     * Creates a CardGric Object
+     * Creates a CardGrid Object
      * @param s CardStack
      * @param x pos
      * @param y pos
@@ -37,6 +38,7 @@ public class CardGrid extends UIElement {
         stack = s;
 
         scrollable = true;
+        condense = true;
         border = false;
     }
 
@@ -73,16 +75,17 @@ public class CardGrid extends UIElement {
                     int yPos = (int) Math.round(y * (ImageCache.cardHeight + borderSpace) + borderSpace - scrollTop);
                     g2.drawImage(ImageCache.cardImage.get(name), xPos, yPos, null);
 
+                    if(condense) {
+                        yPos += ImageCache.cardHeight / 2 - 15;
+                        g2.setColor(new Color(0));
+                        g2.fillRect(xPos, yPos, 30, 30);
+                        g2.setColor(new Color(0xFFFFFF));
+                        g2.setFont(new Font("default", Font.BOLD, 25));
 
-                    yPos += ImageCache.cardHeight / 2 - 15;
-                    g2.setColor(new Color(0));
-                    g2.fillRect(xPos, yPos, 30, 30);
-                    g2.setColor(new Color(0xFFFFFF));
-                    g2.setFont(new Font("default", Font.BOLD, 25));
-
-                    FontMetrics f = g2.getFontMetrics();
-                    String text = "x" + cardCounts.get(name);
-                    g2.drawString(text, xPos + 15 - f.stringWidth(text) / 2, yPos + 23);
+                        FontMetrics f = g2.getFontMetrics();
+                        String text = "x" + cardCounts.get(name);
+                        g2.drawString(text, xPos + 15 - f.stringWidth(text) / 2, yPos + 23);
+                    }
                 }
             }
 
@@ -130,10 +133,12 @@ public class CardGrid extends UIElement {
      * @param scrollAmount
      */
     public void scroll(int scrollTicks, int scrollAmount) {
-        scrollTop += scrollTicks * scrollAmount * 10;
+       if(scrollable) {
+           scrollTop += scrollTicks * scrollAmount * 10;
 
-        if(scrollTop < 0)
-            scrollTop = 0;
+           if (scrollTop < 0)
+               scrollTop = 0;
+       }
     }
 
     /**

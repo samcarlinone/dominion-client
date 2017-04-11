@@ -3,28 +3,28 @@ package com.dominion.prog2.modules;
 
 import com.dominion.prog2.Driver;
 import com.dominion.prog2.game.*;
-import com.dominion.prog2.network.NodeCommunicator;
-import com.dominion.prog2.ui.Button;
 import com.dominion.prog2.ui.CardGrid;
-import com.dominion.prog2.ui.ImageCache;
 import com.dominion.prog2.ui.UIManager;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.rmi.server.ExportException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Game implements Module {
-    private ArrayList<Button> buttonList;
+
     private Driver d;
-    private com.dominion.prog2.game.Window window;
 
-    private CardGrid grid1;
-    private CardGrid grid2;
+    private CardGrid shop;
+    private CardGrid hand;
 
-    private NodeCommunicator comm;
-    private HashMap<String, String> dataSent;
-    private ArrayList<HashMap<String, String>> dataReceived;
-    private int timer;
+    private BufferedImage img;
+
+    //Window Dimensions: w=1800,h=1100
 
     /**
      * Initiates all the different card stacks and
@@ -32,29 +32,36 @@ public class Game implements Module {
     */
     public Game(Driver d) {
         this.d = d;
-        this.window = d.getWindow();
-        this.comm = comm;
-        buttonList = new ArrayList<Button>();
 
-        dataSent = new HashMap<>();
-        dataReceived = new ArrayList<>();
-
+        try {
+            img = ImageIO.read(new File("res/BackgroundTile/RicePaper.jpg"));
+        }
+        catch(IOException e)
+        {
+            System.out.println("Can not read in a Background Image");
+            System.exit(1);
+        }
         CardStack s = new CardStack();
         s.add(new Card("Gold"));
         s.add(new Card("Gold"));
         s.add(new Card("Copper"));
         s.add(new Card("Silver"));
 
-        grid1 = new CardGrid(s, 20, 0, 400, 300);
-        grid1.border = true;
-        grid1.backgroundColor = new Color(40, 84, 168);
-        UIManager.get().addElement(grid1);
+        shop = new CardGrid(s,20,0,400,300);
+        shop.border = true;
+        shop.backgroundColor = new Color(40,84,168);
+        UIManager.get().addElement(shop);
 
-        CardStack s2 = new CardStack();
-        grid2 = new CardGrid(s2, 500, 0, 400, 300);
-        grid2.border = true;
-        grid2.backgroundColor = new Color(40, 84, 168);
-        UIManager.get().addElement(grid2);
+
+        CardStack s2 = new CardStack(s.getAll());
+        s2.add(new Card("Estate"));
+        s2.add(new Card("Moat"));
+        hand = new CardGrid(s2,600,909,600,186);
+        hand.border = true;
+        hand.condense = false;
+        hand.scrollable = false;
+        hand.backgroundColor = new Color(40,84,168);
+        UIManager.get().addElement(hand);
     }
 
     /**
@@ -62,7 +69,16 @@ public class Game implements Module {
      * @param g Graphics
      */
     @Override
-    public void render(Graphics g) {
+    public void render(Graphics g){
+        //Draws tiled background
+        for(int x = 0; x <= 1800; x += 449)
+        {
+            for(int y = 0; y <= 1100; y += 394)
+            {
+                g.drawImage(img,x,y,d);
+            }
+        }
+
         //Nothing for now
     }
 
@@ -73,22 +89,25 @@ public class Game implements Module {
      */
     @Override
     public Module tick(ArrayList<HashMap<String, String>> server_msg) {
-        if(grid1.lastClicked != null) {
-            grid2.stack.add(grid1.stack.remove(grid1.lastClicked));
-            grid1.lastClicked = null;
+        /*
+        if(shop.lastClicked != null) {
+            hand.stack.add(shop.stack.remove(shop.lastClicked));
+            shop.lastClicked = null;
         }
 
-        if(grid2.lastClicked != null) {
-            grid1.stack.add(grid2.stack.remove(grid2.lastClicked));
-            grid2.lastClicked = null;
+        if(hand.lastClicked != null) {
+            shop.stack.add(hand.stack.remove(hand.lastClicked));
+            hand.lastClicked = null;
         }
-
+        */
         return this;
     }
 
     /**
      * Custom Card Functions
      */
+
+
 
     /**
      * discards a CardStack
