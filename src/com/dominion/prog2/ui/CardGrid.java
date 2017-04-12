@@ -46,19 +46,15 @@ public class CardGrid extends UIElement {
      * Renders everything
      * @param g Graphics
      */
-    public void render(Graphics g) {
+    public void render(Graphics2D g2) {
         updateCardVars();
 
-        Shape prevClip = g.getClip();
-        g.setClip(this);
-        Graphics2D g2 = (Graphics2D) g;
-
         if(backgroundColor == null)
-            g.setColor(new Color(0));
+            g2.setColor(new Color(0));
         else
-            g.setColor(backgroundColor);
+            g2.setColor(backgroundColor);
 
-        g.fillRect(x, y, width, height);
+        g2.fillRect(x, y, width, height);
 
         if(stack.size() > 0) {
             g2.translate(x, y);
@@ -93,12 +89,10 @@ public class CardGrid extends UIElement {
         }
 
         if(border) {
-            g.setColor(new Color(255, 255, 255));
+            g2.setColor(new Color(255, 255, 255));
             g2.setStroke(new BasicStroke(5));
             g2.drawRect(x, y, width, height);
         }
-
-        g.setClip(prevClip);
     }
 
     /**

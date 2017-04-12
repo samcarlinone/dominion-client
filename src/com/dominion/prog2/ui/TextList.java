@@ -35,13 +35,11 @@ public class TextList extends UIElement {
 
     /**
      * Renders everything
-     * @param g Graphics
+     * @param g2 Graphics
      */
     @Override
-    public void render(Graphics g) {
+    public void render(Graphics2D g2) {
         normalizeScroll();
-
-        Graphics2D g2 = (Graphics2D) g;
 
         if(backgroundColor.getAlpha() > 0) {
             //Draw Border
@@ -56,7 +54,6 @@ public class TextList extends UIElement {
         //Draw Text
         g2.setColor(color);
         g2.setFont(font);
-        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
         FontMetrics font = g2.getFontMetrics();
 

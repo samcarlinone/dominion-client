@@ -91,10 +91,12 @@ public class UIManager {
      */
     public synchronized void render(Graphics g) {
         Shape oldRect = g.getClip();
+        Graphics2D g2 = (Graphics2D)g;
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
         for(UIElement e : elements) {
             g.setClip(e);
-            e.render(g);
+            e.render(g2);
         }
 
         g.setClip(oldRect);

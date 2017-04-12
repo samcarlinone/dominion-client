@@ -19,9 +19,9 @@ public abstract class UIElement extends Rectangle {
 
     /**
      * Render this element
-     * @param g Graphics
+     * @param g2 Graphics
      */
-    public abstract void render(Graphics g);
+    public abstract void render(Graphics2D g2);
 
     /**
      * Called 60 times a second

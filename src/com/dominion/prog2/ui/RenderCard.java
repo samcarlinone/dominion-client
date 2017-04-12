@@ -24,5 +24,5 @@ public class RenderCard extends UIElement {
      * Render's the card
      * @param g Graphics
      */
-    public void render(Graphics g) { g.drawImage(img, x, y, null); }
+    public void render(Graphics2D g2) { g2.drawImage(img, x, y, null); }
 }

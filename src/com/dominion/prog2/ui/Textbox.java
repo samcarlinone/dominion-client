@@ -40,12 +40,10 @@ public class Textbox extends UIElement {
 
     /**
      * Renders everything
-     * @param g Graphics
+     * @param g2 Graphics
      */
     @Override
-    public void render(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-
+    public void render(Graphics2D g2) {
         g2.setColor(borderColor);
         g2.fillRect(x, y, width, height);
 
@@ -62,7 +60,6 @@ public class Textbox extends UIElement {
 
         g2.setColor(color);
         g2.setFont(font);
-        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
         FontMetrics font = g2.getFontMetrics();
         String beforeCursor = text.substring(0, cursorPos);

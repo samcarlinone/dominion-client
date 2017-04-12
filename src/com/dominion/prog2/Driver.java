@@ -106,9 +106,9 @@ public class Driver extends Canvas implements Runnable
 			this.createBufferStrategy(2);
 			return;
 		}
+
 		Graphics g = bs.getDrawGraphics();
 		//Start Graphics
-		
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, window.getWidth(), window.getHeight());
 

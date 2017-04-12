@@ -37,12 +37,10 @@ public class Button extends UIElement {
 
     /**
      * Renders everything
-     * @param g Graphics
+     * @param g2 Graphics
      */
     @Override
-    public void render(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-
+    public void render(Graphics2D g2) {
         //Draw Border
         g2.setColor(borderColor);
         g2.fillRect(x, y, width, height);
