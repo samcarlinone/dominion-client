@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class LobbyList implements Module{
+public class ChooseLobby implements Module{
     private Driver d;
 
     private Font ui_font = new Font("Arial", Font.PLAIN, 30);
@@ -19,11 +19,15 @@ public class LobbyList implements Module{
     private Textbox msg;
     private Button send;
 
+    private Button createLobby;
+    private Button joinLobby;
+
+
     /**
-     * Creates LobbyList Object
+     * Creates ChooseLobby Object
      * @param d Driver
      */
-    public LobbyList(Driver d) {
+    public ChooseLobby(Driver d) {
         this.d = d;
 
         lobbies = new TextList(50, 100, 400, 200);
@@ -39,6 +43,15 @@ public class LobbyList implements Module{
         send = new Button("Send", 299, 299, 151, 40);
         send.font = ui_font;
         UIManager.get().addElement(send);
+
+        createLobby = new Button("Create Lobby",0,400,200,50);
+        createLobby.font = ui_font;
+        UIManager.get().addElement(createLobby);
+
+        joinLobby = new Button("Join Lobby",200,400,200,50);
+        joinLobby.font = ui_font;
+        UIManager.get().addElement(joinLobby);
+
     }
 
     /**
@@ -73,6 +86,15 @@ public class LobbyList implements Module{
             d.comm.getMessage(d.comm.mapToJSON(msg_map));
         }
 
+
+        if(joinLobby.wasClicked()) {
+            UIManager.get().removeAll();
+            return new WaitScreen(d);
+        }
+        if(createLobby.wasClicked()) {
+            UIManager.get().removeAll();
+            return new HostWaitScreen(d);
+        }
         return this;
     }
 

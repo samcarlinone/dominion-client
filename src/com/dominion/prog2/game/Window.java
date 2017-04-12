@@ -9,8 +9,8 @@ import javax.swing.JFrame;
 
 public class Window extends Canvas
 {
-	private final int width;
-	private final int height;
+	private int width;
+	private int height;
 
 	private Driver d;
 	private String title;
@@ -65,7 +65,10 @@ public class Window extends Canvas
 	public void resizeWindow(int w, int h)
 	{
 		System.out.println("Resizing");
-		frame.resize(w, h+frame.getInsets().top);
+		width = w;
+		height = h+frame.getInsets().top;
+
+		frame.resize(width, height);
 		frame.setLocationRelativeTo(null);
 	}
 

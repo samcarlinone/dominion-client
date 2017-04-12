@@ -28,14 +28,14 @@ public class ImageCache {
                 {
                         "Artisan","Bandit","Bureaucrat",
                         "Card_back","Cellar","Chapel",
-                        "Copper","Council room","Curse",
+                        "Copper","Council Room","Curse",
                         "Duchy","Estate","Festival",
-                        "Gardens","Gold","Harbringer",
+                        "Gardens","Gold","Harbinger",
                         "Laboratory","Library","Market",
                         "Merchant","Militia","Mine",
                         "Moat","Moneylender","Poacher",
                         "Province","Remodel","Sentry",
-                        "Silver","Smithy","Throne room",
+                        "Silver","Smithy","Throne Room",
                         "Trash","Vassal","Village",
                         "Witch","Workshop"
                 };
@@ -51,7 +51,7 @@ public class ImageCache {
         }
         catch(IOException e)
         {
-            System.out.println("Image fail!");
+            System.out.println("Can not read in a Card Image");
             System.exit(1);
         }
     }
