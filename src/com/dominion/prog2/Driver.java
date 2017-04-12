@@ -1,5 +1,6 @@
 package com.dominion.prog2;
 
+import com.dominion.prog2.game.Player;
 import com.dominion.prog2.input.Keyboard;
 import com.dominion.prog2.input.Mouse;
 import com.dominion.prog2.game.Window;
@@ -10,25 +11,24 @@ import com.dominion.prog2.ui.UIManager;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Driver extends Canvas implements Runnable
 {
 	private boolean running = false;
-	private Integer frames;
 	private Thread thread;
 	private boolean ready = false;
 	
 	private Window window;
 	private Mouse mouse;
 	private Keyboard keyboard;
-	private BufferedImage img;
 	private Module currentModule;
 	private int timeSincePing;
     public NodeCommunicator comm;
 	public String name;
+
+	public Player player;
 
 	/**
 	 *	Constructor of Driver
@@ -53,6 +53,8 @@ public class Driver extends Canvas implements Runnable
 //		System.out.println(comm.getMessage(json));
 
 		currentModule = new ChooseName(this);
+
+		player = new Player("User 1");
 
 		ready = true;
 	}
@@ -153,7 +155,7 @@ public class Driver extends Canvas implements Runnable
 		double ns = 1000000000 / amountOfTicks;
 		double delta = 0;
 		long timer = System.currentTimeMillis();
-		frames = 0;
+		Integer frames = 0;
 		while (running) {
 			long now = System.nanoTime();
 			delta += (now - lastTime) / ns;

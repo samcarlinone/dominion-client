@@ -36,9 +36,11 @@ public class HostWaitScreen implements Module
         CardStack fullList =  fillFullList();
 
         allCards = new CardGrid(fullList,5,50,360,450);
+        allCards.condense = false;
         UIManager.get().addElement(allCards);
 
         chosenCards = new CardGrid(new CardStack(),375,50,360,450);
+        chosenCards.condense = false;
         UIManager.get().addElement(chosenCards);
 
         headerAll = new Label("Choose you cards",5,10,200,50);
@@ -87,6 +89,19 @@ public class HostWaitScreen implements Module
             UIManager.get().removeAll();
             return new Game(d);
         }
+
+        if(allCards.lastClicked != null) {
+            if(chosenCards.stack.size() < 10) {
+                chosenCards.stack.add(allCards.stack.remove(allCards.lastClicked));
+            }
+            allCards.lastClicked = null;
+        }
+        if(chosenCards.lastClicked != null) {
+            allCards.stack.add(chosenCards.stack.remove(chosenCards.lastClicked));
+            chosenCards.lastClicked = null;
+        }
+
+
 
         //TODO: Add more here, reads in users in lobby, also transfers cards that are being used in game
 

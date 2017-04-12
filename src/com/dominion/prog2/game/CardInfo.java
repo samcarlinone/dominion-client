@@ -56,13 +56,13 @@ public class CardInfo {
 
     /**
      * generates data based off the values of the card
-     * @param type
-     * @param price
-     * @param victoryValue
-     * @param addCoins
-     * @param addAction
-     * @param addBuy
-     * @param addCard
+     * @param type CardType
+     * @param price int (to buy)
+     * @param victoryValue int (to win)
+     * @param addCoins int
+     * @param addAction int
+     * @param addBuy int
+     * @param addCard int
      * @return list of int based off the data
      */
     private static int[] genData(CardType type, int price, int victoryValue, int addCoins, int addAction, int addBuy, int addCard) {
@@ -71,7 +71,7 @@ public class CardInfo {
 
     /**
      * get the values based off the name
-     * @param name
+     * @param name of Card(String)
      * @return list of integers based on values
      */
     public static int[] getVals(String name){

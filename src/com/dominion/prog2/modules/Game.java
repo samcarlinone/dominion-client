@@ -11,7 +11,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.rmi.server.ExportException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -53,10 +52,7 @@ public class Game implements Module {
         UIManager.get().addElement(shop);
 
 
-        CardStack s2 = new CardStack(s.getAll());
-        s2.add(new Card("Estate"));
-        s2.add(new Card("Moat"));
-        hand = new CardGrid(s2,600,909,600,186);
+        hand = new CardGrid(d.player.hand,600,909,600,186);
         hand.border = true;
         hand.condense = false;
         hand.scrollable = false;
@@ -89,6 +85,12 @@ public class Game implements Module {
      */
     @Override
     public Module tick(ArrayList<HashMap<String, String>> server_msg) {
+        if(hand.getWidth() != 120*hand.stack.size())
+        {
+            hand.setSize(120*hand.stack.size(),168);
+
+        }
+
         /*
         if(shop.lastClicked != null) {
             hand.stack.add(shop.stack.remove(shop.lastClicked));

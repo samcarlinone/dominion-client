@@ -18,7 +18,7 @@ public class CardStack {
     /**
      *initializes the arraylist for the cards in the stack
      * sets the cards based off the param
-     * @param cards
+     * @param cards ArrayList of Cards
      */
     public CardStack(ArrayList<Card> cards) {
         this.cards = new ArrayList<>();
@@ -28,7 +28,7 @@ public class CardStack {
 
     /**
      * adds cards to the list
-     * @param cards
+     * @param cards ArrayList of cards
      */
     public void add(ArrayList<Card> cards) {
         for(Card c : cards) {
@@ -55,8 +55,8 @@ public class CardStack {
     }
 
     /**
-     * splices the list
-     * @param startIndex
+     * splices the list, REMOVES the card too
+     * @param startIndex int
      * @param number of cards to include
      * @return the new arraylist
      */
@@ -98,7 +98,7 @@ public class CardStack {
 
     /**
      * gets all the cards that have a specific card type
-     * @param type
+     * @param type CardType
      * @return arraylist of cards
      */
     public ArrayList<Card> get(CardType type) {
@@ -152,8 +152,8 @@ public class CardStack {
 
     /**
      * merges two card Stack
-     * @param map1
-     * @param map2
+     * @param map1 HashMap(String, Integer)
+     * @param map2 HashMap(String, Integer)
      * @return the merged stack
      */
     public static HashMap<String, Integer> mergeCounts(HashMap<String, Integer> map1, HashMap<String, Integer> map2) {
@@ -166,5 +166,13 @@ public class CardStack {
         });
 
         return result;
+    }
+
+    /**
+     * Clears the arrayList of Cards
+     */
+    public void clear()
+    {
+        cards.clear();
     }
 }

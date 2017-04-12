@@ -44,7 +44,7 @@ public class CardGrid extends UIElement {
 
     /**
      * Renders everything
-     * @param g Graphics
+     * @param g2 Graphics
      */
     public void render(Graphics2D g2) {
         updateCardVars();
