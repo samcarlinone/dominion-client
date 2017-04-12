@@ -89,7 +89,7 @@ public class UIManager {
      * Render all elements
      * @param g Graphics
      */
-    public void render(Graphics g) {
+    public synchronized void render(Graphics g) {
         Shape oldRect = g.getClip();
 
         for(UIElement e : elements) {
@@ -103,7 +103,7 @@ public class UIManager {
     /**
      * Updates all the elements
      */
-    public void tick() {
+    public synchronized void tick() {
         for(UIElement e : elements) {
             e.tick();
         }
@@ -118,7 +118,7 @@ public class UIManager {
      * Relay input events to relevant UIElements
      * @param e
      */
-    public void mouseDown(MouseEvent e) {
+    public synchronized void mouseDown(MouseEvent e) {
         focusedElement = null;
         mDown = true;
 
@@ -143,7 +143,7 @@ public class UIManager {
      * Mouse is unclicked
      * @param e
      */
-    public void mouseUp(MouseEvent e) {
+    public synchronized void mouseUp(MouseEvent e) {
         mDown = false;
 
         if(focusedElement instanceof Button) {
@@ -158,7 +158,7 @@ public class UIManager {
      * Mouse is moved
      * @param e
      */
-    public void mouseMove(MouseEvent e) {
+    public synchronized void mouseMove(MouseEvent e) {
         mX = e.getX();
         mY = e.getY();
 
@@ -184,7 +184,7 @@ public class UIManager {
      * Mouse wheel is moved
      * @param e
      */
-    public void mouseWheelMoved(MouseWheelEvent e) {
+    public synchronized void mouseWheelMoved(MouseWheelEvent e) {
         for(int i=elements.size()-1; i>=0; i--) {
             UIElement elem = elements.get(i);
 
@@ -209,7 +209,7 @@ public class UIManager {
      * A key is pressed
      * @param e
      */
-    public void keyPressed(KeyEvent e) {
+    public synchronized void keyPressed(KeyEvent e) {
         if(focusedElement != null && focusedElement instanceof Textbox) {
             ((Textbox) focusedElement).keyTyped(e);
         }

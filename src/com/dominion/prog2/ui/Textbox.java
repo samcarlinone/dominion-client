@@ -132,8 +132,9 @@ public class Textbox extends UIElement {
         //System.out.println(e.getKeyCode());
 
         switch(e.getKeyCode()) {
+            case KeyEvent.VK_CAPS_LOCK:
             case KeyEvent.VK_SHIFT:
-                //Ignore Shift
+                //Ignore modifiers
                 break;
 
             case KeyEvent.VK_ENTER:
