@@ -1,23 +1,29 @@
 package com.dominion.prog2.modules;
 
 import com.dominion.prog2.Driver;
-import com.dominion.prog2.ui.Textbox;
-import com.dominion.prog2.ui.Label;
-import com.dominion.prog2.ui.UIManager;
-import com.dominion.prog2.ui.Button;
+import com.dominion.prog2.ui.InputFilters;
+import javafx.event.Event;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ChooseName implements Module {
-    private Font ui_font = new Font("Arial", Font.PLAIN, 30);
-    private Label name_label;
-    private Label error_label;
-    private Textbox name;
-    private Button submit;
-
+public class ChooseName extends Module {
     private Driver d;
+
+    private GridPane root;
+    private TextField name;
+    private Button submit;
+    private Label result;
 
     /**
      * Module for the use to choose name, will check to make sure not already taken
@@ -26,70 +32,51 @@ public class ChooseName implements Module {
     public ChooseName(Driver d) {
         this.d = d;
 
-        name_label = new Label("Username", 100, 205, 150, 40);
-        name_label.font = ui_font;
-        name_label.borderWidth = 0;
-        name_label.depth = 1;
-        UIManager.get().addElement(name_label);
+        root = new GridPane();
+        root.setPrefSize(400, 600);
+        root.setAlignment(Pos.CENTER);
 
-        name = new Textbox(10, 100, 200, 300, 40);
-        name.font = ui_font;
-        UIManager.get().addElement(name);
+        name = new TextField();
+        name.addEventFilter(KeyEvent.KEY_TYPED, InputFilters.nameFilter());
+        name.addEventFilter(KeyEvent.KEY_TYPED, InputFilters.lengthFilter(12));
+        root.add(name, 0, 0);
 
-        submit = new Button("Submit", 100, 239, 300, 40);
-        submit.font = ui_font;
-        UIManager.get().addElement(submit);
+        submit = new Button("Submit");
+        submit.setOnMouseClicked(a -> submitClicked());
+        root.add(submit, 0, 1);
 
-        error_label = new Label("That name is unavailable", 50, 278, 400, 40);
-        error_label.fontColor = Color.WHITE;
-        error_label.font = ui_font;
-        UIManager.get().addElement(error_label);
+        result = new Label("Name Taken");
+        result.setVisible(false);
+        result.setStyle("-fx-text-fill: #F00");
+        root.add(result, 0, 2);
+
+        setScene(new Scene(root, 400, 600));
     }
 
-    /**
-     * updates the module
-     * @param server_msg
-     * @return the next module(if the user puts in valid name)
-     */
-    @Override
-    public Module tick(ArrayList<HashMap<String, String>> server_msg) {
-        if(name.getText().length() > 0) {
-            name_label.fontColor = new Color(0, 0, 0, 0);
+    public void submitClicked() {
+        if(name.getText().length() == 0)
+            return;
+
+        HashMap<String, String> name_msg = new HashMap<>();
+        name_msg.put("type", "connect");
+        name_msg.put("name", name.getText());
+
+        String json = d.comm.getMessage(d.comm.mapToJSON(name_msg));
+
+        if(json.contains("invalid")) {
+            result.setVisible(true);
         } else {
-            name_label.fontColor = Color.LIGHT_GRAY;
+            d.name = name.getText();
+            d.setCurrentModule(new ChooseLobby(d));
         }
-
-        if(submit.wasClicked() || name.submitted) {
-            submit.setClicked(false);
-            name.submitted = false;
-
-            if(name.getText().length() == 0)
-                return this;
-
-            HashMap<String, String> name_msg = new HashMap<>();
-            name_msg.put("type", "connect");
-            name_msg.put("name", name.getText());
-
-            String json = d.comm.getMessage(d.comm.mapToJSON(name_msg));
-
-            if(json.contains("invalid")) {
-                error_label.fontColor = Color.RED;
-            } else {
-                d.name = name.getText();
-                UIManager.get().removeAll();
-                return new ChooseLobby(d);
-            }
-        }
-
-        return this;
     }
 
     /**
-     * Renders everything
-     * @param g graphics
+     * Receive a server message
+     * @param server_msg
      */
     @Override
-    public void render(Graphics g) {
-        //TODO: Implement
+    public void serverMsg(ArrayList<HashMap<String, String>> server_msg) {
+        //This screen doesn't actually listen to server messages
     }
 }

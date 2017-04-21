@@ -20,7 +20,7 @@ public class ImageCache {
     public static void readImages(Driver d) {
         cardImage = new HashMap<>();
 
-        cardHeight = (d.getWindow().getHeight()/4);
+        cardHeight = 100;
         cardWidth = ((cardHeight *125)/200);
         System.out.println("w: "+ cardWidth +"||h: " + cardHeight);
 

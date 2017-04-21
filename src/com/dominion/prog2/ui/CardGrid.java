@@ -141,9 +141,6 @@ public class CardGrid extends UIElement {
      * @param mY mouse Y pos
      */
     public void click(int mX, int mY) {
-        if(!this.contains(UIManager.get().getMX(), UIManager.get().getMY()))
-            return;
-
         mX -= x;
         mY -= y;
 

@@ -1,6 +1,6 @@
 package com.dominion.prog2.game;
 
-import com.dominion.prog2.modules.Game;
+//import com.dominion.prog2.modules.Game;
 
 public class Card
 {
@@ -44,9 +44,9 @@ public class Card
      * @param p player
      * @param g game
      */
-    public void play(Player p, Game g) {
+    //public void play(Player p, Game g) {
 
-    }
+    //}
 
     /**
      * getter of name
