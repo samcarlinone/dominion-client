@@ -1,7 +1,12 @@
 package com.dominion.prog2.modules;
 
 import com.dominion.prog2.Driver;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
@@ -12,6 +17,12 @@ public class ChooseLobby extends Module {
     private Driver d;
     private GridPane root;
 
+    private ListView list;
+    private ObservableList<String> items;
+
+    private Button host;
+    private Button join;
+
     /**
      * Creates ChooseLobby Object
      * @param d Driver
@@ -20,31 +31,40 @@ public class ChooseLobby extends Module {
         this.d = d;
 
         root = new GridPane();
-        setScene(new Scene(root, 400, 600));
+        root.setPrefSize(400, 600);
+        root.setAlignment(Pos.CENTER);
 
-        //TODO: Port fully
-//        lobbies = new TextList(50, 100, 400, 200);
-//        lobbies.stringHeight = 36;
-//        lobbies.font = ui_font;
-//        UIManager.get().addElement(lobbies);
-//
-//        msg = new Textbox(16,50, 299, 250, 40);
-//        msg.font = ui_font;
-//        msg.allowSpaces = true;
-//        UIManager.get().addElement(msg);
-//
-//        send = new Button("Send", 299, 299, 151, 40);
-//        send.font = ui_font;
-//        UIManager.get().addElement(send);
-//
-//        createLobby = new Button("Create Lobby",0,400,200,50);
-//        createLobby.font = ui_font;
-//        UIManager.get().addElement(createLobby);
-//
-//        joinLobby = new Button("Join Lobby",200,400,200,50);
-//        joinLobby.font = ui_font;
-//        UIManager.get().addElement(joinLobby);
 
+        //List of Lobbies
+        list = new ListView<String>();
+        items = FXCollections.observableArrayList (
+                "Lobby 1", "Lobby 2", "Lobby 3", "Lobby 4", "Lobby 5");
+        list.setItems(items);
+        list.setPrefWidth(100);
+        list.setPrefHeight(200);
+        root.add(list,0,0);
+
+        //Button for Hosting
+        host = new Button("Host a Lobby");
+        host.setOnMouseClicked(a -> hostClicked());
+        root.add(host, 0, 1);
+
+        //Button for Joining Lobby
+        join = new Button("Join a Lobby");
+        join.setOnMouseClicked(a -> joinClicked());
+        root.add(join, 1, 1);
+
+        setScene(new Scene(root, 0, 0));
+    }
+
+    public void hostClicked()
+    {
+        d.setCurrentModule(new HostWaitScreen(d));
+    }
+
+    public void joinClicked()
+    {
+        d.setCurrentModule(new WaitScreen(d));
     }
 
     /**

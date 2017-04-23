@@ -1,17 +1,11 @@
 package com.dominion.prog2.game;
 
-//import com.dominion.prog2.modules.Game;
 
 public class Card
 {
-    private String name;
-    private CardType type;
-    private int price;
-    private int victoryValue;
-    private int addCoins;
-    private int addAction;
-    private int addBuy;
-    private int addCard;
+    protected String name;
+    protected CardType type;
+    protected int price;
 
     /**
      * Creates a card and adds values based off the card name
@@ -24,11 +18,6 @@ public class Card
 
         type = CardType.values()[vals[0]];
         price = vals[1];
-        victoryValue = vals[2];
-        addCoins = vals[3];
-        addAction = vals[4];
-        addBuy = vals[5];
-        addCard = vals[6];
     }
 
     /**
@@ -38,15 +27,6 @@ public class Card
     public Card(Card c) {
         this(c.getName());
     }
-
-    /**
-     * Plays the card based off the variables of the card
-     * @param p player
-     * @param g game
-     */
-    //public void play(Player p, Game g) {
-
-    //}
 
     /**
      * getter of name
@@ -72,10 +52,4 @@ public class Card
         return price;
     }
 
-    /**
-     * getter of victory value
-     * only cards with type victory
-     * @return value (int)
-     */
-    public int getVictoryValue() { return victoryValue; }
 }

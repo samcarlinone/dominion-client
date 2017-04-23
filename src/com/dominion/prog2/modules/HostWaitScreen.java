@@ -1,4 +1,4 @@
-//package com.dominion.prog2.modules;
+package com.dominion.prog2.modules;
 //
 //import com.dominion.prog2.Driver;
 //import com.dominion.prog2.game.Card;
@@ -145,3 +145,21 @@
 //        //TODO: Implement
 //    }
 //}
+
+import com.dominion.prog2.Driver;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class HostWaitScreen extends Module
+{
+    public HostWaitScreen(Driver d)
+    {
+
+    }
+
+    @Override
+    public void serverMsg(ArrayList<HashMap<String, String>> server_msg) {
+
+    }
+}

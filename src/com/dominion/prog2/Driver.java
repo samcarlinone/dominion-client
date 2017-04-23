@@ -1,7 +1,6 @@
 package com.dominion.prog2;
 
-import com.dominion.prog2.modules.ChooseName;
-import com.dominion.prog2.modules.Module;
+import com.dominion.prog2.modules.*;
 import com.dominion.prog2.network.NodeCommunicator;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -13,9 +12,7 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by CARLINSE1 on 4/20/2017.
- */
+
 public class Driver extends Application {
     public String name;
     public NodeCommunicator comm;
@@ -28,9 +25,9 @@ public class Driver extends Application {
     public void start(Stage primaryStage) throws Exception{
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Dominion");
-        primaryStage.show();
 
         setCurrentModule(new ChooseName(this));
+        primaryStage.show();
 
         comm = new NodeCommunicator();
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(500), a -> pingServer()));
@@ -60,9 +57,26 @@ public class Driver extends Application {
     public void setCurrentModule(Module m) {
         currentModule = m;
 
+        // Changes window height based off Module
+        int w = (int)(primaryStage.getWidth());
+
+        if((currentModule instanceof ChooseName || currentModule instanceof ChooseLobby) && w != 500)
+            setWindow(500, 700);
+        else if((currentModule instanceof WaitScreen || currentModule instanceof HostWaitScreen) && w != 745)
+            setWindow(745, 700);
+        else if(currentModule instanceof Game && w != 1800)
+            setWindow(1800, 1100);
+
+
         primaryStage.setScene(m.getScene());
     }
 
+    public void setWindow(int width, int height)
+    {
+        primaryStage.setWidth(width);
+        primaryStage.setHeight(height);
+
+    }
 
     public static void main(String[] args) {
         launch(args);

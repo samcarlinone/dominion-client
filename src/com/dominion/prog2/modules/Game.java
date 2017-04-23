@@ -1,4 +1,4 @@
-//package com.dominion.prog2.modules;
+package com.dominion.prog2.modules;
 //
 //
 //import com.dominion.prog2.Driver;
@@ -130,3 +130,14 @@
 //    //TODO: decide how we want to do the game logic
 //
 //}
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class Game extends Module
+{
+    @Override
+    public void serverMsg(ArrayList<HashMap<String, String>> server_msg) {
+
+    }
+}
