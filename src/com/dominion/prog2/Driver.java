@@ -46,12 +46,24 @@ public class Driver extends Application {
 
             String json = comm.getMessage(comm.mapToJSON(msg));
 
-            if(!json.equals("Error")) {
-                server_msg = comm.JSONToMap(json);
+            if(json.equals("Error")) {
+                return;
+            }
+
+            server_msg = comm.JSONToMap(json);
+
+            if(server_msg.size() > 0) {
+                if (server_msg.get(0).get("type").equals("disconnected")) {
+                    System.exit(1);
+                }
+
+                if (server_msg.get(0).get("type").equals("room_shutdown")) {
+                    setCurrentModule(new ChooseLobby(this, true));
+                }
+
+                currentModule.serverMsg(server_msg);
             }
         }
-
-        currentModule.serverMsg(server_msg);
     }
 
     public void setCurrentModule(Module m) {

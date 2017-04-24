@@ -84,15 +84,31 @@ package com.dominion.prog2.modules;
 //}
 
 import com.dominion.prog2.Driver;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class WaitScreen extends Module
 {
-    public WaitScreen(Driver d)
-    {
+    private Driver d;
+    private GridPane root;
+    private Label label;
 
+    public WaitScreen(Driver d) {
+        this.d = d;
+
+        root = new GridPane();
+        root.setPrefSize(400, 600);
+        root.setAlignment(Pos.CENTER);
+
+        label = new Label("Wait for Start");
+        root.add(label, 0, 0);
+
+        setScene(new Scene(root, 745, 700));
     }
 
     @Override

@@ -16,8 +16,8 @@ public class NodeCommunicator {
      * Creates the NodeCommunicator Object
      */
     public NodeCommunicator() {
-        //this.url = "http://localhost/";
-        this.url = "https://dominion-server.herokuapp.com/";
+        this.url = "http://localhost/";
+        //this.url = "https://dominion-server.herokuapp.com/";
     }
 
     /**

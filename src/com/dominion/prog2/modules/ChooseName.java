@@ -72,7 +72,7 @@ public class ChooseName extends Module {
             result.setVisible(true);
         } else {
             d.name = name.getText();
-            d.setCurrentModule(new ChooseLobby(d));
+            d.setCurrentModule(new ChooseLobby(d, false));
         }
     }
 
