@@ -2,173 +2,78 @@ package com.dominion.prog2.ui;
 
 import com.dominion.prog2.game.Card;
 import com.dominion.prog2.game.CardStack;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 
-import java.awt.*;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 
+public class CardGrid
+{
+    private CardStack stack;
+    private GridPane root;
+    public int width = 400;
+    public int height = 400;
 
-public class CardGrid extends UIElement {
-    public CardStack stack;
-    public Card lastClicked;
-    public boolean scrollable;
-    public boolean condense;
-    public boolean border;
-    public Color backgroundColor;
+    private TableView<ImageView> list;
+    private ObservableList<ImageView> cardList = FXCollections.observableArrayList();
+    private ArrayList<TableColumn> col;
 
-    private double scrollTop;
-    private double contentHeight;
-    private HashMap<String, Integer> cardCounts;
-    private String[] names;
-    private int columns;
-    private double borderSpace;
-    private int rows;
+    public CardGrid(CardStack c, int numCol)
+    {
+        stack = c;
+        root = new GridPane();
+        root.setPrefSize(width,height);
 
-    /**
-     * Creates a CardGrid Object
-     * @param s CardStack
-     * @param x pos
-     * @param y pos
-     * @param w
-     * @param h
-     */
-    public CardGrid(CardStack s, int x, int y, int w, int h) {
-        super(x, y, w, h);
+        list = new TableView<>();
 
-        stack = s;
+        for(int i = 0; i < c.size(); i ++)
+        {
+            ImageView img = new ImageView();
+            Card card = c.get(i);
 
-        scrollable = true;
-        condense = true;
-        border = false;
+            img.setImage(ImageCache.cardImage.get(card.getName()));
+
+            cardList.add(img);
+        }
+
+        list.setItems(cardList);
+
+        //Sets cols
+        col = new ArrayList<>();
+        for(int i = 0; i < numCol; i ++)
+        {
+            TableColumn column = new TableColumn("");
+            column.setPrefWidth(width/numCol-1);
+            col.add(column);
+
+            list.getColumns().add(col.get(i));
+        }
+
+        //Width of the whole grid
+        list.setPrefWidth(200 * numCol + 10*(numCol-1));
+        list.setPrefHeight(height);
+        root.add(list,0,1);
     }
 
-    /**
-     * Renders everything
-     * @param g2 Graphics
-     */
-    public void render(Graphics2D g2) {
-        updateCardVars();
-
-        if(backgroundColor == null)
-            g2.setColor(new Color(0));
-        else
-            g2.setColor(backgroundColor);
-
-        g2.fillRect(x, y, width, height);
-
-        if(stack.size() > 0) {
-            g2.translate(x, y);
-
-            for (int x = 0; x < columns; x++) {
-                for (int y = 0; y < rows; y++) {
-                    if (x + y * columns >= names.length) {
-                        x = columns;
-                        break;
-                    }
-
-                    String name = names[x + y * columns];
-                    int xPos = (int) Math.round(x * (ImageCache.cardWidth + borderSpace) + borderSpace);
-                    int yPos = (int) Math.round(y * (ImageCache.cardHeight + borderSpace) + borderSpace - scrollTop);
-                    g2.drawImage(ImageCache.cardImage.get(name), xPos, yPos, null);
-
-                    if(condense) {
-                        yPos += ImageCache.cardHeight / 2 - 15;
-                        g2.setColor(new Color(0));
-                        g2.fillRect(xPos, yPos, 30, 30);
-                        g2.setColor(new Color(0xFFFFFF));
-                        g2.setFont(new Font("default", Font.BOLD, 25));
-
-                        FontMetrics f = g2.getFontMetrics();
-                        String text = "x" + cardCounts.get(name);
-                        g2.drawString(text, xPos + 15 - f.stringWidth(text) / 2, yPos + 23);
-                    }
-                }
-            }
-
-            g2.translate(-x, -y);
-        }
-
-        if(border) {
-            g2.setColor(new Color(255, 255, 255));
-            g2.setStroke(new BasicStroke(5));
-            g2.drawRect(x, y, width, height);
-        }
+    public void addCard(Card c)
+    {
+        stack.getAll().add(c);
     }
 
-    /**
-     * Updates the values of the Card
-     */
-    private void updateCardVars() {
-        cardCounts = stack.getCounts();
-
-        names = new String[cardCounts.size()];
-        int index=0;
-        for(HashMap.Entry<String, Integer> entry : cardCounts.entrySet()) {
-            names[index++] = entry.getKey();
-        }
-
-        columns = (int) Math.floor(width / ImageCache.cardWidth);
-        borderSpace = (width - columns*ImageCache.cardWidth) / (double)(columns+1);
-        rows = (int) Math.ceil(cardCounts.size() / (double) columns);
-
-        contentHeight = (rows+1)*borderSpace + rows*ImageCache.cardHeight;
-
-        if(scrollTop + height > contentHeight) {
-            scrollTop = contentHeight - height;
-        }
-
-        if(scrollTop < 0)
-            scrollTop = 0;
+    public void setHeight(int height)
+    {
+        list.setPrefHeight(height);
+        root.add(list,0,0);
     }
 
-    /**
-     * Scrolls so as to see other cards within the grid
-     * @param scrollTicks
-     * @param scrollAmount
-     */
-    public void scroll(int scrollTicks, int scrollAmount) {
-       if(scrollable) {
-           scrollTop += scrollTicks * scrollAmount * 10;
-
-           if (scrollTop < 0)
-               scrollTop = 0;
-       }
-    }
-
-    /**
-     * Clicks on a card based off the mouse position
-     * @param mX mouse X pos
-     * @param mY mouse Y pos
-     */
-    public void click(int mX, int mY) {
-        mX -= x;
-        mY -= y;
-
-        System.out.println(mX);
-
-        updateCardVars();
-
-        int column = (int)Math.round((mX-borderSpace)/(ImageCache.cardWidth+borderSpace));
-
-        if(column == columns)
-            column --;
-
-        int row = (int)Math.round((mY+scrollTop-borderSpace)/(ImageCache.cardHeight+borderSpace));
-
-        if(row == rows)
-            row --;
-
-        int nameNum = column+row*columns;
-
-        if(nameNum >= names.length)
-            return;
-
-        String name = names[nameNum];
-
-        for(int i=0; i<stack.size(); i++) {
-            if(name.equals(stack.get(i).getName())) {
-                lastClicked = stack.get(i);
-            }
-        }
+    public GridPane getGridPane()
+    {
+        return root;
     }
 }

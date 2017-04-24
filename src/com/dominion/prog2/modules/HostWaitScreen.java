@@ -147,6 +147,9 @@ package com.dominion.prog2.modules;
 //}
 
 import com.dominion.prog2.Driver;
+import com.dominion.prog2.game.Card;
+import com.dominion.prog2.game.CardStack;
+import com.dominion.prog2.ui.CardGrid;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -160,6 +163,7 @@ public class HostWaitScreen extends Module
     private Driver d;
     private GridPane root;
     private Label label;
+    private CardGrid chosenCards;
 
     public HostWaitScreen(Driver d) {
         this.d = d;
@@ -171,7 +175,37 @@ public class HostWaitScreen extends Module
         label = new Label("You are the host");
         root.add(label, 0, 0);
 
+
+
+        CardStack allCards = fillFullList();
+        chosenCards = new CardGrid(allCards,2);
+
+        root.add(chosenCards.getGridPane(),1,1);
+
         setScene(new Scene(root, 745, 700));
+    }
+
+    private CardStack fillFullList()
+    {
+        CardStack full = new CardStack();
+
+        String[] CardNames =
+                {
+                        "Artisan","Bandit","Bureaucrat",
+                        "Cellar","Chapel", "Council Room",
+                        "Curse","Festival","Gardens",
+                        "Harbinger","Laboratory","Library",
+                        "Market","Merchant","Militia","Mine",
+                        "Moat","Moneylender","Poacher",
+                        "Remodel","Sentry","Smithy",
+                        "Throne Room","Vassal",
+                        "Village","Witch","Workshop"
+                };
+
+        for(String name: CardNames)
+            full.add(new Card(name));
+
+        return full;
     }
 
     @Override

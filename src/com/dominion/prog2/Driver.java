@@ -2,6 +2,7 @@ package com.dominion.prog2;
 
 import com.dominion.prog2.modules.*;
 import com.dominion.prog2.network.NodeCommunicator;
+import com.dominion.prog2.ui.ImageCache;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -9,6 +10,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,6 +30,8 @@ public class Driver extends Application {
 
         setCurrentModule(new ChooseName(this));
         primaryStage.show();
+
+        ImageCache.readImages(this);
 
         comm = new NodeCommunicator();
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(500), a -> pingServer()));
