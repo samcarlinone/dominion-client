@@ -3,6 +3,7 @@ package com.dominion.prog2.modules;
 import com.dominion.prog2.Driver;
 import com.dominion.prog2.ui.InputFilters;
 import javafx.event.Event;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -39,18 +40,22 @@ public class ChooseName extends Module {
         name = new TextField();
         name.addEventFilter(KeyEvent.KEY_TYPED, InputFilters.nameFilter());
         name.addEventFilter(KeyEvent.KEY_TYPED, InputFilters.lengthFilter(12));
+        name.setPromptText("Nickname");
+        name.setFocusTraversable(false);
         root.add(name, 0, 0);
 
         submit = new Button("Submit");
         submit.setOnMouseClicked(a -> submitClicked());
+        GridPane.setHalignment(submit, HPos.CENTER);
         root.add(submit, 0, 1);
 
         result = new Label("Name Taken");
         result.setVisible(false);
         result.setStyle("-fx-text-fill: #F00");
+        GridPane.setHalignment(result, HPos.CENTER);
         root.add(result, 0, 2);
 
-        setScene(new Scene(root, 400, 600));
+        setScene(new Scene(root, 500, 700));
     }
 
     public void submitClicked() {

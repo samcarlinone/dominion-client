@@ -153,8 +153,7 @@ import java.util.HashMap;
 
 public class HostWaitScreen extends Module
 {
-    public HostWaitScreen(Driver d)
-    {
+    public HostWaitScreen(Driver d) {
 
     }
 

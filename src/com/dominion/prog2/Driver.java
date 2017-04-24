@@ -22,7 +22,7 @@ public class Driver extends Application {
 
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Dominion");
 
@@ -57,25 +57,7 @@ public class Driver extends Application {
     public void setCurrentModule(Module m) {
         currentModule = m;
 
-        // Changes window height based off Module
-        int w = (int)(primaryStage.getWidth());
-
-        if((currentModule instanceof ChooseName || currentModule instanceof ChooseLobby) && w != 500)
-            setWindow(500, 700);
-        else if((currentModule instanceof WaitScreen || currentModule instanceof HostWaitScreen) && w != 745)
-            setWindow(745, 700);
-        else if(currentModule instanceof Game && w != 1800)
-            setWindow(1800, 1100);
-
-
         primaryStage.setScene(m.getScene());
-    }
-
-    public void setWindow(int width, int height)
-    {
-        primaryStage.setWidth(width);
-        primaryStage.setHeight(height);
-
     }
 
     public static void main(String[] args) {
