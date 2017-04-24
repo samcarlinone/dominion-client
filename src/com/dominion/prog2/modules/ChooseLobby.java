@@ -139,10 +139,10 @@ public class ChooseLobby extends Module {
 
             lobby_list.clear();
 
-            if (gameList.get("room_list").length() == 0)
+            if(gameList.get("room_list").length() == 0)
                 return;
 
-            for (int i=0; i<games.length; i++) {
+            for(int i=0; i<games.length; i++) {
                 lobby_list.add(new LobbyData(games[i]));
             }
 
