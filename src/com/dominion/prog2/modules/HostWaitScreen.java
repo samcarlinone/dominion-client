@@ -182,6 +182,7 @@ public class HostWaitScreen extends Module
         chosenCards = new CardGrid(allCards,150);
         chosenCards.getRootPane().setPrefWidth(400);
         chosenCards.getRootPane().setPrefHeight(300);
+        chosenCards.addListener(cardName -> System.err.println(cardName));
 
         root.add(chosenCards.getRootPane(),0,1);
 

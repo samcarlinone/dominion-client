@@ -1,18 +1,20 @@
 package com.dominion.prog2.ui;
 
-import com.dominion.prog2.game.Card;
 import com.dominion.prog2.game.CardStack;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 
-public class CardGrid
-{
+import java.util.ArrayList;
+
+public class CardGrid {
     private CardStack stack;
     private FlowPane list;
     private ScrollPane root;
+    private ArrayList<CardSelected> listeners = new ArrayList<>();
 
     private int cardWidth;
 
@@ -45,19 +47,21 @@ public class CardGrid
 
     private void handleCardClicked(MouseEvent e) {
         if(e.getSource() instanceof ImageView) {
-            ImageView img = (ImageView) e.getSource();
+            Image img = ((ImageView) e.getSource()).getImage();
+            String cardName = ((NamedImage)img).getName();
 
-            System.out.println(((NamedImage)img.getImage()).getName());
+            for(CardSelected listener : listeners) {
+                listener.process(cardName);
+            }
         }
     }
 
-    public void addCard(Card c)
-    {
-        stack.getAll().add(c);
-    }
+    public CardStack getCardStack() { return stack; }
 
     public ScrollPane getRootPane()
     {
         return root;
     }
+
+    public void addListener(CardSelected listener) { listeners.add(listener); }
 }
