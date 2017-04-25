@@ -30,7 +30,7 @@ public class CardInfo {
             "Curse","Estate","Duchy","Province"
     };
 
-    public static String[] kingdowmCardNames = {
+    public static String[] kingdomCardNames = {
             "Artisan","Bandit","Bureaucrat",
             "Cellar","Chapel","Council Room",
             "Festival", "Gardens","Harbinger",

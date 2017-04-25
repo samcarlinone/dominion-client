@@ -1,5 +1,6 @@
 package com.dominion.prog2.ui;
 
+import com.dominion.prog2.game.Card;
 import com.dominion.prog2.game.CardStack;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
@@ -20,6 +21,7 @@ public class CardGrid {
 
     public CardGrid(CardStack stack, int cardWidth) {
         this.stack = stack;
+        stack.addListener(() -> stackChanged());
         this.cardWidth = cardWidth;
 
         root = new ScrollPane();
@@ -34,15 +36,7 @@ public class CardGrid {
             list.setPrefWrapLength(newValue.getWidth());
         });
 
-        for(int i = 0; i < stack.size(); i ++) {
-            ImageView img = new ImageView();
-            img.setImage(ImageCache.cardImage.get(stack.get(i).getName()));
-            img.setFitWidth(cardWidth);
-            img.setPreserveRatio(true);
-            img.setOnMouseClicked((event) -> handleCardClicked(event));
-
-            list.getChildren().add(img);
-        }
+        stackChanged();
     }
 
     private void handleCardClicked(MouseEvent e) {
@@ -56,6 +50,20 @@ public class CardGrid {
         }
     }
 
+    private void stackChanged() {
+        list.getChildren().clear();
+
+        for(Card card : stack) {
+            ImageView img = new ImageView();
+            img.setImage(ImageCache.cardImage.get(card.getName()));
+            img.setFitWidth(cardWidth);
+            img.setPreserveRatio(true);
+            img.setOnMouseClicked((event) -> handleCardClicked(event));
+
+            list.getChildren().add(img);
+        }
+    }
+
     public CardStack getCardStack() { return stack; }
 
     public ScrollPane getRootPane()
@@ -64,4 +72,14 @@ public class CardGrid {
     }
 
     public void addListener(CardSelected listener) { listeners.add(listener); }
+
+    static public void move(String name, CardGrid source, CardGrid target) {
+        Card card = source.getCardStack().get(name);
+
+        if(card == null)
+            return;
+
+        source.getCardStack().remove(card);
+        target.getCardStack().add(card);
+    }
 }

@@ -3,10 +3,12 @@ package com.dominion.prog2.game;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 
 
-public class CardStack {
+public class CardStack implements Iterable<Card> {
     private ArrayList<Card> cards;
+    private ArrayList<StackChanged> listeners = new ArrayList<>();
 
     /**
      *initializes the arraylist for the cards in the stack
@@ -27,6 +29,25 @@ public class CardStack {
     }
 
     /**
+     * Initializes card stack from list of names
+     */
+    public CardStack(String[] names) {
+        cards = new ArrayList<>();
+
+        for(String name : names) {
+            cards.add(new Card(name));
+        }
+    }
+
+    /**
+     * Implement Iterable interface to allow enhanced for loops
+     * @return
+     */
+    public Iterator<Card> iterator() {
+        return new CardStackIterator(this);
+    }
+
+    /**
      * adds cards to the list
      * @param cards ArrayList of cards
      */
@@ -34,6 +55,8 @@ public class CardStack {
         for(Card c : cards) {
             this.cards.add(c);
         }
+
+        notifyListeners();
     }
 
     /**
@@ -42,6 +65,7 @@ public class CardStack {
      */
     public void add(Card c) {
         this.cards.add(c);
+        notifyListeners();
     }
 
     /**
@@ -51,6 +75,7 @@ public class CardStack {
      */
     public Card remove(Card c) {
         this.cards.remove(c);
+        notifyListeners();
         return c;
     }
 
@@ -70,6 +95,8 @@ public class CardStack {
             i++;
         }
 
+        notifyListeners();
+
         return result;
     }
 
@@ -78,6 +105,7 @@ public class CardStack {
      */
     public void shuffle() {
         Collections.shuffle(cards);
+        notifyListeners();
     }
 
     /**
@@ -95,6 +123,20 @@ public class CardStack {
      * @return true or false if the array has the card
      */
     public boolean has(Card c) { return cards.contains(c); }
+
+    /**
+     * Get card by name or returns null if not found
+     * @return First card in array with given name or null
+     */
+    public Card get(String name) {
+        for(Card card : cards) {
+            if(card.getName().equals(name)) {
+                return card;
+            }
+        }
+
+        return null;
+    }
 
     /**
      * gets all the cards that have a specific card type
@@ -129,16 +171,29 @@ public class CardStack {
 
     /**
      * getter for the size of the arraylist
-     * @return int size
      */
     public int size() {
         return cards.size();
     }
 
     /**
-     * gets hashmap of name as key and value is the number of those cards
-     * within the cardStack
-     * @return hashmap String, int
+     * Listeners are notified whenever the cards in a stack change
+     */
+    public void addListener(StackChanged listener) {
+        listeners.add(listener);
+    }
+
+    /**
+     * Notifies all listeners of a change to this stack
+     */
+    private void notifyListeners() {
+        for(StackChanged listener : listeners) {
+            listener.change();
+        }
+    }
+
+    /**
+     * gets hashmap of name as key and value is the number of those cards within the cardStack
      */
     public HashMap<String, Integer> getCounts() {
         HashMap<String, Integer> result = new HashMap<>();

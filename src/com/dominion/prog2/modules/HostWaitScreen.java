@@ -166,37 +166,41 @@ public class HostWaitScreen extends Module
     private Driver d;
     private GridPane root;
     private Label label;
+    private CardGrid kingdomCards;
     private CardGrid chosenCards;
 
     public HostWaitScreen(Driver d) {
         this.d = d;
 
         root = new GridPane();
-        root.setPrefSize(400, 600);
+        root.setPrefSize(600, 600);
         root.setAlignment(Pos.CENTER);
 
         label = new Label("You are the host");
         root.add(label, 0, 0);
 
-        CardStack allCards = fillFullList();
-        chosenCards = new CardGrid(allCards,150);
-        chosenCards.getRootPane().setPrefWidth(400);
-        chosenCards.getRootPane().setPrefHeight(300);
-        chosenCards.addListener(cardName -> System.err.println(cardName));
+        GridPane cardChoosers = new GridPane();
+        cardChoosers.setPrefSize(600, 500);
+        cardChoosers.setAlignment(Pos.CENTER);
 
-        root.add(chosenCards.getRootPane(),0,1);
+        kingdomCards = new CardGrid(new CardStack(CardInfo.kingdomCardNames),125);
+        kingdomCards.getRootPane().setPrefWidth(300);
+        kingdomCards.getRootPane().setPrefHeight(500);
+        kingdomCards.addListener(cardName -> {
+            if(chosenCards.getCardStack().size() < 10)
+                CardGrid.move(cardName, kingdomCards, chosenCards);
+        });
+        cardChoosers.add(kingdomCards.getRootPane(),0,0);
+
+        chosenCards = new CardGrid(new CardStack(),125);
+        chosenCards.getRootPane().setPrefWidth(300);
+        chosenCards.getRootPane().setPrefHeight(500);
+        chosenCards.addListener(cardName -> CardGrid.move(cardName, chosenCards, kingdomCards));
+        cardChoosers.add(chosenCards.getRootPane(),1,0);
+
+        root.add(cardChoosers, 0, 1);
 
         setScene(new Scene(root, 745, 700));
-    }
-
-    private CardStack fillFullList() {
-        CardStack full = new CardStack();
-
-        for(String name: CardInfo.kingdowmCardNames) {
-            full.add(new Card(name));
-        }
-
-        return full;
     }
 
     @Override
