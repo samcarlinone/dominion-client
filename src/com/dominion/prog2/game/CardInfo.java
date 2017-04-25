@@ -4,6 +4,51 @@ import java.util.HashMap;
 
 
 public class CardInfo {
+    /**
+     * Card Names
+     */
+    public static String[] allCardNames = {
+            "Artisan","Bandit","Bureaucrat",
+            "Card_back","Cellar","Chapel",
+            "Copper","Council Room","Curse",
+            "Duchy","Estate","Festival",
+            "Gardens","Gold","Harbinger",
+            "Laboratory","Library","Market",
+            "Merchant","Militia","Mine",
+            "Moat","Moneylender","Poacher",
+            "Province","Remodel","Sentry",
+            "Silver","Smithy","Throne Room",
+            "Trash","Vassal","Village",
+            "Witch","Workshop"
+    };
+
+    public static String[] treasureCardNames = {
+            "Copper","Silver","Gold"
+    };
+
+    public static String[] victoryCardNames = {
+            "Curse","Estate","Duchy","Province"
+    };
+
+    public static String[] kingdowmCardNames = {
+            "Artisan","Bandit","Bureaucrat",
+            "Cellar","Chapel","Council Room",
+            "Festival", "Gardens","Harbinger",
+            "Laboratory","Library","Market",
+            "Merchant","Militia","Mine",
+            "Moat","Moneylender","Poacher",
+            "Remodel","Sentry", "Smithy",
+            "Throne Room", "Vassal","Village",
+            "Witch","Workshop"
+    };
+
+    public static String[] extraCardNames = {
+            "Card_back", "Trash"
+    };
+
+    /**
+     * Card Data
+     */
     private static HashMap<String, int[]> data;
 
     /**

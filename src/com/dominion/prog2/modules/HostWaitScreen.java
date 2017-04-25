@@ -148,11 +148,14 @@ package com.dominion.prog2.modules;
 
 import com.dominion.prog2.Driver;
 import com.dominion.prog2.game.Card;
+import com.dominion.prog2.game.CardInfo;
 import com.dominion.prog2.game.CardStack;
 import com.dominion.prog2.ui.CardGrid;
+import com.dominion.prog2.ui.ImageCache;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
@@ -175,35 +178,22 @@ public class HostWaitScreen extends Module
         label = new Label("You are the host");
         root.add(label, 0, 0);
 
-
-
         CardStack allCards = fillFullList();
-        chosenCards = new CardGrid(allCards,2);
+        chosenCards = new CardGrid(allCards,150);
+        chosenCards.getRootPane().setPrefWidth(400);
+        chosenCards.getRootPane().setPrefHeight(300);
 
-        root.add(chosenCards.getGridPane(),1,1);
+        root.add(chosenCards.getRootPane(),0,1);
 
         setScene(new Scene(root, 745, 700));
     }
 
-    private CardStack fillFullList()
-    {
+    private CardStack fillFullList() {
         CardStack full = new CardStack();
 
-        String[] CardNames =
-                {
-                        "Artisan","Bandit","Bureaucrat",
-                        "Cellar","Chapel", "Council Room",
-                        "Curse","Festival","Gardens",
-                        "Harbinger","Laboratory","Library",
-                        "Market","Merchant","Militia","Mine",
-                        "Moat","Moneylender","Poacher",
-                        "Remodel","Sentry","Smithy",
-                        "Throne Room","Vassal",
-                        "Village","Witch","Workshop"
-                };
-
-        for(String name: CardNames)
+        for(String name: CardInfo.kingdowmCardNames) {
             full.add(new Card(name));
+        }
 
         return full;
     }

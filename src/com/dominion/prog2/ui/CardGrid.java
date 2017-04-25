@@ -2,63 +2,53 @@ package com.dominion.prog2.ui;
 
 import com.dominion.prog2.game.Card;
 import com.dominion.prog2.game.CardStack;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.image.Image;
+import javafx.geometry.Insets;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-
-
-import java.util.ArrayList;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.FlowPane;
 
 public class CardGrid
 {
     private CardStack stack;
-    private GridPane root;
-    public int width = 400;
-    public int height = 400;
+    private FlowPane list;
+    private ScrollPane root;
 
-    private TableView<ImageView> list;
-    private ObservableList<ImageView> cardList = FXCollections.observableArrayList();
-    private ArrayList<TableColumn> col;
+    private int cardWidth;
 
-    public CardGrid(CardStack c, int numCol)
-    {
-        stack = c;
-        root = new GridPane();
-        root.setPrefSize(width,height);
+    public CardGrid(CardStack stack, int cardWidth) {
+        this.stack = stack;
+        this.cardWidth = cardWidth;
 
-        list = new TableView<>();
+        root = new ScrollPane();
+        root.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        list = new FlowPane();
+        list.setPadding(new Insets(10));
+        list.setHgap(10);
+        list.setVgap(10);
+        root.setContent(list);
 
-        for(int i = 0; i < c.size(); i ++)
-        {
+        root.viewportBoundsProperty().addListener((observable, oldValue, newValue) -> {
+            list.setPrefWrapLength(newValue.getWidth());
+        });
+
+        for(int i = 0; i < stack.size(); i ++) {
             ImageView img = new ImageView();
-            Card card = c.get(i);
+            img.setImage(ImageCache.cardImage.get(stack.get(i).getName()));
+            img.setFitWidth(cardWidth);
+            img.setPreserveRatio(true);
+            img.setOnMouseClicked((event) -> handleCardClicked(event));
 
-            img.setImage(ImageCache.cardImage.get(card.getName()));
-
-            cardList.add(img);
+            list.getChildren().add(img);
         }
+    }
 
-        list.setItems(cardList);
+    private void handleCardClicked(MouseEvent e) {
+        if(e.getSource() instanceof ImageView) {
+            ImageView img = (ImageView) e.getSource();
 
-        //Sets cols
-        col = new ArrayList<>();
-        for(int i = 0; i < numCol; i ++)
-        {
-            TableColumn column = new TableColumn("");
-            column.setPrefWidth(width/numCol-1);
-            col.add(column);
-
-            list.getColumns().add(col.get(i));
+            System.out.println(((NamedImage)img.getImage()).getName());
         }
-
-        //Width of the whole grid
-        list.setPrefWidth(200 * numCol + 10*(numCol-1));
-        list.setPrefHeight(height);
-        root.add(list,0,1);
     }
 
     public void addCard(Card c)
@@ -66,13 +56,7 @@ public class CardGrid
         stack.getAll().add(c);
     }
 
-    public void setHeight(int height)
-    {
-        list.setPrefHeight(height);
-        root.add(list,0,0);
-    }
-
-    public GridPane getGridPane()
+    public ScrollPane getRootPane()
     {
         return root;
     }
