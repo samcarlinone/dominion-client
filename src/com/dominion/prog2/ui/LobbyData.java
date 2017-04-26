@@ -1,8 +1,6 @@
 package com.dominion.prog2.ui;
 
-/**
- * Created by CARLINSE1 on 4/24/2017.
- */
+
 public class LobbyData {
     private String name;
     private String host;

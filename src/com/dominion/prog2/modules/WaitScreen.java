@@ -1,6 +1,9 @@
 package com.dominion.prog2.modules;
 
 import com.dominion.prog2.Driver;
+import com.dominion.prog2.game.CardStack;
+import com.dominion.prog2.ui.CardGrid;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,7 +17,10 @@ public class WaitScreen extends Module
 {
     private Driver d;
     private GridPane root;
-    private Label label;
+    private Label Title;
+
+    private Label chosenTitle;
+    private CardGrid chosenCards;
 
     private Button leave;
 
@@ -25,16 +31,36 @@ public class WaitScreen extends Module
         root.setPrefSize(400, 600);
         root.setAlignment(Pos.CENTER);
 
-        label = new Label("Lobby: " + LobbyName + " | Waiting to Start");
-        label.setStyle("-fx-font-size: 18pt");
-        root.add(label, 0, 0);
+        //Title
+        Title = new Label("Lobby: " + LobbyName + " | Waiting to Start");
+        Title.setStyle("-fx-font-size: 18pt");
+        GridPane.setHalignment(Title, HPos.CENTER);
+        root.add(Title, 0, 0);
 
+        //Cards that are chosen for the Lobby
+        GridPane cardChoosers = new GridPane();
+        cardChoosers.setPrefSize(600, 500);
+        cardChoosers.setAlignment(Pos.CENTER);
+
+        chosenTitle = new Label("Chosen Cards");
+        chosenTitle.setStyle("-fx-font-size: 18pt");
+        cardChoosers.setHalignment(chosenTitle, HPos.CENTER);
+        cardChoosers.add(chosenTitle, 1, 0);
+
+        chosenCards = new CardGrid(new CardStack(),125);
+        chosenCards.getRootPane().setPrefWidth(300);
+        chosenCards.getRootPane().setPrefHeight(500);
+        cardChoosers.add(chosenCards.getRootPane(),1,1);
+
+        root.add(cardChoosers,0,1);
+
+        //Buttons
         GridPane buttons = new GridPane();
         buttons.setAlignment(Pos.CENTER);
 
         this.leave = new Button("Leave Lobby");
         this.leave.setOnMouseClicked(a -> leaveClicked());
-        buttons.add(this.leave, 1, 0);
+        buttons.add(this.leave, 0, 0);
 
         root.add(buttons,0,1);
 

@@ -130,10 +130,14 @@ package com.dominion.prog2.modules;
 //    //TODO: decide how we want to do the game logic
 //
 //}
-
 import com.dominion.prog2.Driver;
+import com.dominion.prog2.ui.ImageCache;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
@@ -143,6 +147,9 @@ public class Game extends Module
 {
     private Driver d;
     private GridPane root;
+    private Button leave;
+
+    private BackgroundImage backgroundImage;
 
     public Game(Driver d)
     {
@@ -152,8 +159,36 @@ public class Game extends Module
         root.setPrefSize(400, 600);
         root.setAlignment(Pos.CENTER);
 
+        //Background image
+        backgroundImage = new BackgroundImage(new Image("BackgroundTile/RicePaper.jpg"),null,null,null,null);
+        Background b = new Background(backgroundImage);
+        root.setBackground(b);
+
+        GridPane buttons = new GridPane();
+        buttons.setAlignment(Pos.CENTER);
+        this.leave = new Button("Leave Game");
+        this.leave.setOnMouseClicked(a -> leaveClicked());
+        buttons.add(this.leave, 0, 0);
+        root.add(buttons,0,0);
 
         setScene(new Scene(root, 745, 700));
+    }
+
+    public void leaveClicked()
+    {
+        //TODO: leave the game, goes back to choose lobby
+        HashMap<String, String> join_msg = new HashMap<>();
+        join_msg.put("type", "leave");
+        join_msg.put("name", d.name);
+
+        String json = d.comm.getMessage(d.comm.mapToJSON(join_msg));
+        HashMap<String, String> result = d.comm.JSONToMap(json).get(0);
+
+        if(result.get("type").equals("accepted")) {
+            d.setCurrentModule(new ChooseLobby(d,false));
+        } else {
+            System.exit(27);
+        }
     }
 
     @Override

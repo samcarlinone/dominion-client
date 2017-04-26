@@ -22,12 +22,14 @@ public class HostWaitScreen extends Module
 {
     private Driver d;
     private GridPane root;
-    private Label label;
+    private Label Title;
 
     private Button start;
     private Button leave;
     private Button clear;
 
+    private Label kingdomTitle;
+    private Label chosenTitle;
     private CardGrid kingdomCards;
     private CardGrid chosenCards;
 
@@ -46,16 +48,17 @@ public class HostWaitScreen extends Module
         root.setPrefSize(600, 600);
         root.setAlignment(Pos.CENTER);
 
-        label = new Label("Hosting: " + LobbyName);
-        label.setStyle("-fx-font-size: 24pt");
-        GridPane.setHalignment(label, HPos.CENTER);
-        root.add(label, 0, 0);
+        Title = new Label("Hosting: " + LobbyName);
+        Title.setStyle("-fx-font-size: 24pt");
+        GridPane.setHalignment(Title, HPos.CENTER);
+        root.add(Title, 0, 0);
 
         Separator rule = new Separator();
         rule.setPadding(new Insets(10, 10, 10, 10));
         GridPane.setValignment(rule, VPos.BOTTOM);
         root.add(rule, 0, 1);
 
+        //Presets
         GridPane presets = new GridPane();
         presets.setAlignment(Pos.CENTER);
 
@@ -87,6 +90,15 @@ public class HostWaitScreen extends Module
         cardChoosers.setPrefSize(600, 500);
         cardChoosers.setAlignment(Pos.CENTER);
 
+        kingdomTitle = new Label("Kingdom Cards");
+        kingdomTitle.setStyle("-fx-font-size: 18pt");
+        cardChoosers.setHalignment(kingdomTitle, HPos.CENTER);
+        cardChoosers.add(kingdomTitle, 0, 0);
+        chosenTitle = new Label("Chosen Cards");
+        chosenTitle.setStyle("-fx-font-size: 18pt");
+        cardChoosers.setHalignment(chosenTitle, HPos.CENTER);
+        cardChoosers.add(chosenTitle, 1, 0);
+
         kingdomCards = new CardGrid(new CardStack(CardInfo.kingdomCardNames),125);
         kingdomCards.getRootPane().setPrefWidth(300);
         kingdomCards.getRootPane().setPrefHeight(500);
@@ -94,13 +106,13 @@ public class HostWaitScreen extends Module
             if(chosenCards.getCardStack().size() < 10)
                 CardGrid.move(cardName, kingdomCards, chosenCards);
         });
-        cardChoosers.add(kingdomCards.getRootPane(),0,0);
+        cardChoosers.add(kingdomCards.getRootPane(),0,1);
 
         chosenCards = new CardGrid(new CardStack(),125);
         chosenCards.getRootPane().setPrefWidth(300);
         chosenCards.getRootPane().setPrefHeight(500);
         chosenCards.addListener(cardName -> CardGrid.move(cardName, chosenCards, kingdomCards));
-        cardChoosers.add(chosenCards.getRootPane(),1,0);
+        cardChoosers.add(chosenCards.getRootPane(),1,1);
 
         root.add(cardChoosers, 0, 3);
 
@@ -121,10 +133,8 @@ public class HostWaitScreen extends Module
 
         root.add(buttons,0,4);
 
-        //Add ID of those in Lobby
+        //TODO: Add ID of those in Lobby  is there a max amount of ppl in lobby?
         //  Be able to kick them
-        //Lobby doesn't close for those in lobby besides host
-        //Presets
 
         setScene(new Scene(root, 745, 700));
     }
@@ -185,7 +195,9 @@ public class HostWaitScreen extends Module
 
     public void startClicked()
     {
-        d.setCurrentModule(new Game(d));
+        //TODO: Remove from list once host starts game
+        if(chosenCards.getCardStack().size() == 10)
+            d.setCurrentModule(new Game(d));
     }
     public void leaveClicked()
     {

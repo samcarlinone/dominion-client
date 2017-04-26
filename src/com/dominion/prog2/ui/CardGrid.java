@@ -3,11 +3,14 @@ package com.dominion.prog2.ui;
 import com.dominion.prog2.game.Card;
 import com.dominion.prog2.game.CardStack;
 import javafx.geometry.Insets;
+import javafx.geometry.VPos;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
 
@@ -26,11 +29,13 @@ public class CardGrid {
 
         root = new ScrollPane();
         root.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
         list = new FlowPane();
         list.setPadding(new Insets(10));
         list.setHgap(10);
         list.setVgap(10);
         root.setContent(list);
+
 
         root.viewportBoundsProperty().addListener((observable, oldValue, newValue) -> {
             list.setPrefWrapLength(newValue.getWidth());
