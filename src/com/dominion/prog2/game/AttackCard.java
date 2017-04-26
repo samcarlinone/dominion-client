@@ -28,7 +28,17 @@ public class AttackCard extends Card
      */
     public void play(Player p, Game g)
     {
-        //TODO: Implement
+        switch(name)
+        {
+            case "Bureaucrat":
+                break;
+            case "Militia":
+                break;
+            case "Bandit":
+                break;
+            case "Witch":
+                break;
+        }
     }
 
 

@@ -104,7 +104,7 @@ public class ChooseLobby extends Module {
         HashMap<String, String> result = d.comm.JSONToMap(json).get(0);
 
         if(result.get("type").equals("accepted")) {
-            d.setCurrentModule(new HostWaitScreen(d));
+            d.setCurrentModule(new HostWaitScreen(d, game_name.getText()));
         }
     }
 
@@ -124,7 +124,7 @@ public class ChooseLobby extends Module {
         HashMap<String, String> result = d.comm.JSONToMap(json).get(0);
 
         if(result.get("type").equals("accepted")) {
-            d.setCurrentModule(new WaitScreen(d));
+            d.setCurrentModule(new WaitScreen(d, selected.getName()));
         }
     }
 

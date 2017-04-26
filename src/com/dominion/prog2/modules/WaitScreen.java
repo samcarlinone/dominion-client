@@ -86,6 +86,7 @@ package com.dominion.prog2.modules;
 import com.dominion.prog2.Driver;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
@@ -98,17 +99,38 @@ public class WaitScreen extends Module
     private GridPane root;
     private Label label;
 
-    public WaitScreen(Driver d) {
+    private Button leave;
+
+    public WaitScreen(Driver d, String LobbyName) {
         this.d = d;
 
         root = new GridPane();
         root.setPrefSize(400, 600);
         root.setAlignment(Pos.CENTER);
 
-        label = new Label("Wait for Start");
+        label = new Label("Lobby: " + LobbyName + " | Waiting to Start");
         root.add(label, 0, 0);
 
+        GridPane buttons = new GridPane();
+        buttons.setAlignment(Pos.CENTER);
+
+        this.leave = new Button("Close Lobby");
+        this.leave.setOnMouseClicked(a -> leaveClicked());
+        buttons.add(this.leave, 1, 0);
+
+        root.add(buttons,0,1);
+
+        //add which cards are chosen
+        //add who is in lobby
+
+
         setScene(new Scene(root, 745, 700));
+    }
+
+    public void leaveClicked()
+    {
+        d.setCurrentModule(new ChooseLobby(d,false));
+        //Need to properly leave the lobby!!!!!
     }
 
     @Override

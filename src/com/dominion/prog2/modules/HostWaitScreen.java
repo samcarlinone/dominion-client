@@ -1,182 +1,48 @@
 package com.dominion.prog2.modules;
-//
-//import com.dominion.prog2.Driver;
-//import com.dominion.prog2.game.Card;
-//import com.dominion.prog2.game.CardStack;
-//import com.dominion.prog2.ui.*;
-//import com.dominion.prog2.ui.Button;
-//import com.dominion.prog2.ui.Label;
-//
-//import java.awt.*;
-//import java.util.ArrayList;
-//import java.util.HashMap;
-//
-//public class HostWaitScreen implements Module
-//{
-//    private CardGrid allCards;
-//    private CardGrid chosenCards;
-//    private Label headerAll;
-//    private Label headerChosen;
-//    private Button startGame;
-//    private Button leave;
-//    private TextList usersWaiting;
-//
-//    private Font ui_font = new Font("Arial", Font.PLAIN, 30);
-//    private Driver d;
-//
-//    /**
-//     * Module for the use to choose the cards that will be in the game, Done only by host of lobby
-//     * @param d Driver
-//     */
-//    public HostWaitScreen(Driver d)
-//    {
-//        this.d = d;
-//
-//
-//        CardStack fullList =  fillFullList();
-//
-//        allCards = new CardGrid(fullList,5,50,360,450);
-//        allCards.condense = false;
-//        UIManager.get().addElement(allCards);
-//
-//        chosenCards = new CardGrid(new CardStack(),375,50,360,450);
-//        chosenCards.condense = false;
-//        UIManager.get().addElement(chosenCards);
-//
-//        headerAll = new Label("Choose you cards",5,10,200,50);
-//        headerAll.font = new Font("Arial", Font.PLAIN, 20);
-//        UIManager.get().addElement(headerAll);
-//
-//        headerChosen = new Label("Chosen cards",375,10,200,50);
-//        headerChosen.font = new Font("Arial", Font.PLAIN, 20);
-//        UIManager.get().addElement(headerChosen);
-//
-//
-//        usersWaiting = new TextList(365-(200/2) +5,560,200,135);
-//        usersWaiting.font = new Font("default", Font.PLAIN, 25);
-//        usersWaiting.stringHeight = 30;
-//        usersWaiting.strings.add("Users in Lobby:");
-//        usersWaiting.strings.add("User 1");
-//        usersWaiting.strings.add("User 2");
-//        usersWaiting.strings.add("User 3");
-//        usersWaiting.strings.add("User 4");
-//        usersWaiting.strings.add("User 5");
-//        UIManager.get().addElement(usersWaiting);
-//
-//
-//        startGame = new Button("Start Game",375-200,510,200,40);
-//        startGame.font = ui_font;
-//        UIManager.get().addElement(startGame);
-//
-//        leave = new Button("Leave Game",375,510,200,40);
-//        leave.font = ui_font;
-//        UIManager.get().addElement(leave);
-//    }
-//
-//    /**
-//     * Updates the module
-//     * @param server_msg
-//     * @return Module
-//     */
-//    @Override
-//    public Module tick(ArrayList<HashMap<String, String>> server_msg) {
-//
-//        if(leave.wasClicked()) {
-//            UIManager.get().removeAll();
-//            return new ChooseLobby(d);
-//        }
-//        if(startGame.wasClicked()) {
-//            UIManager.get().removeAll();
-//            return new Game(d);
-//        }
-//
-//        if(allCards.lastClicked != null) {
-//            if(chosenCards.stack.size() < 10) {
-//                chosenCards.stack.add(allCards.stack.remove(allCards.lastClicked));
-//            }
-//            allCards.lastClicked = null;
-//        }
-//        if(chosenCards.lastClicked != null) {
-//            allCards.stack.add(chosenCards.stack.remove(chosenCards.lastClicked));
-//            chosenCards.lastClicked = null;
-//        }
-//
-//
-//
-//        //TODO: Add more here, reads in users in lobby, also transfers cards that are being used in game
-//
-//        return this;
-//    }
-//
-//    /**
-//     * Fills the full list of cards
-//     */
-//    private CardStack fillFullList()
-//    {
-//        CardStack full = new CardStack();
-//
-//        String[] CardNames =
-//                {
-//                        "Artisan","Bandit","Bureaucrat",
-//                        "Cellar","Chapel", "Council Room",
-//                        "Curse","Festival","Gardens",
-//                        "Harbinger",
-//                        "Laboratory","Library","Market",
-//                        "Merchant","Militia","Mine",
-//                        "Moat","Moneylender","Poacher",
-//                        "Remodel","Sentry",
-//                        "Smithy","Throne Room",
-//                        "Vassal","Village",
-//                        "Witch","Workshop"
-//                };
-//
-//        for(String name: CardNames)
-//            full.add(new Card(name));
-//
-//        return full;
-//    }
-//
-//    /**
-//     * Renders everything
-//     * @param g Graphics
-//     */
-//    @Override
-//    public void render(Graphics g) {
-//        //TODO: Implement
-//    }
-//}
 
 import com.dominion.prog2.Driver;
-import com.dominion.prog2.game.Card;
 import com.dominion.prog2.game.CardInfo;
 import com.dominion.prog2.game.CardStack;
 import com.dominion.prog2.ui.CardGrid;
-import com.dominion.prog2.ui.ImageCache;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class HostWaitScreen extends Module
 {
     private Driver d;
     private GridPane root;
     private Label label;
+
+    private Button start;
+    private Button leave;
+    private Button clear;
+
     private CardGrid kingdomCards;
     private CardGrid chosenCards;
 
-    public HostWaitScreen(Driver d) {
+    private Button presetFirst;
+    private Button presetSize;
+    private Button presetDeck;
+    private Button presetSleight;
+    private Button presetImprovement;
+    private Button presetSilver;
+
+
+    public HostWaitScreen(Driver d, String LobbyName) {
         this.d = d;
 
         root = new GridPane();
         root.setPrefSize(600, 600);
         root.setAlignment(Pos.CENTER);
 
-        label = new Label("You are the host");
+        label = new Label("Hosting: " + LobbyName);
         root.add(label, 0, 0);
 
         GridPane cardChoosers = new GridPane();
@@ -200,7 +66,118 @@ public class HostWaitScreen extends Module
 
         root.add(cardChoosers, 0, 1);
 
+        GridPane buttons = new GridPane();
+        buttons.setAlignment(Pos.CENTER);
+
+        this.start = new Button("Start Game");
+        this.start.setOnMouseClicked(a -> startClicked());
+        buttons.add(this.start, 1, 0);
+
+        this.leave = new Button("Close Lobby");
+        this.leave.setOnMouseClicked(a -> leaveClicked());
+        buttons.add(this.leave, 2, 0);
+
+        this.clear = new Button("Clear Chosen");
+        this.clear.setOnMouseClicked(a -> clearChosen());
+        buttons.add(this.clear, 3, 0);
+
+        root.add(buttons,0,2);
+
+
+        GridPane presets = new GridPane();
+        presets.setAlignment(Pos.CENTER);
+
+        this.presetFirst = new Button("First Game");
+        this.presetFirst.setOnMouseClicked(a -> presetCards("first"));
+        presets.add(this.presetFirst, 1, 0);
+        this.presetSize = new Button("Size Distortion");
+        this.presetSize.setOnMouseClicked(a -> presetCards("size"));
+        presets.add(this.presetSize, 2, 0);
+        this.presetDeck = new Button("Deck Top");
+        this.presetDeck.setOnMouseClicked(a -> presetCards("deck"));
+        presets.add(this.presetDeck, 3, 0);
+        this.presetSleight = new Button("Sleight of Hand");
+        this.presetSleight.setOnMouseClicked(a -> presetCards("hand"));
+        presets.add(this.presetSleight, 4, 0);
+        this.presetImprovement = new Button("Improvements");
+        this.presetImprovement.setOnMouseClicked(a -> presetCards("improv"));
+        presets.add(this.presetImprovement, 5, 0);
+        this.presetSilver = new Button("Silver & Gold");
+        this.presetSilver.setOnMouseClicked(a -> presetCards("sg"));
+        presets.add(this.presetSilver, 6, 0);
+
+        root.add(presets,0,3);
+
+        //Add ID of those in Lobby
+        //  Be able to kick them
+        //Lobby doesn't close for those in lobby besides host
+        //Presets
+
         setScene(new Scene(root, 745, 700));
+    }
+
+    public void clearChosen()
+    {
+        //resets all cards
+        while(chosenCards.getCardStack().size()>0)
+        {
+            String name = chosenCards.getCardStack().get(0).getName();
+            chosenCards.move(name, chosenCards, kingdomCards);
+        }
+    }
+
+    public void presetCards(String n)
+    {
+        List<String> preset = new ArrayList<>();
+        clearChosen();
+
+        switch(n)
+        {
+            case "first":
+                preset = new ArrayList<>(Arrays.asList("Cellar",
+                        "Market","Merchant","Militia","Mine","Moat",
+                        "Remodel","Smithy","Village","Workshop"));
+                break;
+            case "size":
+                preset = new ArrayList<>(Arrays.asList("Artisan",
+                        "Bandit","Bureaucrat","Chapel","Festival",
+                        "Gardens","Sentry","Throne Room","Witch","Workshop"));
+                break;
+            case "deck":
+                preset = new ArrayList<>(Arrays.asList("Artisan",
+                        "Bureaucrat","Council Room","Festival","Harbinger",
+                        "Laboratory","Moneylender","Sentry","Vassal","Village"));
+                break;
+            case "hand":
+                preset = new ArrayList<>(Arrays.asList("Cellar",
+                        "Council Room","Festival","Gardens","Library",
+                        "Harbinger","Militia","Poacher","Smithy","Throne Room"));
+                break;
+            case "improv":
+                preset = new ArrayList<>(Arrays.asList("Artisan",
+                        "Cellar","Market","Merchant","Mine","Moat",
+                        "Moneylender","Poacher","Remodel","Witch"));
+                break;
+            case "sg":
+                preset = new ArrayList<>(Arrays.asList("Bandit",
+                        "Bureaucrat","Chapel","Harbinger","Laboratory","Merchant",
+                        "Mine","Moneylender","Throne Room","Vassal"));
+                break;
+        }
+        for(String name: preset)
+        {
+            CardGrid.move(name, kingdomCards, chosenCards);
+        }
+    }
+
+    public void startClicked()
+    {
+        d.setCurrentModule(new Game(d));
+    }
+    public void leaveClicked()
+    {
+        d.setCurrentModule(new ChooseLobby(d,true));
+        //add close down lobby?
     }
 
     @Override

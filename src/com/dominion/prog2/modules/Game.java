@@ -131,11 +131,31 @@ package com.dominion.prog2.modules;
 //
 //}
 
+import com.dominion.prog2.Driver;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Game extends Module
 {
+    private Driver d;
+    private GridPane root;
+
+    public Game(Driver d)
+    {
+        this.d = d;
+
+        root = new GridPane();
+        root.setPrefSize(400, 600);
+        root.setAlignment(Pos.CENTER);
+
+
+        setScene(new Scene(root, 745, 700));
+    }
+
     @Override
     public void serverMsg(ArrayList<HashMap<String, String>> server_msg) {
 
