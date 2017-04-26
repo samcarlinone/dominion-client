@@ -40,7 +40,7 @@ public class Driver extends Application {
     }
 
     private void pingServer() {
-        ArrayList<HashMap<String, String>> server_msg = null;
+        ArrayList<HashMap<String, String>> server_msg;
 
         if(name != null && !name.equals("")) {
             //Ping server

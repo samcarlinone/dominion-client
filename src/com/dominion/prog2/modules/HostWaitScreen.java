@@ -189,8 +189,18 @@ public class HostWaitScreen extends Module
     }
     public void leaveClicked()
     {
-        d.setCurrentModule(new ChooseLobby(d,true));
-        //add close down lobby?
+        HashMap<String, String> join_msg = new HashMap<>();
+        join_msg.put("type", "leave");
+        join_msg.put("name", d.name);
+
+        String json = d.comm.getMessage(d.comm.mapToJSON(join_msg));
+        HashMap<String, String> result = d.comm.JSONToMap(json).get(0);
+
+        if(result.get("type").equals("accepted")) {
+            d.setCurrentModule(new ChooseLobby(d,false));
+        } else {
+            System.exit(27);
+        }
     }
 
     @Override
