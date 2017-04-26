@@ -4,10 +4,14 @@ import com.dominion.prog2.Driver;
 import com.dominion.prog2.game.CardInfo;
 import com.dominion.prog2.game.CardStack;
 import com.dominion.prog2.ui.CardGrid;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.GridPane;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,7 +47,41 @@ public class HostWaitScreen extends Module
         root.setAlignment(Pos.CENTER);
 
         label = new Label("Hosting: " + LobbyName);
+        label.setStyle("-fx-font-size: 24pt");
+        GridPane.setHalignment(label, HPos.CENTER);
         root.add(label, 0, 0);
+
+        Separator rule = new Separator();
+        rule.setPadding(new Insets(10, 10, 10, 10));
+        GridPane.setValignment(rule, VPos.BOTTOM);
+        root.add(rule, 0, 1);
+
+        GridPane presets = new GridPane();
+        presets.setAlignment(Pos.CENTER);
+
+        Label presetsLabel = new Label("Presets: ");
+        presetsLabel.setStyle("-fx-font-size: 16pt");
+        presets.add(presetsLabel, 0, 0);
+        this.presetFirst = new Button("First Game");
+        this.presetFirst.setOnMouseClicked(a -> presetCards("first"));
+        presets.add(this.presetFirst, 1, 0);
+        this.presetSize = new Button("Size Distortion");
+        this.presetSize.setOnMouseClicked(a -> presetCards("size"));
+        presets.add(this.presetSize, 2, 0);
+        this.presetDeck = new Button("Deck Top");
+        this.presetDeck.setOnMouseClicked(a -> presetCards("deck"));
+        presets.add(this.presetDeck, 3, 0);
+        this.presetSleight = new Button("Sleight of Hand");
+        this.presetSleight.setOnMouseClicked(a -> presetCards("hand"));
+        presets.add(this.presetSleight, 4, 0);
+        this.presetImprovement = new Button("Improvements");
+        this.presetImprovement.setOnMouseClicked(a -> presetCards("improv"));
+        presets.add(this.presetImprovement, 5, 0);
+        this.presetSilver = new Button("Silver & Gold");
+        this.presetSilver.setOnMouseClicked(a -> presetCards("sg"));
+        presets.add(this.presetSilver, 6, 0);
+
+        root.add(presets,0,2);
 
         GridPane cardChoosers = new GridPane();
         cardChoosers.setPrefSize(600, 500);
@@ -64,7 +102,7 @@ public class HostWaitScreen extends Module
         chosenCards.addListener(cardName -> CardGrid.move(cardName, chosenCards, kingdomCards));
         cardChoosers.add(chosenCards.getRootPane(),1,0);
 
-        root.add(cardChoosers, 0, 1);
+        root.add(cardChoosers, 0, 3);
 
         GridPane buttons = new GridPane();
         buttons.setAlignment(Pos.CENTER);
@@ -81,32 +119,7 @@ public class HostWaitScreen extends Module
         this.clear.setOnMouseClicked(a -> clearChosen());
         buttons.add(this.clear, 3, 0);
 
-        root.add(buttons,0,2);
-
-
-        GridPane presets = new GridPane();
-        presets.setAlignment(Pos.CENTER);
-
-        this.presetFirst = new Button("First Game");
-        this.presetFirst.setOnMouseClicked(a -> presetCards("first"));
-        presets.add(this.presetFirst, 1, 0);
-        this.presetSize = new Button("Size Distortion");
-        this.presetSize.setOnMouseClicked(a -> presetCards("size"));
-        presets.add(this.presetSize, 2, 0);
-        this.presetDeck = new Button("Deck Top");
-        this.presetDeck.setOnMouseClicked(a -> presetCards("deck"));
-        presets.add(this.presetDeck, 3, 0);
-        this.presetSleight = new Button("Sleight of Hand");
-        this.presetSleight.setOnMouseClicked(a -> presetCards("hand"));
-        presets.add(this.presetSleight, 4, 0);
-        this.presetImprovement = new Button("Improvements");
-        this.presetImprovement.setOnMouseClicked(a -> presetCards("improv"));
-        presets.add(this.presetImprovement, 5, 0);
-        this.presetSilver = new Button("Silver & Gold");
-        this.presetSilver.setOnMouseClicked(a -> presetCards("sg"));
-        presets.add(this.presetSilver, 6, 0);
-
-        root.add(presets,0,3);
+        root.add(buttons,0,4);
 
         //Add ID of those in Lobby
         //  Be able to kick them
