@@ -1,6 +1,7 @@
 package com.dominion.prog2.game;
 
 import com.dominion.prog2.game.Card;
+import com.dominion.prog2.modules.Game;
 
 public class VictoryCard extends Card
 {
@@ -10,8 +11,7 @@ public class VictoryCard extends Card
      * Constructor for Victory Card
      * @param name
      */
-    public VictoryCard(String name)
-    {
+    public VictoryCard(String name) {
         super(name);
 
         int[] vals = CardInfo.getVals(name);

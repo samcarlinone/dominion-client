@@ -80,6 +80,22 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
+     * removed a card by name
+     * @param name of card
+     */
+    public void remove(String name) {
+        for(int i = 0; i < cards.size(); i ++)
+        {
+            if(cards.get(i).getName().equals(name)){
+                this.cards.remove(cards.get(i));
+                notifyListeners();
+                return;
+            }
+        }
+        notifyListeners();
+    }
+
+    /**
      * splices the list, REMOVES the card too
      * @param startIndex int
      * @param number of cards to include

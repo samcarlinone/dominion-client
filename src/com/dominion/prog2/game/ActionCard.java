@@ -41,6 +41,7 @@ public class ActionCard extends Card
         switch(name)
         {
             case "Cellar":
+                g.popup = true;
                 break;
             case "Chapel":
                 break;

@@ -131,6 +131,8 @@ package com.dominion.prog2.modules;
 //
 //}
 import com.dominion.prog2.Driver;
+import com.dominion.prog2.game.CardStack;
+import com.dominion.prog2.ui.CardGrid;
 import com.dominion.prog2.ui.ImageCache;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -148,6 +150,15 @@ public class Game extends Module
     private Driver d;
     private GridPane root;
     private Button leave;
+
+    private Button popUpSubmit;
+    private CardGrid popUpGrid;
+    public CardStack popUpStack;
+
+    public boolean popup = false;
+
+    public CardStack trash;
+    public CardStack shop;
 
     private BackgroundImage backgroundImage;
 
@@ -171,7 +182,25 @@ public class Game extends Module
         buttons.add(this.leave, 0, 0);
         root.add(buttons,0,0);
 
+        
+
+
+        //if there is something that pops up
+        if(popup)
+        {
+            popUpSubmit = new Button("Submit");
+            this.popUpSubmit.setOnMouseClicked(a -> submitPopUp());
+
+            popUpGrid = new CardGrid(popUpStack, popUpStack.size());
+        }
+
+
         setScene(new Scene(root, 745, 700));
+    }
+
+    public void submitPopUp()
+    {
+        //TODO:
     }
 
     public void leaveClicked()
@@ -192,7 +221,8 @@ public class Game extends Module
     }
 
     @Override
-    public void serverMsg(ArrayList<HashMap<String, String>> server_msg) {
+    public void serverMsg(ArrayList<HashMap<String, String>> server_msg)
+    {
 
     }
 }

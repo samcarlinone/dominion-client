@@ -61,4 +61,25 @@ public class Player
         }
     }
 
+    public void addCard(String location, String cardName, Card Card)
+    {
+        Card newC;
+        if(Card == null && !cardName.equals(""))
+            newC = new Card(cardName);
+        else
+            newC = Card;
+        if(location.equals("hand"))
+        {
+            hand.add(newC);
+        }
+        else if(location.equals("deck"))
+        {
+            deck.add(newC);
+        }
+        else if(location.equals("discard"))
+        {
+            discard.add(newC);
+        }
+    }
+
 }
