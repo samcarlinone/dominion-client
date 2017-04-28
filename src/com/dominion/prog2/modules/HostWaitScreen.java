@@ -12,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -140,13 +141,18 @@ public class HostWaitScreen extends Module
 
         //Player and Kick Section
         players = new TableView<>();
-        playerList = FXCollections.observableArrayList("HELLO","1","2","3","4","5","6");
+        players.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        playerList = FXCollections.observableArrayList();
         players.setItems(playerList);
         players.setMaxSize(200,200);
 
-        TableColumn<String, String> name = new TableColumn<>("Player's in the Lobby");
-        name.setPrefWidth(players.getWidth());
-        players.getColumns().add(name);
+        //TODO: Add user's ids to table
+
+        TableColumn<String,String> users = new TableColumn<>("Player in Lobby");
+        users.setPrefWidth(400/3);
+        users.setCellValueFactory(new PropertyValueFactory("name"));
+
+        players.getColumns().addAll(users);
 
         GridPane.setHalignment(players, HPos.CENTER);
         root.add(players,0,5);
@@ -156,16 +162,17 @@ public class HostWaitScreen extends Module
         GridPane.setHalignment(kick, HPos.CENTER);
         root.add(this.kick,0,6);
 
-
-        //TODO: Add ID of those in Lobby
-        //  Be able to kick them
-
         setScene(new Scene(root, 745, 700));
     }
 
     public void kickPlayers()
     {
-        //TODO: Send message to server to kick player in IdsToBeKicked
+        //TODO: how to add multiple people from table to kickList
+        String selected = players.getSelectionModel().getSelectedItem();
+        IdToBeKicked.add(selected);
+
+        for(String name: IdToBeKicked)
+            d.simpleCommand("kick","player_name", name);
     }
 
     public void clearChosen()
@@ -250,5 +257,7 @@ public class HostWaitScreen extends Module
     @Override
     public void serverMsg(ArrayList<HashMap<String, String>> server_msg) {
         //TODO: add players to PlayerList
+
+
     }
 }
