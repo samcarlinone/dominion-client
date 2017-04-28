@@ -114,14 +114,7 @@ public class ChooseLobby extends Module {
         if(selected == null)
             return;
 
-        HashMap<String, String> join_msg = new HashMap<>();
-        join_msg.put("type", "join");
-        join_msg.put("name", d.name);
-        join_msg.put("room_name", selected.getName());
-        join_msg.put("room_host", selected.getHost());
-
-        String json = d.comm.getMessage(d.comm.mapToJSON(join_msg));
-        HashMap<String, String> result = d.comm.JSONToMap(json).get(0);
+        HashMap<String, String> result = d.simpleCommand("join", "room_name", selected.getName(), "room_host", selected.getHost());
 
         if(result.get("type").equals("accepted")) {
             d.setCurrentModule(new WaitScreen(d, selected.getName()));

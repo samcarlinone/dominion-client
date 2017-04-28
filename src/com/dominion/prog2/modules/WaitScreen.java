@@ -73,12 +73,7 @@ public class WaitScreen extends Module
 
     public void leaveClicked()
     {
-        HashMap<String, String> join_msg = new HashMap<>();
-        join_msg.put("type", "leave");
-        join_msg.put("name", d.name);
-
-        String json = d.comm.getMessage(d.comm.mapToJSON(join_msg));
-        HashMap<String, String> result = d.comm.JSONToMap(json).get(0);
+        HashMap<String, String> result = d.simpleCommand("leave");
 
         if(result.get("type").equals("accepted")) {
             d.setCurrentModule(new ChooseLobby(d,false));

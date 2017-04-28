@@ -224,18 +224,21 @@ public class HostWaitScreen extends Module
 
     public void startClicked()
     {
-        //TODO: Remove from list once host starts game
-        if(chosenCards.getCardStack().size() == 10)
+        if(chosenCards.getCardStack().size() == 10) {
+            HashMap<String, String> result = d.simpleCommand("begin");
+
+            if(result.get("type").equals("accepted")) {
+                d.setCurrentModule(new ChooseLobby(d,false));
+            } else {
+                System.exit(32);
+            }
+
             d.setCurrentModule(new Game(d));
+        }
     }
     public void leaveClicked()
     {
-        HashMap<String, String> join_msg = new HashMap<>();
-        join_msg.put("type", "leave");
-        join_msg.put("name", d.name);
-
-        String json = d.comm.getMessage(d.comm.mapToJSON(join_msg));
-        HashMap<String, String> result = d.comm.JSONToMap(json).get(0);
+        HashMap<String, String> result = d.simpleCommand("leave");
 
         if(result.get("type").equals("accepted")) {
             d.setCurrentModule(new ChooseLobby(d,false));

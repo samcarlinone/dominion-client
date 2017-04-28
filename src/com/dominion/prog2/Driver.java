@@ -70,6 +70,21 @@ public class Driver extends Application {
         }
     }
 
+    public HashMap<String, String> simpleCommand(String type, String... strings) {
+        HashMap<String, String> join_msg = new HashMap<>();
+        join_msg.put("type", type);
+        join_msg.put("name", name);
+
+        if(strings != null) {
+            for(int i=0; i<strings.length; i+=2) {
+                join_msg.put(strings[i], strings[i+1]);
+            }
+        }
+
+        String json = comm.getMessage(comm.mapToJSON(join_msg));
+        return comm.JSONToMap(json).get(0);
+    }
+
     public void setCurrentModule(Module m) {
         currentModule = m;
 
