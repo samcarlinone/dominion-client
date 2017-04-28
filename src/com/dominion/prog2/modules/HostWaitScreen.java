@@ -4,14 +4,14 @@ import com.dominion.prog2.Driver;
 import com.dominion.prog2.game.CardInfo;
 import com.dominion.prog2.game.CardStack;
 import com.dominion.prog2.ui.CardGrid;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +27,11 @@ public class HostWaitScreen extends Module
     private Button start;
     private Button leave;
     private Button clear;
+
+    private Button kick;
+    private TableView<String> players;
+    private ObservableList<String> playerList;
+    private ArrayList<String> IdToBeKicked;
 
     private Label kingdomTitle;
     private Label chosenTitle;
@@ -133,10 +138,34 @@ public class HostWaitScreen extends Module
 
         root.add(buttons,0,4);
 
-        //TODO: Add ID of those in Lobby  is there a max amount of ppl in lobby?
+        //Player and Kick Section
+        players = new TableView<>();
+        playerList = FXCollections.observableArrayList("HELLO","1","2","3","4","5","6");
+        players.setItems(playerList);
+        players.setMaxSize(200,200);
+
+        TableColumn<String, String> name = new TableColumn<>("Player's in the Lobby");
+        name.setPrefWidth(players.getWidth());
+        players.getColumns().add(name);
+
+        GridPane.setHalignment(players, HPos.CENTER);
+        root.add(players,0,5);
+
+        this.kick = new Button("Kick Player(s)");
+        this.kick.setOnMouseClicked(a -> kickPlayers());
+        GridPane.setHalignment(kick, HPos.CENTER);
+        root.add(this.kick,0,6);
+
+
+        //TODO: Add ID of those in Lobby
         //  Be able to kick them
 
         setScene(new Scene(root, 745, 700));
+    }
+
+    public void kickPlayers()
+    {
+        //TODO: Send message to server to kick player in IdsToBeKicked
     }
 
     public void clearChosen()
@@ -217,6 +246,6 @@ public class HostWaitScreen extends Module
 
     @Override
     public void serverMsg(ArrayList<HashMap<String, String>> server_msg) {
-
+        //TODO: add players to PlayerList
     }
 }
