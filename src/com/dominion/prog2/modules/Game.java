@@ -214,7 +214,7 @@ public class Game extends Module
         HashMap<String, String> result = d.comm.JSONToMap(json).get(0);
 
         if(result.get("type").equals("accepted")) {
-            d.setCurrentModule(new ChooseLobby(d,false));
+            d.setCurrentModule(new ChooseLobby(d, null));
         } else {
             System.exit(27);
         }

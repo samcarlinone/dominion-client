@@ -76,7 +76,7 @@ public class WaitScreen extends Module
         HashMap<String, String> result = d.simpleCommand("leave");
 
         if(result.get("type").equals("accepted")) {
-            d.setCurrentModule(new ChooseLobby(d,false));
+            d.setCurrentModule(new ChooseLobby(d, null));
         } else {
             System.exit(28);
         }

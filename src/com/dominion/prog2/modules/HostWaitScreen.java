@@ -4,6 +4,8 @@ import com.dominion.prog2.Driver;
 import com.dominion.prog2.game.CardInfo;
 import com.dominion.prog2.game.CardStack;
 import com.dominion.prog2.ui.CardGrid;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -14,6 +16,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.util.Callback;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -146,11 +150,13 @@ public class HostWaitScreen extends Module
         players.setItems(playerList);
         players.setMaxSize(200,200);
 
-        //TODO: Add user's ids to table
-
         TableColumn<String,String> users = new TableColumn<>("Player in Lobby");
         users.setPrefWidth(400/3);
-        users.setCellValueFactory(new PropertyValueFactory("name"));
+        users.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<String, String>, ObservableValue<String>>() {
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<String, String> p) {
+                return new ReadOnlyObjectWrapper(p.getValue());
+            }
+        });
 
         players.getColumns().addAll(users);
 
@@ -167,12 +173,14 @@ public class HostWaitScreen extends Module
 
     public void kickPlayers()
     {
-        //TODO: how to add multiple people from table to kickList
-        String selected = players.getSelectionModel().getSelectedItem();
-        IdToBeKicked.add(selected);
+        ObservableList<String> selected = players.getSelectionModel().getSelectedItems();
 
-        for(String name: IdToBeKicked)
-            d.simpleCommand("kick","player_name", name);
+        for(String name : selected) {
+            if(name != null) {
+                System.out.println(name);
+                d.simpleCommand("kick", "player_name", name);
+            }
+        }
     }
 
     public void clearChosen()
@@ -235,7 +243,7 @@ public class HostWaitScreen extends Module
             HashMap<String, String> result = d.simpleCommand("begin");
 
             if(result.get("type").equals("accepted")) {
-                d.setCurrentModule(new ChooseLobby(d,false));
+                d.setCurrentModule(new ChooseLobby(d, null));
             } else {
                 System.exit(32);
             }
@@ -248,7 +256,7 @@ public class HostWaitScreen extends Module
         HashMap<String, String> result = d.simpleCommand("leave");
 
         if(result.get("type").equals("accepted")) {
-            d.setCurrentModule(new ChooseLobby(d,false));
+            d.setCurrentModule(new ChooseLobby(d, null));
         } else {
             System.exit(27);
         }
@@ -256,8 +264,16 @@ public class HostWaitScreen extends Module
 
     @Override
     public void serverMsg(ArrayList<HashMap<String, String>> server_msg) {
-        //TODO: add players to PlayerList
+        System.out.println(server_msg);
 
+        for(HashMap<String, String> msg : server_msg) {
+            if(msg.get("type").equals("join")) {
+                playerList.add(msg.get("user"));
+            }
 
+            if(msg.get("type").equals("disconnect")) {
+                playerList.remove(msg.get("user"));
+            }
+        }
     }
 }

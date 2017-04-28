@@ -34,7 +34,7 @@ public class ChooseLobby extends Module {
      * Creates ChooseLobby Object
      * @param d Driver
      */
-    public ChooseLobby(Driver d, boolean wasRoomShutdown) {
+    public ChooseLobby(Driver d, String reason) {
         this.d = d;
 
         root = new GridPane();
@@ -82,11 +82,12 @@ public class ChooseLobby extends Module {
         join.setOnMouseClicked(a -> joinClicked());
         buttons.add(join, 2, 0);
 
-        roomShutdown = new Label("Room was Shutdown");
-        roomShutdown.setVisible(wasRoomShutdown);
-        roomShutdown.setStyle("-fx-text-fill: #F00");
-        GridPane.setHalignment(roomShutdown, HPos.CENTER);
-        root.add(roomShutdown, 0, 2);
+        if(reason != null) {
+            roomShutdown = new Label(reason);
+            roomShutdown.setStyle("-fx-text-fill: #F00");
+            GridPane.setHalignment(roomShutdown, HPos.CENTER);
+            root.add(roomShutdown, 0, 2);
+        }
 
         setScene(new Scene(root, 745, 700));
     }

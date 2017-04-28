@@ -61,8 +61,8 @@ public class Driver extends Application {
                     System.exit(1);
                 }
 
-                if (server_msg.get(0).get("type").equals("room_shutdown")) {
-                    setCurrentModule(new ChooseLobby(this, true));
+                if (server_msg.get(0).get("type").equals("removed")) {
+                    setCurrentModule(new ChooseLobby(this, server_msg.get(0).get("reason")));
                 }
 
                 currentModule.serverMsg(server_msg);
