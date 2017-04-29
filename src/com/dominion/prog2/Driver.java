@@ -92,7 +92,9 @@ public class Driver extends Application {
 
     public void broadcast(HashMap<String, String> data) {
         String msg = comm.escapeJSON(comm.mapToJSON(data));
-        simpleCommand("broadcast", "msg", msg);
+        if(simpleCommand("broadcast", "msg", msg).get("type").equals("rejected")) {
+            System.err.println("Invalid Message");
+        }
     }
 
     public void setCurrentModule(Module m) {
