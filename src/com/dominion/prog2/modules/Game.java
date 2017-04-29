@@ -73,11 +73,17 @@ public class Game extends Module
                 enemies.add(new Label(name));
         }
 
+        //TODO: Fix styles of the LABELS
         for(int i = 0; i < enemies.size(); i ++){
             Label l = enemies.get(i);
-            l.setStyle("-fx-border-color: black;");
+            l.setStyle("-fx-font-size: 15pt:-fx-border-color: black;");
             first.add(l,i+1,0);
         }
+
+        Label current = new Label("Current Turn: " + players.get(turn));
+        current.setStyle("-fx-border-color: black:-fx-font-size: 20pt;");
+        first.add(current, players.size()+2,0);
+
 
         //Second Row
         GridPane second = new GridPane();
@@ -174,12 +180,24 @@ public class Game extends Module
         }
         third.add(discard,3,0);
 
+        Button endTurn = new Button("End turn");
+        endTurn.setOnMouseClicked(a -> endTurn());
+        third.add(endTurn, 4,0);
+
 
 
         root.add(first,0 ,0);
         root.add(second,0 ,1);
         root.add(third,0 ,2);
         setScene(new Scene(root, 1600, 1000));
+    }
+
+    public void endTurn()
+    {
+        HashMap<String, String> endTurn = new HashMap<>();
+        endTurn.put("type", "endTurn");
+
+        d.broadcast(endTurn);
     }
 
     public void submitPopUp()
@@ -203,11 +221,14 @@ public class Game extends Module
     {
         for(HashMap<String, String> msg : server_msg) {
             switch (msg.get("type")) {
-                //TODO: recieve msg that a turn has ended
+                case "endTurn":
+                    turn ++;
+                    if(turn >= players.size())
+                        turn = 0;
+                    break;
             }
         }
     }
-
     //TODO: add whose turn
     //TODO: Check to see if game ends
 }
