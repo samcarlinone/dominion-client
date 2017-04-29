@@ -14,7 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -138,7 +137,18 @@ public class WaitScreen extends Module
                 case "removeCardGrid":
                     chosenCards.getCardStack().remove(msg.get("data"));
                     break;
-
+                case "startGame":
+                    String finalList = msg.get("data");
+                    CardStack finalShop = new CardStack();
+                    if(!finalList.equals("")) {
+                        for(String name: finalList.split(","))
+                        {
+                            finalShop.add(new Card(name));
+                        }
+                    }
+                    if(finalShop.size() > 0)
+                        d.setCurrentModule(new Game(d, finalShop, playerList));
+                    break;
             }
         }
     }

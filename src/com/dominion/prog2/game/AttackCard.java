@@ -31,18 +31,16 @@ public class AttackCard extends Card
         switch(name)
         {
             case "Bureaucrat":
-                g.shop.remove("Silver");
-                p.addCard("deck","Silver",null);
+
                 break;
             case "Militia":
-                p.turnMoney += addCoins;
+
                 break;
             case "Bandit":
-                g.shop.remove("Gold");
-                p.addCard("discard","Gold",null);
+
                 break;
             case "Witch":
-                p.pickUpCards(addCard);
+
                 break;
         }
     }

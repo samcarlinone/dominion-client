@@ -4,9 +4,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 
-/**
- * Created by cobra on 4/20/2017.
- */
+
 public class InputFilters {
     /**
      * Returns an appropriate name filter for input fields

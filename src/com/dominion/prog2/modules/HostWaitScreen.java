@@ -267,13 +267,20 @@ public class HostWaitScreen extends Module
         if(chosenCards.getCardStack().size() == 10) {
             HashMap<String, String> result = d.simpleCommand("begin");
 
+            HashMap<String, String> finalCards = new HashMap<>();
+            String cards = "";
+            for(int i = 0; i < chosenCards.getCardStack().size(); i ++) {
+                cards += chosenCards.getCardStack().get(i).getName() + ",";
+            }
+            finalCards.put("type", "startGame");
+            finalCards.put("data", cards);
+            d.broadcast(finalCards);
+
             if(result.get("type").equals("accepted")) {
-                d.setCurrentModule(new ChooseLobby(d, null));
+                d.setCurrentModule(new Game(d, chosenCards.getCardStack(), playerList));
             } else {
                 System.exit(32);
             }
-
-            d.setCurrentModule(new Game(d));
         }
     }
     public void leaveClicked()

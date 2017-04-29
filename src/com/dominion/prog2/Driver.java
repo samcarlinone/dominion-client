@@ -27,6 +27,7 @@ public class Driver extends Application {
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Dominion");
+        primaryStage.centerOnScreen();
 
         setCurrentModule(new ChooseName(this));
         primaryStage.show();
@@ -101,6 +102,7 @@ public class Driver extends Application {
         currentModule = m;
 
         primaryStage.setScene(m.getScene());
+        primaryStage.centerOnScreen();
     }
 
     public static void main(String[] args) {
