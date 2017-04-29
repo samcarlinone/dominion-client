@@ -3,16 +3,18 @@ package com.dominion.prog2.ui;
 import com.dominion.prog2.game.Card;
 import com.dominion.prog2.game.CardStack;
 import javafx.geometry.Insets;
-import javafx.geometry.VPos;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CardGrid {
     private CardStack stack;
@@ -21,11 +23,13 @@ public class CardGrid {
     private ArrayList<CardSelected> listeners = new ArrayList<>();
 
     private int cardWidth;
+    private boolean collapseSame;
 
-    public CardGrid(CardStack stack, int cardWidth) {
+    public CardGrid(CardStack stack, int cardWidth, boolean collapseSame) {
         this.stack = stack;
         stack.addListener(() -> stackChanged());
         this.cardWidth = cardWidth;
+        this.collapseSame = collapseSame;
 
         root = new ScrollPane();
         root.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -53,19 +57,55 @@ public class CardGrid {
                 listener.process(cardName);
             }
         }
+
+        if(e.getSource() instanceof StackPane) {
+            StackPane group = (StackPane)e.getSource();
+
+            Image img = ((ImageView) group.getChildren().get(0)).getImage();
+            String cardName = ((NamedImage)img).getName();
+
+            for(CardSelected listener : listeners) {
+                listener.process(cardName);
+            }
+        }
     }
 
     private void stackChanged() {
         list.getChildren().clear();
 
-        for(Card card : stack) {
-            ImageView img = new ImageView();
-            img.setImage(ImageCache.cardImage.get(card.getName()));
-            img.setFitWidth(cardWidth);
-            img.setPreserveRatio(true);
-            img.setOnMouseClicked((event) -> handleCardClicked(event));
+        if(collapseSame) {
+            HashMap<String, Integer> counts = stack.getCounts();
 
-            list.getChildren().add(img);
+            for(Map.Entry<String, Integer> entry : counts.entrySet()) {
+                StackPane group = new StackPane();
+                group.setOnMouseClicked((event) -> handleCardClicked(event));
+
+                ImageView img = new ImageView();
+                img.setImage(ImageCache.cardImage.get(entry.getKey()));
+                img.setFitWidth(cardWidth);
+                img.setPreserveRatio(true);
+                group.getChildren().add(img);
+
+                Label number = new Label(""+entry.getValue());
+                number.setStyle("-fx-background-color: darkred; -fx-text-fill: white; -fx-font-size: 22pt; -fx-font-weight: 900;");
+                number.setPrefSize(35, 35);
+                number.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(4))));
+                number.setAlignment(Pos.CENTER);
+                StackPane.setAlignment(number, Pos.BOTTOM_RIGHT);
+                group.getChildren().add(number);
+
+                list.getChildren().add(group);
+            }
+        } else {
+            for (Card card : stack) {
+                ImageView img = new ImageView();
+                img.setImage(ImageCache.cardImage.get(card.getName()));
+                img.setFitWidth(cardWidth);
+                img.setPreserveRatio(true);
+                img.setOnMouseClicked((event) -> handleCardClicked(event));
+
+                list.getChildren().add(img);
+            }
         }
     }
 

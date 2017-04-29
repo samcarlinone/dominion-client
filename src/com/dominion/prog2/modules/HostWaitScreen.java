@@ -109,7 +109,7 @@ public class HostWaitScreen extends Module
         cardChoosers.setHalignment(chosenTitle, HPos.CENTER);
         cardChoosers.add(chosenTitle, 1, 0);
 
-        kingdomCards = new CardGrid(new CardStack(CardInfo.kingdomCardNames),125);
+        kingdomCards = new CardGrid(new CardStack(CardInfo.kingdomCardNames),125, false);
         kingdomCards.getRootPane().setPrefWidth(300);
         kingdomCards.getRootPane().setPrefHeight(500);
         kingdomCards.addListener(cardName -> {
@@ -124,7 +124,7 @@ public class HostWaitScreen extends Module
         });
         cardChoosers.add(kingdomCards.getRootPane(),0,1);
 
-        chosenCards = new CardGrid(new CardStack(),125);
+        chosenCards = new CardGrid(new CardStack(),125, false);
         chosenCards.getRootPane().setPrefWidth(300);
         chosenCards.getRootPane().setPrefHeight(500);
         chosenCards.addListener(cardName -> {
