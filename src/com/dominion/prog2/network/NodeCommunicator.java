@@ -63,6 +63,15 @@ public class NodeCommunicator {
     }
 
     /**
+     * If a JSON object is going to be put as a subproperty we must escape it for that role
+     * @param json Encoded json
+     * @return Escaped json
+     */
+    public String escapeJSON(String json) {
+        return json.replace("\"", "\\\"");
+    }
+
+    /**
      * Converts JSON to an array of objects !!!Only supports objects with string values, invalid JSON will cause unexpected results!!!
      * @param data JSON formatted object or array of objects
      * @return ArrayList of HashMaps of String key and Object value

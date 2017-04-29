@@ -115,6 +115,12 @@ public class HostWaitScreen extends Module
         kingdomCards.addListener(cardName -> {
             if(chosenCards.getCardStack().size() < 10)
                 CardGrid.move(cardName, kingdomCards, chosenCards);
+
+            HashMap<String, String> test = new HashMap<>();
+            test.put("type", "test");
+            test.put("data", "This is a test "+cardName);
+
+            d.broadcast(test);
         });
         cardChoosers.add(kingdomCards.getRootPane(),0,1);
 
@@ -264,15 +270,19 @@ public class HostWaitScreen extends Module
 
     @Override
     public void serverMsg(ArrayList<HashMap<String, String>> server_msg) {
-        System.out.println(server_msg);
-
         for(HashMap<String, String> msg : server_msg) {
-            if(msg.get("type").equals("join")) {
-                playerList.add(msg.get("user"));
-            }
+            switch (msg.get("type")) {
+                case "join":
+                    playerList.add(msg.get("user"));
+                    break;
 
-            if(msg.get("type").equals("disconnect")) {
-                playerList.remove(msg.get("user"));
+                case "disconnect":
+                    playerList.remove(msg.get("user"));
+                    break;
+
+                case "test":
+                    System.out.println(msg.get("data"));
+                    break;
             }
         }
     }

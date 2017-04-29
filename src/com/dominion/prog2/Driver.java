@@ -54,6 +54,11 @@ public class Driver extends Application {
                 return;
             }
 
+            if(json.equals("<html><body>Cogito ergo sum.</body></html>")) {
+                System.err.println("You sent an invalid message!");
+                System.exit(2);
+            }
+
             server_msg = comm.JSONToMap(json);
 
             if(server_msg.size() > 0) {
@@ -83,6 +88,11 @@ public class Driver extends Application {
 
         String json = comm.getMessage(comm.mapToJSON(join_msg));
         return comm.JSONToMap(json).get(0);
+    }
+
+    public void broadcast(HashMap<String, String> data) {
+        String msg = comm.escapeJSON(comm.mapToJSON(data));
+        simpleCommand("broadcast", "msg", msg);
     }
 
     public void setCurrentModule(Module m) {

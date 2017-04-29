@@ -84,6 +84,12 @@ public class WaitScreen extends Module
 
     @Override
     public void serverMsg(ArrayList<HashMap<String, String>> server_msg) {
-
+        for(HashMap<String, String> msg : server_msg) {
+            switch (msg.get("type")) {
+                case "test":
+                    System.out.println(msg.get("data"));
+                    break;
+            }
+        }
     }
 }
