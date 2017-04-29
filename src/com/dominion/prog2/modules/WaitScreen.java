@@ -101,10 +101,6 @@ public class WaitScreen extends Module
 
         root.add(buttons,0,5);
 
-        //TODO: add which cards are chosen
-        //TODO: add who is in lobby
-
-
         setScene(new Scene(root, 745, 700));
     }
 
@@ -131,8 +127,10 @@ public class WaitScreen extends Module
                     break;
                 case "setCardGrid":
                     String fullList = msg.get("data");
-                    for(String name: fullList.split(","))
-                        chosenCards.getCardStack().add(new Card(name));
+                    if(!fullList.equals("")){
+                        for(String name: fullList.split(","))
+                            chosenCards.getCardStack().add(new Card(name));
+                    }
                     break;
                 case "addCardGrid":
                     chosenCards.getCardStack().add(new Card(msg.get("data")));
