@@ -84,13 +84,13 @@ public class Game extends Module
             //shop
         CardStack shoppe = new CardStack();
         for(String name: CardInfo.treasureCardNames)
-            shoppe.add(new Card(name));
+            shoppe.addMultiple(name, 10);
         for(String name: CardInfo.victoryCardNames)
-            shoppe.add(new Card(name));
+            shoppe.addMultiple(name, 10);
         for(Card c: finalShopList)
-            shoppe.add(c);
+            shoppe.addMultiple(c.getName(), 10);
 
-        shop = new CardGrid(shoppe,150);
+        shop = new CardGrid(shoppe,150, true);
         shop.getRootPane().setPrefWidth(1000);
         shop.getRootPane().setPrefHeight(750);
         second.add(shop.getRootPane(),0,0);

@@ -123,4 +123,28 @@ public class CardInfo {
         populate();
         return data.get(name);
     }
+
+    public static Card getCard(String name) {
+        int[] vals = CardInfo.getVals(name);
+
+        switch (CardType.values()[vals[0]]) {
+            case TREASURE:
+                return new TreasureCard(name);
+
+            case VICTORY:
+                return new VictoryCard(name);
+
+            case ACTION:
+                return new ActionCard(name);
+
+            case ATTACK:
+                return new AttackCard(name);
+
+            case REACTION:
+                return new ReactionCard(name);
+        }
+
+        return null;
+    }
+    }
 }

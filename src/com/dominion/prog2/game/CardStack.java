@@ -69,6 +69,16 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
+     * Adds an arbitrary number of new cards by name
+     */
+    public void addMultiple(String name, int number) {
+        for(int i=0; i<number; i++) {
+            this.cards.add(new Card(name));
+        }
+        notifyListeners();
+    }
+
+    /**
      * removed a specific card
      * @param c card
      * @return the card that was passed in

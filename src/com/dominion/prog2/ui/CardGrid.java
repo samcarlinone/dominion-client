@@ -25,10 +25,11 @@ public class CardGrid {
     private int cardWidth;
     private boolean collapseSame;
 
-    public CardGrid(CardStack stack, int cardWidth) {
+    public CardGrid(CardStack stack, int cardWidth, boolean collapseSame) {
         this.stack = stack;
         stack.addListener(() -> stackChanged());
         this.cardWidth = cardWidth;
+        this.collapseSame = collapseSame;
 
         root = new ScrollPane();
         root.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -39,7 +40,6 @@ public class CardGrid {
         list.setVgap(10);
         root.setContent(list);
 
-
         root.viewportBoundsProperty().addListener((observable, oldValue, newValue) -> {
             list.setPrefWrapLength(newValue.getWidth());
         });
@@ -47,9 +47,8 @@ public class CardGrid {
         stackChanged();
     }
 
-    public CardGrid(CardStack stack, int cardWidth, boolean collapseSame) {
-        this(stack, cardWidth);
-        this.collapseSame = collapseSame;
+    public CardGrid(CardStack stack, int cardWidth) {
+        this(stack, cardWidth, false);
     }
 
     private void handleCardClicked(MouseEvent e) {
@@ -91,9 +90,9 @@ public class CardGrid {
                 group.getChildren().add(img);
 
                 Label number = new Label(""+entry.getValue());
-                number.setStyle("-fx-background-color: darkred; -fx-text-fill: white; -fx-font-size: 22pt; -fx-font-weight: 900;");
-                number.setPrefSize(35, 35);
-                number.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(4))));
+                number.setStyle("-fx-background-color: darkred; -fx-text-fill: white; -fx-font-size: 20pt; -fx-font-weight: 900;");
+                number.setPrefSize(40, 40);
+                number.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(3))));
                 number.setAlignment(Pos.CENTER);
                 StackPane.setAlignment(number, Pos.BOTTOM_RIGHT);
                 group.getChildren().add(number);
