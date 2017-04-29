@@ -1,14 +1,19 @@
 package com.dominion.prog2.modules;
 
 import com.dominion.prog2.Driver;
+import com.dominion.prog2.game.Card;
 import com.dominion.prog2.game.CardStack;
 import com.dominion.prog2.ui.CardGrid;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.util.Callback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,10 +27,17 @@ public class WaitScreen extends Module
     private Label chosenTitle;
     private CardGrid chosenCards;
 
+    private TableView<String> players;
+    private ObservableList<String> playerList;
+
     private Button leave;
 
-    public WaitScreen(Driver d, String LobbyName) {
+    public WaitScreen(Driver d, String LobbyName, String userNames) {
         this.d = d;
+
+        HashMap<String, String> requestCards = new HashMap<>();
+        requestCards.put("type", "getChosenCards");
+        d.broadcast(requestCards);
 
         root = new GridPane();
         root.setPrefSize(400, 600);
@@ -54,15 +66,40 @@ public class WaitScreen extends Module
 
         root.add(cardChoosers,0,1);
 
+        //Player and Kick Section
+        players = new TableView<>();
+        playerList = FXCollections.observableArrayList();
+
+        for(String name : userNames.split(",")) {
+            if(!name.equals(d.name))
+                playerList.add(name);
+        }
+
+        players.setItems(playerList);
+        players.setMaxSize(200,200);
+
+        TableColumn<String,String> users = new TableColumn<>("Player in Lobby");
+        users.setPrefWidth(400/3);
+        users.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<String, String>, ObservableValue<String>>() {
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<String, String> p) {
+                return new ReadOnlyObjectWrapper(p.getValue());
+            }
+        });
+
+        players.getColumns().addAll(users);
+
+        GridPane.setHalignment(players, HPos.CENTER);
+        root.add(players,0,6);
+
         //Buttons
         GridPane buttons = new GridPane();
         buttons.setAlignment(Pos.CENTER);
 
         this.leave = new Button("Leave Lobby");
         this.leave.setOnMouseClicked(a -> leaveClicked());
-        buttons.add(this.leave, 0, 0);
+        buttons.add(this.leave, 0, 1);
 
-        root.add(buttons,0,1);
+        root.add(buttons,0,5);
 
         //TODO: add which cards are chosen
         //TODO: add who is in lobby
@@ -86,9 +123,24 @@ public class WaitScreen extends Module
     public void serverMsg(ArrayList<HashMap<String, String>> server_msg) {
         for(HashMap<String, String> msg : server_msg) {
             switch (msg.get("type")) {
-                case "test":
-                    System.out.println(msg.get("data"));
+                case "join":
+                    playerList.add(msg.get("user"));
                     break;
+                case "disconnect":
+                    playerList.remove(msg.get("user"));
+                    break;
+                case "setCardGrid":
+                    String fullList = msg.get("data");
+                    for(String name: fullList.split(","))
+                        chosenCards.getCardStack().add(new Card(name));
+                    break;
+                case "addCardGrid":
+                    chosenCards.getCardStack().add(new Card(msg.get("data")));
+                    break;
+                case "removeCardGrid":
+                    chosenCards.getCardStack().remove(msg.get("data"));
+                    break;
+
             }
         }
     }

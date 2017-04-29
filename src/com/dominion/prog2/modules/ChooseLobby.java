@@ -118,7 +118,7 @@ public class ChooseLobby extends Module {
         HashMap<String, String> result = d.simpleCommand("join", "room_name", selected.getName(), "room_host", selected.getHost());
 
         if(result.get("type").equals("accepted")) {
-            d.setCurrentModule(new WaitScreen(d, selected.getName()));
+            d.setCurrentModule(new WaitScreen(d, selected.getName(), result.get("players")));
         }
     }
 

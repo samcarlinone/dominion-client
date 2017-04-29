@@ -1,6 +1,7 @@
 package com.dominion.prog2.modules;
 
 import com.dominion.prog2.Driver;
+import com.dominion.prog2.game.Card;
 import com.dominion.prog2.game.CardInfo;
 import com.dominion.prog2.game.CardStack;
 import com.dominion.prog2.ui.CardGrid;
@@ -36,7 +37,6 @@ public class HostWaitScreen extends Module
     private Button kick;
     private TableView<String> players;
     private ObservableList<String> playerList;
-    private ArrayList<String> IdToBeKicked;
 
     private Label kingdomTitle;
     private Label chosenTitle;
@@ -116,18 +116,26 @@ public class HostWaitScreen extends Module
             if(chosenCards.getCardStack().size() < 10)
                 CardGrid.move(cardName, kingdomCards, chosenCards);
 
-            HashMap<String, String> test = new HashMap<>();
-            test.put("type", "test");
-            test.put("data", "This is a test "+cardName);
+            HashMap<String, String> add = new HashMap<>();
+            add.put("type", "addCardGrid");
+            add.put("data", ""+cardName);
 
-            d.broadcast(test);
+            d.broadcast(add);
         });
         cardChoosers.add(kingdomCards.getRootPane(),0,1);
 
         chosenCards = new CardGrid(new CardStack(),125);
         chosenCards.getRootPane().setPrefWidth(300);
         chosenCards.getRootPane().setPrefHeight(500);
-        chosenCards.addListener(cardName -> CardGrid.move(cardName, chosenCards, kingdomCards));
+        chosenCards.addListener(cardName -> {
+            CardGrid.move(cardName, chosenCards, kingdomCards);
+
+            HashMap<String, String> remove = new HashMap<>();
+            remove.put("type", "removeCardGrid");
+            remove.put("data", ""+cardName);
+
+            d.broadcast(remove);
+        });
         cardChoosers.add(chosenCards.getRootPane(),1,1);
 
         root.add(cardChoosers, 0, 3);
@@ -192,10 +200,16 @@ public class HostWaitScreen extends Module
     public void clearChosen()
     {
         //resets all cards
-        while(chosenCards.getCardStack().size()>0)
+        while(chosenCards.getCardStack().size() > 0)
         {
             String name = chosenCards.getCardStack().get(0).getName();
             chosenCards.move(name, chosenCards, kingdomCards);
+
+            HashMap<String, String> remove = new HashMap<>();
+            remove.put("type", "removeCardGrid");
+            remove.put("data", ""+name);
+
+            d.broadcast(remove);
         }
     }
 
@@ -240,6 +254,11 @@ public class HostWaitScreen extends Module
         for(String name: preset)
         {
             CardGrid.move(name, kingdomCards, chosenCards);
+            HashMap<String, String> add = new HashMap<>();
+            add.put("type", "addCardGrid");
+            add.put("data", ""+name);
+
+            d.broadcast(add);
         }
     }
 
@@ -279,10 +298,16 @@ public class HostWaitScreen extends Module
                 case "disconnect":
                     playerList.remove(msg.get("user"));
                     break;
-
-                case "test":
-                    System.out.println(msg.get("data"));
+                case "getChosenCards":
+                    HashMap<String, String> list = new HashMap<>();
+                    list.put("type", "setCardGrid");
+                    String cardList = "";
+                    for(Card C: chosenCards.getCardStack())
+                        cardList += C.getName() + ",";
+                    list.put("data", cardList);
+                    d.broadcast(list);
                     break;
+
             }
         }
     }
