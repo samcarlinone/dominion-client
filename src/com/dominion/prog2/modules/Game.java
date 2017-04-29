@@ -1,4 +1,5 @@
 package com.dominion.prog2.modules;
+
 import com.dominion.prog2.Driver;
 import com.dominion.prog2.game.Card;
 import com.dominion.prog2.game.CardInfo;
@@ -27,6 +28,7 @@ public class Game extends Module
     private GridPane root;
     private Player you;
     private BackgroundImage backgroundImage;
+    private int turn = 1;
 
     public ObservableList<String> players;
 
@@ -48,7 +50,6 @@ public class Game extends Module
         this.players = userNames;
         you = new Player(d.name);
 
-
         root = new GridPane();
         root.setPrefSize(400, 600);
         root.setAlignment(Pos.CENTER_LEFT);
@@ -68,9 +69,8 @@ public class Game extends Module
         ArrayList<Label> enemies = new ArrayList<>();
         for(String name: players)
         {
-            if(!name.equals(d.name)) {
+            if(!name.equals(d.name))
                 enemies.add(new Label(name));
-            }
         }
 
         for(int i = 0; i < enemies.size(); i ++){
@@ -83,12 +83,44 @@ public class Game extends Module
         GridPane second = new GridPane();
             //shop
         CardStack shoppe = new CardStack();
-        for(String name: CardInfo.treasureCardNames)
-            shoppe.addMultiple(name, 10);
-        for(String name: CardInfo.victoryCardNames)
-            shoppe.addMultiple(name, 10);
-        for(Card c: finalShopList)
-            shoppe.addMultiple(c.getName(), 10);
+        for(String name: CardInfo.treasureCardNames) {
+            switch(name){
+                case "Copper":
+                    shoppe.addMultiple(name, 60);
+                    break;
+                case "Silver":
+                    shoppe.addMultiple(name, 40);
+                    break;
+                case "Gold":
+                    shoppe.addMultiple(name, 30);
+                    break;
+            }
+        }
+        for(String name: CardInfo.victoryCardNames) {
+            switch(name)
+            {
+                case "Curse":
+                    if(finalShopList.has("Witch"))
+                        shoppe.addMultiple(name, 30);
+                    break;
+                case "Estate":
+                    shoppe.addMultiple(name, 24);
+                    break;
+                case "Duchy":
+                    shoppe.addMultiple(name, 12);
+                    break;
+                case "Province":
+                    shoppe.addMultiple(name, 12);
+                    break;
+            }
+        }
+        for(Card c: finalShopList) {
+            String name = c.getName();
+            if(name.equals("Garden"))
+                shoppe.addMultiple(name,12);
+            else
+                shoppe.addMultiple(name, 10);
+        }
 
         shop = new CardGrid(shoppe,150, true);
         shop.getRootPane().setPrefWidth(1000);
@@ -111,9 +143,13 @@ public class Game extends Module
         GridPane third = new GridPane();
             //Stats
         GridPane yourStats = new GridPane();
+        yourStats.setAlignment(Pos.CENTER);
         turnAction = new Label("Turn Actions: "+you.turnAction);
+        turnAction.setStyle("-fx-font-size: 15pt");
         turnCoin = new Label("Turn Coins: "+you.turnMoney);
+        turnCoin.setStyle("-fx-font-size: 15pt");
         turnBuys = new Label("Turn Buys: "+you.turnBuys);
+        turnBuys.setStyle("-fx-font-size: 15pt");
         yourStats.add(turnAction, 0,0);
         yourStats.add(turnCoin, 0,1);
         yourStats.add(turnBuys, 0,2);
@@ -121,7 +157,8 @@ public class Game extends Module
             //Deck
         ImageView deck = new ImageView();
         deck.setImage(ImageCache.cardImage.get("Card_back"));
-        //TODO: Resize
+        deck.setPreserveRatio(true);
+        deck.setFitWidth(100);
         third.add(deck,1,0);
             //Hand
         hand = new CardGrid(you.hand,100);
@@ -132,7 +169,8 @@ public class Game extends Module
         ImageView discard = new ImageView();
         if(you.discard.size() > 0) {
             discard.setImage(ImageCache.cardImage.get(you.discard.get(0).getName()));
-            //TODO: Resize
+            discard.setPreserveRatio(true);
+            discard.setFitWidth(100);
         }
         third.add(discard,3,0);
 
@@ -165,8 +203,11 @@ public class Game extends Module
     {
         for(HashMap<String, String> msg : server_msg) {
             switch (msg.get("type")) {
-
+                //TODO: recieve msg that a turn has ended
             }
         }
     }
+
+    //TODO: add whose turn
+    //TODO: Check to see if game ends
 }

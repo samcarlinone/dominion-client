@@ -73,7 +73,7 @@ public class CardStack implements Iterable<Card> {
      */
     public void addMultiple(String name, int number) {
         for(int i=0; i<number; i++) {
-            this.cards.add(new Card(name));
+            this.cards.add(CardInfo.getCard(name));
         }
         notifyListeners();
     }
@@ -149,6 +149,21 @@ public class CardStack implements Iterable<Card> {
      * @return true or false if the array has the card
      */
     public boolean has(Card c) { return cards.contains(c); }
+
+    /**
+     * Sees if the ArrayList has a card with a specific name
+     * @param name string
+     * @return true of false if array has a card with the name
+     */
+    public boolean has(String name)
+    {
+        for(Card c: cards)
+        {
+            if(c.getName().equals(name))
+                return true;
+        }
+        return false;
+    }
 
     /**
      * Get card by name or returns null if not found
