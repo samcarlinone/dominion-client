@@ -103,7 +103,7 @@ public class Game extends Module
             popUpSubmit = new Button("Submit");
             this.popUpSubmit.setOnMouseClicked(a -> submitPopUp());
 
-            popUpGrid = new CardGrid(popUpStack, popUpStack.size(), false);
+            popUpGrid = new CardGrid(popUpStack, popUpStack.size());
         }
 
 

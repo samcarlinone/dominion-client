@@ -25,11 +25,10 @@ public class CardGrid {
     private int cardWidth;
     private boolean collapseSame;
 
-    public CardGrid(CardStack stack, int cardWidth, boolean collapseSame) {
+    public CardGrid(CardStack stack, int cardWidth) {
         this.stack = stack;
         stack.addListener(() -> stackChanged());
         this.cardWidth = cardWidth;
-        this.collapseSame = collapseSame;
 
         root = new ScrollPane();
         root.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -46,6 +45,11 @@ public class CardGrid {
         });
 
         stackChanged();
+    }
+
+    public CardGrid(CardStack stack, int cardWidth, boolean collapseSame) {
+        this(stack, cardWidth);
+        this.collapseSame = collapseSame;
     }
 
     private void handleCardClicked(MouseEvent e) {
