@@ -1,6 +1,7 @@
 package com.dominion.prog2.ui;
 
 import com.dominion.prog2.game.Card;
+import com.dominion.prog2.game.CardInfo;
 import com.dominion.prog2.game.CardStack;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -78,18 +79,22 @@ public class CardGrid {
 
         if(collapseSame) {
             HashMap<String, Integer> counts = stack.getCounts();
+            ArrayList<String> names = new ArrayList<>();
+            names.addAll(counts.keySet());
 
-            for(Map.Entry<String, Integer> entry : counts.entrySet()) {
+            names.sort(new CardInfo.NameComparator());
+
+            for(String name : names) {
                 StackPane group = new StackPane();
                 group.setOnMouseClicked((event) -> handleCardClicked(event));
 
                 ImageView img = new ImageView();
-                img.setImage(ImageCache.cardImage.get(entry.getKey()));
+                img.setImage(ImageCache.cardImage.get(name));
                 img.setFitWidth(cardWidth);
                 img.setPreserveRatio(true);
                 group.getChildren().add(img);
 
-                Label number = new Label(""+entry.getValue());
+                Label number = new Label(""+counts.get(name));
                 number.setStyle("-fx-background-color: darkred; -fx-text-fill: white; -fx-font-size: 20pt; -fx-font-weight: 900;");
                 number.setPrefSize(40, 40);
                 number.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(3))));

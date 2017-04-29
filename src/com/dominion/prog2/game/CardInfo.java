@@ -1,5 +1,7 @@
 package com.dominion.prog2.game;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 
 
@@ -48,6 +50,8 @@ public class CardInfo {
 
     /**
      * Card Data
+     * stored in format
+     * [type, price, victoryValue, addCoins, addAction, addBuy, addCard]
      */
     private static HashMap<String, int[]> data;
 
@@ -146,5 +150,29 @@ public class CardInfo {
 
         return null;
     }
+
+    public static class NameComparator implements Comparator<String>
+    {
+        public int compare(String name1, String name2)
+        {
+            int[] vals1 = CardInfo.getVals(name1);
+            int[] vals2 = CardInfo.getVals(name2);
+
+            if(vals1[0] != vals2[0]) {
+                CardType type1 = CardType.values()[vals1[0]];
+                boolean isAction1 = type1 == CardType.ACTION || type1 == CardType.ATTACK || type1 == CardType.REACTION;
+                CardType type2 = CardType.values()[vals2[0]];
+                boolean isAction2 = type2 == CardType.ACTION || type2 == CardType.ATTACK || type2 == CardType.REACTION;
+
+                if(!isAction1 || !isAction2)
+                    return vals1[0] - vals2[0];
+            }
+
+            if(vals1[1] != vals2[1]) {
+                return vals1[1] - vals2[1];
+            }
+
+            return name1.compareTo(name2);
+        }
     }
 }
