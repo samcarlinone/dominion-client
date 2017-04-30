@@ -1,10 +1,7 @@
 package com.dominion.prog2.modules;
 
 import com.dominion.prog2.Driver;
-import com.dominion.prog2.game.Card;
-import com.dominion.prog2.game.CardInfo;
-import com.dominion.prog2.game.CardStack;
-import com.dominion.prog2.game.Player;
+import com.dominion.prog2.game.*;
 import com.dominion.prog2.ui.CardGrid;
 import com.dominion.prog2.ui.ImageCache;
 import javafx.collections.ObservableList;
@@ -21,33 +18,44 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public class Game extends Module
 {
     private Driver d;
     private GridPane root;
     private Player you;
+    private int youIndex;
     private BackgroundImage backgroundImage;
     private int turn = 1;
 
-    public ObservableList<String> players;
+    private ObservableList<String> players;
 
     private Button popUpSubmit;
     private CardGrid popUpGrid;
-    public CardStack popUpStack;
+    private CardStack popUpStack;
     public boolean popup = false;
 
-    public Label turnAction;
-    public Label turnCoin;
-    public Label turnBuys;
+    private Label turnAction;
+    private Label turnCoin;
+    private Label turnBuys;
 
-    public CardGrid hand;
-    public CardGrid shop;
+    private CardGrid hand;
+    private CardGrid shop;
+    private ImageView discard;
+    private ImageView playArea;
+
+    private Button endPhase;
 
     public Game(Driver d, CardStack finalShopList, ObservableList<String> userNames)
     {
         this.d = d;
         this.players = userNames;
+        for(int i=0; i<userNames.size(); i++) {
+            if(userNames.get(i).equals(d.name))
+                youIndex = i;
+
+        }
         you = new Player(d.name);
 
         root = new GridPane();
@@ -76,18 +84,17 @@ public class Game extends Module
         //TODO: Fix styles of the LABELS
         for(int i = 0; i < enemies.size(); i ++){
             Label l = enemies.get(i);
-            l.setStyle("-fx-font-size: 15pt:-fx-border-color: black;");
+            l.setStyle("-fx-font-size: 15pt;-fx-border-color: black;");
             first.add(l,i+1,0);
         }
 
         Label current = new Label("Current Turn: " + players.get(turn));
-        current.setStyle("-fx-border-color: black:-fx-font-size: 20pt;");
+        current.setStyle("-fx-border-color: black;-fx-font-size: 20pt;");
         first.add(current, players.size()+2,0);
-
 
         //Second Row
         GridPane second = new GridPane();
-            //shop
+        //shop
         CardStack shoppe = new CardStack();
         for(String name: CardInfo.treasureCardNames) {
             switch(name){
@@ -131,11 +138,15 @@ public class Game extends Module
         shop = new CardGrid(shoppe,150, true);
         shop.getRootPane().setPrefWidth(1000);
         shop.getRootPane().setPrefHeight(750);
+        shop.addListener((cardName -> buyCard(cardName)));
         second.add(shop.getRootPane(),0,0);
 
+        playArea = new ImageView();
+        playArea.setPreserveRatio(true);
+        playArea.setFitWidth(150);
+        second.add(playArea, 1, 0);
 
-
-            //if there is something that pops up
+        //if there is something that pops up
         if(popup)
         {
             popUpSubmit = new Button("Submit");
@@ -144,10 +155,9 @@ public class Game extends Module
             popUpGrid = new CardGrid(popUpStack, popUpStack.size());
         }
 
-
         //Third Row
         GridPane third = new GridPane();
-            //Stats
+        //Stats
         GridPane yourStats = new GridPane();
         yourStats.setAlignment(Pos.CENTER);
         turnAction = new Label("Turn Actions: "+you.turnAction);
@@ -160,19 +170,20 @@ public class Game extends Module
         yourStats.add(turnCoin, 0,1);
         yourStats.add(turnBuys, 0,2);
         third.add(yourStats,0,0);
-            //Deck
+        //Deck
         ImageView deck = new ImageView();
         deck.setImage(ImageCache.cardImage.get("Card_back"));
         deck.setPreserveRatio(true);
         deck.setFitWidth(100);
         third.add(deck,1,0);
-            //Hand
+        //Hand
         hand = new CardGrid(you.hand,100);
         hand.getRootPane().setPrefWidth(600);
         hand.getRootPane().setMaxHeight(200);
+        hand.addListener((cardName -> playCard(cardName)));
         third.add(hand.getRootPane(),2,0);
-            //Discard
-        ImageView discard = new ImageView();
+        //Discard
+        discard = new ImageView();
         if(you.discard.size() > 0) {
             discard.setImage(ImageCache.cardImage.get(you.discard.get(0).getName()));
             discard.setPreserveRatio(true);
@@ -180,11 +191,10 @@ public class Game extends Module
         }
         third.add(discard,3,0);
 
-        Button endTurn = new Button("End turn");
-        endTurn.setOnMouseClicked(a -> endTurn());
-        third.add(endTurn, 4,0);
-
-
+        endPhase = new Button("End Play Phase");
+        endPhase.setVisible(youIndex == turn);
+        endPhase.setOnMouseClicked(a -> endPhase());
+        third.add(endPhase, 4,0);
 
         root.add(first,0 ,0);
         root.add(second,0 ,1);
@@ -192,12 +202,19 @@ public class Game extends Module
         setScene(new Scene(root, 1600, 1000));
     }
 
-    public void endTurn()
+    public void endPhase()
     {
-        HashMap<String, String> endTurn = new HashMap<>();
-        endTurn.put("type", "endTurn");
+        if(you.actionPhase) {
+            you.actionPhase = false;
+            endPhase.setText("End Turn");
+        } else {
+            HashMap<String, String> endTurn = new HashMap<>();
+            endTurn.put("type", "endTurn");
+            d.broadcast(endTurn);
 
-        d.broadcast(endTurn);
+            endPhase.setText("End Play Phase");
+            endPhase.setVisible(false);
+        }
     }
 
     public void submitPopUp()
@@ -205,14 +222,48 @@ public class Game extends Module
         //TODO: complete
     }
 
-    public void helpClicked()
-    {
-        try {
-            Desktop.getDesktop().browse(new URI("http://riograndegames.com/uploads/Game/Game_278_gameRules.pdf"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+    private void playCard(String name) {
+        if(turn == youIndex && you.actionPhase) {
+            Card tryPlay = you.hand.get(name);
+
+            if(!(tryPlay instanceof VictoryCard)) {
+                if(tryPlay instanceof TreasureCard) {
+                    playSpecificCard(tryPlay);
+                } else {
+                    if(you.turnAction > 0) {
+                        playSpecificCard(tryPlay);
+                        you.turnAction--;
+                    }
+                }
+            }
+        }
+    }
+
+    private void playSpecificCard(Card played) {
+        if(played instanceof TreasureCard)
+            ((TreasureCard)played).play(you, this);
+        else
+            ((ActionCard)played).play(you, this);
+        
+        you.played.add(you.hand.remove(played));
+        playArea.setImage(ImageCache.cardImage.get(played.getName()));
+    }
+
+    private void buyCard(String name) {
+        if(turn == youIndex && !you.actionPhase) {
+            Card wanted = shop.getCardStack().get(name);
+
+            if(you.turnBuys > 0 && wanted.getPrice() <= you.turnMoney) {
+                you.discard.add(shop.getCardStack().remove(wanted));
+
+                you.turnMoney -= wanted.getPrice();
+                you.turnBuys--;
+
+                if(you.turnBuys == 0) {
+                    endPhase();
+                }
+            }
+
         }
     }
 
@@ -225,10 +276,26 @@ public class Game extends Module
                     turn ++;
                     if(turn >= players.size())
                         turn = 0;
+
+                    if(turn == youIndex) {
+                        endPhase.setVisible(true);
+                    }
+
                     break;
             }
         }
     }
-    //TODO: add whose turn
     //TODO: Check to see if game ends
+
+    public void helpClicked()
+    {
+        try {
+            Desktop.getDesktop().browse(new URI("http://riograndegames.com/uploads/Game/Game_278_gameRules.pdf"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -2,6 +2,7 @@ package com.dominion.prog2.modules;
 
 import com.dominion.prog2.Driver;
 import com.dominion.prog2.game.Card;
+import com.dominion.prog2.game.CardInfo;
 import com.dominion.prog2.game.CardStack;
 import com.dominion.prog2.ui.CardGrid;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -128,11 +129,11 @@ public class WaitScreen extends Module
                     String fullList = msg.get("data");
                     if(!fullList.equals("")){
                         for(String name: fullList.split(","))
-                            chosenCards.getCardStack().add(new Card(name));
+                            chosenCards.getCardStack().add(CardInfo.getCard(name));
                     }
                     break;
                 case "addCardGrid":
-                    chosenCards.getCardStack().add(new Card(msg.get("data")));
+                    chosenCards.getCardStack().add(CardInfo.getCard(msg.get("data")));
                     break;
                 case "removeCardGrid":
                     chosenCards.getCardStack().remove(msg.get("data"));
@@ -143,7 +144,7 @@ public class WaitScreen extends Module
                     if(!finalList.equals("")) {
                         for(String name: finalList.split(","))
                         {
-                            finalShop.add(new Card(name));
+                            finalShop.add(CardInfo.getCard(name));
                         }
                     }
                     if(finalShop.size() > 0)

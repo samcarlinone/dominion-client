@@ -3,13 +3,13 @@ package com.dominion.prog2.game;
 
 import com.dominion.prog2.modules.Game;
 
-public class AttackCard extends Card
+public class AttackCard extends ActionCard
 {
     private int addCoins;
     private int addCard;
 
     /**
-     * Constructor for Treasure Card
+     * Constructor for Attack Card
      * @param name
      */
     public AttackCard(String name)

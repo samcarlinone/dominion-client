@@ -5,11 +5,14 @@ public class Player
     public CardStack deck;
     public CardStack hand;
     public CardStack discard;
+    public CardStack played;
     public String name;
 
     public int turnBuys;
     public int turnAction;
     public int turnMoney;
+
+    public boolean actionPhase=true;
 
     //Todo: figure out what methods we want to include
 
@@ -23,12 +26,15 @@ public class Player
         deck = new CardStack();
         hand = new CardStack();
         discard = new CardStack();
+        played = new CardStack();
 
         //Initializes Deck
         for(int i = 0; i < 7; i ++)
-            deck.add(new Card("Copper"));
+            deck.add(CardInfo.getCard("Copper"));
         for(int i = 0; i < 3; i ++)
-            deck.add(new Card("Estate"));
+            deck.add(CardInfo.getCard("Estate"));
+
+        deck.shuffle();
 
         nextTurn();
     }
@@ -65,7 +71,7 @@ public class Player
     {
         Card newC;
         if(Card == null && !cardName.equals(""))
-            newC = new Card(cardName);
+            newC = CardInfo.getCard(cardName);
         else
             newC = Card;
         if(location.equals("hand"))

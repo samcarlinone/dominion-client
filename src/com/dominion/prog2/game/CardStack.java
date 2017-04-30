@@ -35,7 +35,7 @@ public class CardStack implements Iterable<Card> {
         cards = new ArrayList<>();
 
         for(String name : names) {
-            cards.add(new Card(name));
+            cards.add(CardInfo.getCard(name));
         }
     }
 
@@ -93,16 +93,18 @@ public class CardStack implements Iterable<Card> {
      * removed a card by name
      * @param name of card
      */
-    public void remove(String name) {
+    public Card remove(String name) {
         for(int i = 0; i < cards.size(); i ++)
         {
             if(cards.get(i).getName().equals(name)){
-                this.cards.remove(cards.get(i));
+                Card c = cards.get(i);
+                cards.remove(c);
                 notifyListeners();
-                return;
+                return c;
             }
         }
         notifyListeners();
+        return null;
     }
 
     /**
