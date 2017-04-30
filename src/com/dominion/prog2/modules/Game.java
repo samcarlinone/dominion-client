@@ -346,6 +346,15 @@ public class Game extends Module
                     if(!Player.equals(you.name))
                         playArea.setImage(ImageCache.cardImage.get(played));
                     break;
+                case "disconnect":
+                    HashMap<String, String> result = d.simpleCommand("leave");
+
+                    if(result.get("type").equals("accepted")) {
+                        d.setCurrentModule(new ChooseLobby(d, "Someone disconnected"));
+                    } else {
+                        System.exit(49);
+                    }
+                    break;
             }
         }
     }
