@@ -5,7 +5,8 @@ import com.dominion.prog2.game.*;
 import com.dominion.prog2.ui.CardGrid;
 import com.dominion.prog2.ui.ImageCache;
 import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
+import javafx.geometry.*;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -30,6 +31,7 @@ public class Game extends Module
     private int turn = 1;
 
     private ObservableList<String> players;
+    private ArrayList<Label> playerLabels;
 
     private Button popUpSubmit;
     private CardGrid popUpGrid;
@@ -61,8 +63,6 @@ public class Game extends Module
         you = new Player(d.name);
 
         root = new GridPane();
-        root.setPrefSize(400, 600);
-        root.setAlignment(Pos.CENTER_LEFT);
 
         //Background image
         backgroundImage = new BackgroundImage(new Image("BackgroundTile/RicePaper.jpg"),null,null,null,null);
@@ -70,29 +70,29 @@ public class Game extends Module
         root.setBackground(b);
 
         //First Row
-        GridPane first = new GridPane();
+        TilePane first = new TilePane();
+        first.setHgap(80);
+        first.setPrefColumns(players.size()+1);
+        first.prefWidthProperty().bind(root.widthProperty());
         Button help = new Button("Instructions");
         help.setOnMouseClicked(a -> helpClicked());
-        first.add(help, 0,0);
+        first.getChildren().add(help);
 
-        //TODO: align properly
-        ArrayList<Label> enemies = new ArrayList<>();
-        for(String name: players)
-        {
+        playerLabels = new ArrayList<>();
+        for(String name: players) {
             if(!name.equals(d.name))
-                enemies.add(new Label(name));
+                playerLabels.add(new Label(name));
+            else
+                playerLabels.add(new Label(name + " (you)"));
         }
 
-        //TODO: Fix styles of the LABELS
-        for(int i = 0; i < enemies.size(); i ++){
-            Label l = enemies.get(i);
-            l.setStyle("-fx-font-size: 15pt;-fx-border-color: black;");
-            first.add(l,i+1,0);
+        for(int i = 0; i < playerLabels.size(); i ++){
+            Label l = playerLabels.get(i);
+            l.setStyle("-fx-font-size: 20pt; -fx-border-color: black; -fx-border-width: 3px; -fx-background-color: #fff");
+            l.setPadding(new Insets(0, 6, 0, 6));
+            first.getChildren().add(l);
         }
-
-        Label current = new Label("Current Turn: " + players.get(turn));
-        current.setStyle("-fx-border-color: black;-fx-font-size: 20pt;");
-        first.add(current, players.size()+2,0);
+        playerLabels.get(turn).setStyle("-fx-font-size: 20pt; -fx-border-color: black; -fx-border-width: 3px; -fx-background-color: #339ebd");
 
         //Second Row
         GridPane second = new GridPane();
@@ -161,6 +161,8 @@ public class Game extends Module
         GridPane third = new GridPane();
         //Stats
         GridPane yourStats = new GridPane();
+        yourStats.setStyle("-fx-background-color: #fff; -fx-border-color: black; -fx-border-width: 2px;");
+        yourStats.setPadding(new Insets(0, 6, 0, 6));
         yourStats.setAlignment(Pos.CENTER);
         turnAction = new Label("Turn Actions: "+you.turnAction);
         turnAction.setStyle("-fx-font-size: 15pt");
@@ -201,6 +203,9 @@ public class Game extends Module
         root.add(first,0 ,0);
         root.add(second,0 ,1);
         root.add(third,0 ,2);
+
+
+        root.setPrefSize(1600, 1000);
         setScene(new Scene(root, 1600, 1000));
     }
 
@@ -315,9 +320,11 @@ public class Game extends Module
         for(HashMap<String, String> msg : server_msg) {
             switch (msg.get("type")) {
                 case "endTurn":
+                    playerLabels.get(turn).setStyle("-fx-font-size: 20pt; -fx-border-color: black; -fx-border-width: 3px; -fx-background-color: #fff");
                     turn ++;
                     if(turn >= players.size())
                         turn = 0;
+                    playerLabels.get(turn).setStyle("-fx-font-size: 20pt; -fx-border-color: black; -fx-border-width: 3px; -fx-background-color: #339ebd");
 
                     if(turn == youIndex)
                         endPhase.setVisible(true);
