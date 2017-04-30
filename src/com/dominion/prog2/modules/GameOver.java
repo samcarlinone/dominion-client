@@ -96,9 +96,14 @@ public class GameOver extends Module
         d.broadcast(ready);
     }
 
-    private void playAgainClicked()
-    {
-        d.setCurrentModule(new ChooseLobby(d, "Game Finished"));
+    private void playAgainClicked() {
+        HashMap<String, String> result = d.simpleCommand("leave");
+
+        if(result.get("type").equals("accepted")) {
+            d.setCurrentModule(new ChooseLobby(d, "Game Finished"));
+        } else {
+            System.exit(48);
+        }
     }
 
 
