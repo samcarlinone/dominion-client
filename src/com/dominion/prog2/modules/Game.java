@@ -212,6 +212,12 @@ public class Game extends Module
             endTurn.put("type", "endTurn");
             d.broadcast(endTurn);
 
+            you.nextTurn();
+            hand.getCardStack().clear();
+            hand.getCardStack().add(you.hand.getAll());
+
+            discard.setImage(playArea.getImage());
+
             endPhase.setText("End Play Phase");
             endPhase.setVisible(false);
         }
@@ -244,7 +250,16 @@ public class Game extends Module
             ((TreasureCard)played).play(you, this);
         else
             ((ActionCard)played).play(you, this);
-        
+
+        updateStats();
+
+        //BroadCast Action
+        HashMap<String, String> buy = new HashMap<>();
+        buy.put("type", "played");
+        buy.put("player", players.get(turn));
+        buy.put("cardName", played.getName());
+        d.broadcast(buy);
+
         you.played.add(you.hand.remove(played));
         playArea.setImage(ImageCache.cardImage.get(played.getName()));
     }
@@ -259,12 +274,34 @@ public class Game extends Module
                 you.turnMoney -= wanted.getPrice();
                 you.turnBuys--;
 
+                updateStats();
+
+                //BroadCast Buys
+                HashMap<String, String> buy = new HashMap<>();
+                buy.put("type", "bought");
+                buy.put("player", players.get(turn));
+                buy.put("cardName", name);
+                d.broadcast(buy);
+
                 if(you.turnBuys == 0) {
                     endPhase();
                 }
             }
 
         }
+    }
+
+    public boolean checkEnd()
+    {
+        //TODO: Check if the game ends
+        return false;
+    }
+
+    public void updateStats()
+    {
+        turnAction.setText("Turn Actions: "+you.turnAction);
+        turnCoin.setText("Turn Coins: "+you.turnMoney);
+        turnBuys.setText("Turn Buys: "+you.turnBuys);
     }
 
     @Override
@@ -277,15 +314,31 @@ public class Game extends Module
                     if(turn >= players.size())
                         turn = 0;
 
-                    if(turn == youIndex) {
+                    if(turn == youIndex)
                         endPhase.setVisible(true);
-                    }
 
+                    if(checkEnd())
+                        d.setCurrentModule(new GameOver(players, null));
+
+                    playArea.setImage(null);
+                    break;
+                case "bought":
+                    String bought = msg.get("cardName");
+                    String Buyer = msg.get("player");
+                    if(!Buyer.equals(you.name))
+                        shop.getCardStack().remove(bought);
+                    break;
+                case "played":
+                    String played = msg.get("cardName");
+                    String Player = msg.get("player");
+                    if(!Player.equals(you.name))
+                        playArea.setImage(ImageCache.cardImage.get(played));
                     break;
             }
         }
     }
     //TODO: Check to see if game ends
+    //TODO: add to discard pile, and show top Card
 
     public void helpClicked()
     {

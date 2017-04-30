@@ -264,7 +264,7 @@ public class HostWaitScreen extends Module
 
     public void startClicked()
     {
-        if(chosenCards.getCardStack().size() == 10) {
+        if(chosenCards.getCardStack().size() == 10 && playerList.size() > 1) {
             HashMap<String, String> result = d.simpleCommand("begin");
 
             HashMap<String, String> finalCards = new HashMap<>();
