@@ -1,7 +1,6 @@
 package com.dominion.prog2.modules;
 
 import com.dominion.prog2.Driver;
-import com.dominion.prog2.game.Card;
 import com.dominion.prog2.game.CardInfo;
 import com.dominion.prog2.game.CardStack;
 import com.dominion.prog2.ui.CardGrid;
@@ -79,7 +78,7 @@ public class WaitScreen extends Module
         players.setMaxSize(200,200);
 
         TableColumn<String,String> users = new TableColumn<>("Player in Lobby");
-        users.setPrefWidth(400/3);
+        users.setPrefWidth(190);
         users.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<String, String>, ObservableValue<String>>() {
             public ObservableValue<String> call(TableColumn.CellDataFeatures<String, String> p) {
                 return new ReadOnlyObjectWrapper(p.getValue());

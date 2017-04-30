@@ -93,4 +93,27 @@ public class Player
         }
     }
 
+    public int getTotalScore()
+    {
+        int score = 0;
+        for(Card c: deck) {
+            if(c instanceof VictoryCard)
+                score += ((VictoryCard) c).getVictoryValue();
+        }
+        for(Card c: hand) {
+            if(c instanceof VictoryCard)
+                score += ((VictoryCard) c).getVictoryValue();
+        }
+        for(Card c: discard) {
+            if(c instanceof VictoryCard)
+                score += ((VictoryCard) c).getVictoryValue();
+        }
+        for(Card c: played) {
+            if(c instanceof VictoryCard)
+                score += ((VictoryCard) c).getVictoryValue();
+        }
+
+        return score;
+    }
+
 }

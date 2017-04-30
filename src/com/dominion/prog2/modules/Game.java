@@ -50,6 +50,8 @@ public class Game extends Module
     public Game(Driver d, CardStack finalShopList, ObservableList<String> userNames)
     {
         this.d = d;
+
+
         this.players = userNames;
         for(int i=0; i<userNames.size(); i++) {
             if(userNames.get(i).equals(d.name))
@@ -297,7 +299,7 @@ public class Game extends Module
     public boolean checkEnd()
     {
         //TODO: Check if the game ends
-        return false;
+        return true;
     }
 
     public void updateStats()
@@ -321,7 +323,7 @@ public class Game extends Module
                         endPhase.setVisible(true);
 
                     if(checkEnd())
-                        d.setCurrentModule(new GameOver(players, null));
+                        d.setCurrentModule(new GameOver(players, you, d));
 
                     playArea.setImage(null);
                     break;
@@ -341,7 +343,6 @@ public class Game extends Module
         }
     }
     //TODO: Check to see if game ends
-    //TODO: add to discard pile, and show top Card
 
     public void helpClicked()
     {
