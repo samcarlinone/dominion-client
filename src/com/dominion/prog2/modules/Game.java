@@ -110,6 +110,12 @@ public class Game extends Module
         playArea = new ImageView();
         playArea.setPreserveRatio(true);
         playArea.setFitWidth(150);
+        you.played.addListener(() -> {
+            if(you.played.size() > 0)
+                playArea.setImage(ImageCache.cardImage.get(you.played.get(you.played.size()-1).getName()));
+            else
+                playArea.setImage(null);
+        });
         second.add(playArea, 1, 0);
 
         //Third Row
@@ -128,29 +134,33 @@ public class Game extends Module
         yourStats.add(turnAction, 0,0);
         yourStats.add(turnCoin, 0,1);
         yourStats.add(turnBuys, 0,2);
-        third.add(yourStats,0,0);
+        third.add(yourStats,2,0);
         //Deck
         ImageView deck = new ImageView();
         deck.setImage(ImageCache.cardImage.get("Card_back"));
         deck.setPreserveRatio(true);
         deck.setFitWidth(100);
-        third.add(deck,1,0);
+        third.add(deck,0,0);
         //Hand
         hand = new CardGrid(you.hand,100);
         hand.getRootPane().setPrefWidth(600);
         hand.getRootPane().setMaxHeight(200);
         hand.addListener((cardName -> playCard(cardName)));
-        third.add(hand.getRootPane(),2,0);
+        third.add(hand.getRootPane(),1,0);
         //Discard
         discard = new ImageView();
-        if(you.discard.size() > 0) {
-            discard.setImage(ImageCache.cardImage.get(you.discard.get(0).getName()));
-            discard.setPreserveRatio(true);
-            discard.setFitWidth(100);
-        }
+        you.discard.addListener(() -> {
+            if(you.discard.size() > 0)
+                discard.setImage(ImageCache.cardImage.get(you.discard.get(you.discard.size()-1).getName()));
+            else
+                discard.setVisible(false);
+        });
+        discard.setPreserveRatio(true);
+        discard.setFitWidth(100);
         third.add(discard,3,0);
 
         endPhase = new Button("End Play Phase");
+        endPhase.setStyle("-fx-font-size: 20pt");
         endPhase.setVisible(youIndex == turn);
         endPhase.setOnMouseClicked(a -> endPhase());
         third.add(endPhase, 4,0);
@@ -158,7 +168,6 @@ public class Game extends Module
         root.add(first,0 ,0);
         root.add(second,0 ,1);
         root.add(third,0 ,2);
-
 
         root.setPrefSize(1600, 1000);
         setScene(new Scene(stage, 1600, 1000));
@@ -208,23 +217,23 @@ public class Game extends Module
 
     public void endPhase()
     {
-        if(you.actionPhase) {
-            you.actionPhase = false;
-            endPhase.setText("End Turn");
-        } else {
-            HashMap<String, String> endTurn = new HashMap<>();
-            endTurn.put("type", "endTurn");
-            d.broadcast(endTurn);
+        if(popup == null) {
+            if (you.actionPhase) {
+                you.actionPhase = false;
+                endPhase.setText("End Turn");
+            } else {
+                HashMap<String, String> endTurn = new HashMap<>();
+                endTurn.put("type", "endTurn");
+                d.broadcast(endTurn);
 
-            you.nextTurn();
-            updateStats();
-            discard.setImage(playArea.getImage());
-            discard.setPreserveRatio(true);
-            discard.setFitWidth(100);
-            playArea.setImage(null);
+                you.nextTurn();
+                updateStats();
+                discard.setPreserveRatio(true);
+                discard.setFitWidth(100);
 
-            endPhase.setText("End Play Phase");
-            endPhase.setVisible(false);
+                endPhase.setText("End Play Phase");
+                endPhase.setVisible(false);
+            }
         }
     }
 
@@ -233,15 +242,18 @@ public class Game extends Module
         popup = new CardSelectPopup(msg, source, validate, this);
         stage.getChildren().add(popup.getRootPane());
         popup.getRootPane().setPrefSize(500, 400);
+        popup.getRootPane().setLayoutX(200);
+        popup.getRootPane().setLayoutY(200);
     }
 
     public void popupSubmitted() {
         selector.selected(popup.getSelectedStack(), this);
         stage.getChildren().remove(popup.getRootPane());
+        popup = null;
     }
 
     private void playCard(String name) {
-        if(turn == youIndex && you.actionPhase) {
+        if(turn == youIndex && you.actionPhase && popup == null) {
             Card tryPlay = you.hand.get(name);
 
             if(!(tryPlay instanceof VictoryCard)) {
@@ -275,7 +287,6 @@ public class Game extends Module
         d.broadcast(buy);
 
         you.played.add(you.hand.remove(played));
-        playArea.setImage(ImageCache.cardImage.get(played.getName()));
     }
 
     private void buyCard(String name) {
@@ -364,7 +375,6 @@ public class Game extends Module
             }
         }
     }
-    //TODO: Check to see if game ends
 
     public void helpClicked()
     {

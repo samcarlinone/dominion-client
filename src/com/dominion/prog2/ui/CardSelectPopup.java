@@ -27,10 +27,10 @@ public class CardSelectPopup {
         selected = new CardStack();
 
         root = new GridPane();
-        root.setStyle("-fx-background-color: #fff; -fx-border-width: 6px; -fx-border-color: #000;");
+        root.setStyle("-fx-background-color: #ffffff; -fx-border-width: 6px; -fx-border-color: #8c000a;");
 
         Label msg = new Label(message);
-        msg.setStyle("-fx-font-size: 20px");
+        msg.setStyle("-fx-font-size: 18pt");
         root.add(msg, 0, 0);
 
         sourceGrid = new CardGrid(source, 150);
@@ -42,12 +42,13 @@ public class CardSelectPopup {
         root.add(selectedGrid.getRootPane(), 1, 1);
 
         Button choose = new Button("Choose");
+        choose.setStyle("-fx-font-size: 20pt");
         root.add(choose, 0, 2);
         choose.setOnMouseClicked((e) -> chooseClicked());
     }
 
     private void chooseClicked() {
-        if(validator.validate(selected)) {
+        if(validator.validate(selected, game)) {
             game.popupSubmitted();
         }
     }

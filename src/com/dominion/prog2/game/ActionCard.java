@@ -43,7 +43,7 @@ public class ActionCard extends Card
             case "Cellar":
                 g.selectCards("Choose cards to discard", p.hand,
                         ((stack, game) -> game.getYou().discard.add(stack.getAll())),
-                        (stack -> stack.size()>0 ));
+                        ((stack, game) -> stack.size()>0 ));
                 break;
             case "Chapel":
                 break;
