@@ -2,6 +2,9 @@ package com.dominion.prog2.modules;
 
 import com.dominion.prog2.Driver;
 import com.dominion.prog2.game.Player;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -15,6 +18,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,12 +36,7 @@ public class GameOver extends Module
         this.d = d;
         this.p = p;
 
-        if(d.name.equals(userNames.get(0))){
-            HashMap<String, String> ready = new HashMap<>();
-            ready.put("type", "readyScores");
-            d.broadcast(ready);
-        }
-
+        boolean host = d.name.equals(userNames.get(0));
 
         root = new GridPane();
         root.setPrefSize(400, 600);
@@ -52,6 +51,8 @@ public class GameOver extends Module
 
         players = new TableView<>();
         nameScores = FXCollections.observableArrayList();
+
+        nameScores.add("Waiting for Scores...");
 
         players.setItems(nameScores);
         players.setMaxSize(200,200);
@@ -81,15 +82,27 @@ public class GameOver extends Module
         root.add(buttons, 0,2);
 
         setScene(new Scene(root, 745, 700));
+
+        if(host) {
+            Timeline timeline = new Timeline(new KeyFrame(Duration.millis(2000), a -> readyForScores()));
+            timeline.play();
+        }
     }
 
-    public void playAgainClicked()
+    private void readyForScores()
+    {
+        HashMap<String, String> ready = new HashMap<>();
+        ready.put("type", "readyScores");
+        d.broadcast(ready);
+    }
+
+    private void playAgainClicked()
     {
         d.setCurrentModule(new ChooseLobby(d, "Game Finished"));
     }
 
 
-    public void submitScores()
+    private void submitScores()
     {
         HashMap<String, String> submit = new HashMap<>();
         submit.put("type", "submitScore");
@@ -103,6 +116,7 @@ public class GameOver extends Module
         for(HashMap<String, String> msg : server_msg) {
             switch (msg.get("type")) {
                 case "readyScores":
+                    nameScores.clear();
                     submitScores();
                     break;
                 case "submitScore":
