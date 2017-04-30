@@ -41,7 +41,9 @@ public class ActionCard extends Card
         switch(name)
         {
             case "Cellar":
-                g.popup = true;
+                g.selectCards("Choose cards to discard", p.hand,
+                        ((stack, game) -> game.getYou().discard.add(stack.getAll())),
+                        (stack -> stack.size()>0 ));
                 break;
             case "Chapel":
                 break;

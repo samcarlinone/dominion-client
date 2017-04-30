@@ -2,11 +2,11 @@ package com.dominion.prog2.modules;
 
 import com.dominion.prog2.Driver;
 import com.dominion.prog2.game.*;
-import com.dominion.prog2.ui.CardGrid;
-import com.dominion.prog2.ui.ImageCache;
+import com.dominion.prog2.ui.*;
 import javafx.collections.ObservableList;
 import javafx.geometry.*;
 import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,11 +19,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Pattern;
 
 public class Game extends Module
 {
     private Driver d;
+    private Group stage;
     private GridPane root;
     private Player you;
     private int youIndex;
@@ -33,10 +33,8 @@ public class Game extends Module
     private ObservableList<String> players;
     private ArrayList<Label> playerLabels;
 
-    private Button popUpSubmit;
-    private CardGrid popUpGrid;
-    private CardStack popUpStack;
-    public boolean popup = false;
+    private CardSelectPopup popup;
+    private SelectCards selector;
 
     private Label turnAction;
     private Label turnCoin;
@@ -63,7 +61,9 @@ public class Game extends Module
         }
         you = new Player(d.name);
 
+        stage = new Group();
         root = new GridPane();
+        stage.getChildren().add(root);
 
         //Background image
         backgroundImage = new BackgroundImage(new Image("BackgroundTile/RicePaper.jpg"),null,null,null,null);
@@ -111,15 +111,6 @@ public class Game extends Module
         playArea.setPreserveRatio(true);
         playArea.setFitWidth(150);
         second.add(playArea, 1, 0);
-
-        //if there is something that pops up
-        if(popup)
-        {
-            popUpSubmit = new Button("Submit");
-            this.popUpSubmit.setOnMouseClicked(a -> submitPopUp());
-
-            popUpGrid = new CardGrid(popUpStack, popUpStack.size());
-        }
 
         //Third Row
         GridPane third = new GridPane();
@@ -170,7 +161,7 @@ public class Game extends Module
 
 
         root.setPrefSize(1600, 1000);
-        setScene(new Scene(root, 1600, 1000));
+        setScene(new Scene(stage, 1600, 1000));
     }
 
     public void addCardsToShop(CardStack finalShopList)
@@ -237,9 +228,16 @@ public class Game extends Module
         }
     }
 
-    public void submitPopUp()
-    {
-        //TODO: complete
+    public void selectCards(String msg, CardStack source, SelectCards callback, ValidateCardSelection validate) {
+        selector = callback;
+        popup = new CardSelectPopup(msg, source, validate, this);
+        stage.getChildren().add(popup.getRootPane());
+        popup.getRootPane().setPrefSize(500, 400);
+    }
+
+    public void popupSubmitted() {
+        selector.selected(popup.getSelectedStack(), this);
+        stage.getChildren().remove(popup.getRootPane());
     }
 
     private void playCard(String name) {
@@ -378,5 +376,7 @@ public class Game extends Module
             e.printStackTrace();
         }
     }
+
+    public Player getYou() { return you; }
 
 }
