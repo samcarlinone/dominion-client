@@ -28,6 +28,9 @@ public class AttackCard extends ActionCard
      */
     public void play(Player p, Game g)
     {
+        p.turnMoney += addCoins;
+        p.pickUpCards(addCard);
+
         switch(name)
         {
             case "Bureaucrat":
