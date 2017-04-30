@@ -47,6 +47,11 @@ public class Player
         turnBuys = 1;
         turnAction = 1;
         turnMoney = 0;
+        actionPhase = true;
+        discard.add(played.getAll());
+        played.clear();
+        discard.add(hand.getAll());
+        hand.clear();
 
         pickUpCards(5);
     }

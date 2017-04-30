@@ -213,10 +213,11 @@ public class Game extends Module
             d.broadcast(endTurn);
 
             you.nextTurn();
-            hand.getCardStack().clear();
-            hand.getCardStack().add(you.hand.getAll());
-
+            updateStats();
             discard.setImage(playArea.getImage());
+            discard.setPreserveRatio(true);
+            discard.setFitWidth(100);
+            playArea.setImage(null);
 
             endPhase.setText("End Play Phase");
             endPhase.setVisible(false);
@@ -243,6 +244,8 @@ public class Game extends Module
                 }
             }
         }
+
+        updateStats();
     }
 
     private void playSpecificCard(Card played) {
