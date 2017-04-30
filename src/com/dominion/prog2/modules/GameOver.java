@@ -2,7 +2,6 @@ package com.dominion.prog2.modules;
 
 import com.dominion.prog2.Driver;
 import com.dominion.prog2.game.Player;
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -125,7 +124,7 @@ public class GameOver extends Module
                     submitScores();
                     break;
                 case "submitScore":
-                    nameScores.add(msg.get("user") + "  |   " + msg.get("score"));
+                    nameScores.add(msg.get("user") + " has a score of: " + msg.get("score"));
                     break;
             }
         }

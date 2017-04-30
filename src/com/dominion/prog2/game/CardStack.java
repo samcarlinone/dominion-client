@@ -267,6 +267,20 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
+     * Gets how many different cards there are
+     * @return types
+     */
+    public int getNumberTypesOfCards()
+    {
+        ArrayList<String> names = new ArrayList<>();
+        for(Card c: cards)
+            if(!names.contains(c.getName()))
+                names.add(c.getName());
+        return names.size();
+    }
+
+
+    /**
      * Clears the arrayList of Cards
      */
     public void clear()

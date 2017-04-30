@@ -43,6 +43,7 @@ public class Game extends Module
     private Label turnBuys;
 
     private CardGrid hand;
+    private CardStack shoppe;
     private CardGrid shop;
     private ImageView discard;
     private ImageView playArea;
@@ -97,45 +98,8 @@ public class Game extends Module
         //Second Row
         GridPane second = new GridPane();
         //shop
-        CardStack shoppe = new CardStack();
-        for(String name: CardInfo.treasureCardNames) {
-            switch(name){
-                case "Copper":
-                    shoppe.addMultiple(name, 60);
-                    break;
-                case "Silver":
-                    shoppe.addMultiple(name, 40);
-                    break;
-                case "Gold":
-                    shoppe.addMultiple(name, 30);
-                    break;
-            }
-        }
-        for(String name: CardInfo.victoryCardNames) {
-            switch(name)
-            {
-                case "Curse":
-                    if(finalShopList.has("Witch"))
-                        shoppe.addMultiple(name, 30);
-                    break;
-                case "Estate":
-                    shoppe.addMultiple(name, 24);
-                    break;
-                case "Duchy":
-                    shoppe.addMultiple(name, 12);
-                    break;
-                case "Province":
-                    shoppe.addMultiple(name, 12);
-                    break;
-            }
-        }
-        for(Card c: finalShopList) {
-            String name = c.getName();
-            if(name.equals("Garden"))
-                shoppe.addMultiple(name,12);
-            else
-                shoppe.addMultiple(name, 10);
-        }
+        shoppe = new CardStack();
+        addCardsToShop(finalShopList);
 
         shop = new CardGrid(shoppe,150, true);
         shop.getRootPane().setPrefWidth(1000);
@@ -207,6 +171,48 @@ public class Game extends Module
 
         root.setPrefSize(1600, 1000);
         setScene(new Scene(root, 1600, 1000));
+    }
+
+    public void addCardsToShop(CardStack finalShopList)
+    {
+        for(String name: CardInfo.treasureCardNames) {
+            switch(name){
+                case "Copper":
+                    shoppe.addMultiple(name, 60);
+                    break;
+                case "Silver":
+                    shoppe.addMultiple(name, 40);
+                    break;
+                case "Gold":
+                    shoppe.addMultiple(name, 30);
+                    break;
+            }
+        }
+        for(String name: CardInfo.victoryCardNames) {
+            switch(name)
+            {
+                case "Curse":
+                    if(finalShopList.has("Witch"))
+                        shoppe.addMultiple(name, 30);
+                    break;
+                case "Estate":
+                    shoppe.addMultiple(name, 24);
+                    break;
+                case "Duchy":
+                    shoppe.addMultiple(name, 12);
+                    break;
+                case "Province":
+                    shoppe.addMultiple(name, 12);
+                    break;
+            }
+        }
+        for(Card c: finalShopList) {
+            String name = c.getName();
+            if(name.equals("Garden"))
+                shoppe.addMultiple(name,12);
+            else
+                shoppe.addMultiple(name, 10);
+        }
     }
 
     public void endPhase()
@@ -303,8 +309,10 @@ public class Game extends Module
 
     public boolean checkEnd()
     {
-        //TODO: Check if the game ends
-        return true;
+        boolean noProvinces = !shop.getCardStack().has("Province");
+        boolean threeGone = shop.getCardStack().getNumberTypesOfCards() <= shop.maxCards-3;
+
+        return (noProvinces || threeGone);
     }
 
     public void updateStats()

@@ -21,6 +21,7 @@ public class CardGrid {
     private CardStack stack;
     private FlowPane list;
     private ScrollPane root;
+    public int maxCards = 16;
     private ArrayList<CardSelected> listeners = new ArrayList<>();
 
     private int cardWidth;
@@ -31,6 +32,9 @@ public class CardGrid {
         stack.addListener(() -> stackChanged());
         this.cardWidth = cardWidth;
         this.collapseSame = collapseSame;
+
+        if(stack.has("Witch"))
+            maxCards = 17;
 
         root = new ScrollPane();
         root.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
