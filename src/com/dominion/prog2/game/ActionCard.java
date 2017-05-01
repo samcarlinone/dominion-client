@@ -59,7 +59,7 @@ public class ActionCard extends Card
                                 you.hand.remove(c);
 
                         }),
-                        ((stack,game)-> true));
+                        ((stack,game)-> stack.size() <= 4));
                 break;
             case "Harbinger":
                 g.selectCards("Choose a card from Discard",p.discard,
@@ -83,7 +83,7 @@ public class ActionCard extends Card
                             //TODO: Play the card
                             //TODO: make sure you balance out the actions
                         }),
-                        ((stack,game)-> true));
+                        ((stack,game)-> stack.size() <= 1));
                 break;
             case "Workshop":
                 g.selectCards("Gain one of these Cards",g.getShoppe().filterPrice(4),
@@ -121,15 +121,17 @@ public class ActionCard extends Card
                     g.selectCards("Choose a Card to Trash", p.hand,
                             ((stack, game) -> {
                                 Player you = game.getYou();
-                                you.hand.remove(stack.get(0));
-                                g.selectCards("Choose one of these cards", game.getShoppe().filterPrice(stack.get(0).getPrice() + 2),
-                                        ((stack2, game2) -> {
-                                            you.discard.add(stack2.get(0));
-                                            game.getShoppe().remove(stack2.get(0));
-                                        }),
-                                        ((stack2, game2) -> stack2.size() > 0));
+                                if(stack.size() > 0) {
+                                    you.hand.remove(stack.get(0));
+                                    g.selectCards("Choose one of these cards", game.getShoppe().filterPrice(stack.get(0).getPrice() + 2),
+                                            ((stack2, game2) -> {
+                                                you.discard.add(stack2.get(0));
+                                                game.getShoppe().remove(stack2.get(0));
+                                            }),
+                                            ((stack2, game2) -> stack2.size() <= 1));
+                                }
                             }),
-                            ((stack, game) -> stack.size() > 0));
+                            ((stack, game) -> stack.size() <= 1));
                 }
                 break;
             case "Throne Room":
@@ -140,7 +142,7 @@ public class ActionCard extends Card
                                 //TODO: Play the card twice
                                 //TODO: make sure you balance out the actions
                             }),
-                            ((stack, game) -> stack.size() > 0));
+                            ((stack, game) -> stack.size() <= 1));
                 }
                 break;
             case "Library":
@@ -154,7 +156,8 @@ public class ActionCard extends Card
                 g.selectCards("Trash a Treasure for a better Treasure",p.hand.filterType(type),
                         ((stack,game)-> {
                             Player you = game.getYou();
-                            you.hand.remove(stack.get(0).getName());
+                            if(!stack.get(0).getName().equals("Gold"))
+                                you.hand.remove(stack.get(0).getName());
                             switch(stack.get(0).getName()) {
                                 case "Copper":
                                     Card s = g.getShoppe().get("Silver");
@@ -168,7 +171,7 @@ public class ActionCard extends Card
                                     break;
                             }
                         }),
-                        ((stack,game)-> stack.size() < 2));
+                        ((stack,game)-> stack.size() <= 1));
                 break;
             case "Sentry":
                 //TODO: edit: I don't allow player to order their cards
@@ -190,7 +193,7 @@ public class ActionCard extends Card
                                 twoCards.remove(c);
                             }
                         }),
-                        ((stack,game)-> true));
+                        ((stack,game)-> stack.size() <= 1));
                 if(twoCards.size() > 0)
                     g.selectCards("Do you want to discard any of these?",twoCards,
                             ((stack,game)-> {
@@ -200,7 +203,7 @@ public class ActionCard extends Card
                                     you.discard.add(c);
                                     twoCards.remove(c);
                                 }
-                            }),((stack,game)-> true));
+                            }),((stack,game)-> stack.size() <= 1));
                 break;
             case "Artisan":
                 g.selectCards("Gain a Card costing up to 5",g.getShoppe().filterPrice(5),
@@ -210,7 +213,7 @@ public class ActionCard extends Card
                             you.hand.add(c);
                             game.getShoppe().remove(c);
                         }),
-                        ((stack,game)-> stack.size() < 2));
+                        ((stack,game)-> stack.size() <= 1));
                 g.selectCards("Put a card from hand onto your deck",p.hand,
                         ((stack,game)-> {
                             Player you = game.getYou();
@@ -218,7 +221,7 @@ public class ActionCard extends Card
                             you.hand.remove(c);
                             you.deck.addTop(c);
                         }),
-                        ((stack,game)-> stack.size() < 2));
+                        ((stack,game)-> stack.size() <= 1));
                 break;
         }
     }
