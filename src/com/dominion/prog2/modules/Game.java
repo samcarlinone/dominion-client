@@ -392,6 +392,10 @@ public class Game extends Module
                                             }),
                                             ((stack, game) -> stack.size() == 2));
                                     break;
+                                case "Witch":
+                                    Card c = shoppe.remove("Curse");
+                                    you.discard.add(c);
+                                    break;
                             }
                         }
                     }
