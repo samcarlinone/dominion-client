@@ -98,7 +98,6 @@ public class Game extends Module
         GridPane second = new GridPane();
         //shop
         shoppe = new CardStack();
-        //TODO: add watcher for sync
         addCardsToShop(finalShopList);
 
         shop = new CardGrid(shoppe,150, true);
