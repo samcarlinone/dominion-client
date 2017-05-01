@@ -78,7 +78,7 @@ public class Game extends Module
         stage.getChildren().add(root);
 
         //Background image
-        backgroundImage = new BackgroundImage(new Image("BackgroundTile/RicePaper.jpg"),null,null,null,null);
+        backgroundImage = new BackgroundImage(new Image("Misc/RicePaper.jpg"),null,null,null,null);
         Background b = new Background(backgroundImage);
         root.setBackground(b);
 

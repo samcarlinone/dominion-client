@@ -37,7 +37,7 @@ public class ChooseName extends Module {
         root.setAlignment(Pos.CENTER);
 
         ImageView title = new ImageView();
-        title.setImage(new Image("BackgroundTile/Logo.jpg"));
+        title.setImage(new Image("Misc/Logo.jpg"));
         title.setFitWidth(400);
         title.setPreserveRatio(true);
         root.getChildren().add(title);
