@@ -461,12 +461,12 @@ public class Game extends Module
         timeline.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(image.layoutXProperty(), finish.getMinX())));
         timeline.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(image.layoutYProperty(), finish.getMinY())));
         //Hide Image (we must hide first, then wait before deleting, otherwise javafx will not properly repaint the scene)
-        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(time+2), event -> {
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(time+10), event -> {
             stage.getChildren().remove(image);
             //Scene repainting hackery
             stage.setTranslateX(Math.random()*0.01);
         }));
-        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(time+20), event -> {
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(time+50), event -> {
             stage.getChildren().remove(image);
             stage.setTranslateX(0);
         }));
