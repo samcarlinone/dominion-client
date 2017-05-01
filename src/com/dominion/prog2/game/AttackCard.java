@@ -40,10 +40,11 @@ public class AttackCard extends ActionCard
                 //Nothing
                 break;
             case "Bandit":
-
+                if(g.shoppe.has("Gold"))
+                    p.discard.add(g.shoppe.remove("Gold"));
                 break;
             case "Witch":
-
+                //Nothing
                 break;
         }
     }

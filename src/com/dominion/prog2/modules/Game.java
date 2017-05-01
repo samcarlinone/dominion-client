@@ -278,8 +278,6 @@ public class Game extends Module
         else
             ((ActionCard)played).play(you, this);
 
-        updateStats();
-
         //BroadCast Action
         HashMap<String, String> buy = new HashMap<>();
         buy.put("type", "played");
@@ -383,7 +381,6 @@ public class Game extends Module
                                         }
                                     }
                                     break;
-
                                 case "Militia":
                                     selectCards("You must pick two to discard", you.hand,
                                             ((stack, game) -> {
@@ -394,6 +391,23 @@ public class Game extends Module
                                 case "Witch":
                                     Card c = shoppe.remove("Curse");
                                     you.discard.add(c);
+                                    break;
+                                case "Bandit":
+                                    CardStack top2 = new CardStack(you.deck.splice(0, 2));
+
+                                    if(top2.has("Silver")) {
+                                      top2.remove("Silver");
+                                      you.discard.add(top2.get(0));
+                                      break;
+                                    }
+
+                                    if(top2.has("Gold")) {
+                                        top2.remove("Gold");
+                                        you.discard.add(top2.get(0));
+                                        break;
+                                    }
+
+                                    you.discard.add(top2.getAll());
                                     break;
                             }
                         }
