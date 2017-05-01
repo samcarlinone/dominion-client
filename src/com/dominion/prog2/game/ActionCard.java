@@ -129,9 +129,9 @@ public class ActionCard extends Card
                                 if(stack.size() > 0) {
                                 }
                                     you.hand.remove(stack.get(0));
-                                    g.selectCards("Choose one of these cards", game.getShoppe().filterPrice(stack.get(0).getPrice() + 2), (stack2, game2) -> {
-                                                you.discard.add(stack2.get(0));
-                                                game.getShoppe().remove(stack2.get(0));
+                                    game.selectCards("Choose one of these cards", game.getShoppe().filterPrice(stack.get(0).getPrice() + 2), (stack2, game2) -> {
+                                                game2.getYou().discard.add(stack2.get(0));
+                                                game2.getShoppe().remove(stack2.get(0));
                                             }
                                             ,((stack2, game2) -> stack2.size() <= 1));
                             },
