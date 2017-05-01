@@ -9,7 +9,7 @@ public class ImageCache {
     public static HashMap<String, Image> cardImage;
 
     /**
-     * Puts images into a HashMap String, Image
+     * Puts images into a HashMap <String, Image>
      * @param d Driver
      */
     public static void readImages(Driver d) {

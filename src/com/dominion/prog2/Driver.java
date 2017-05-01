@@ -14,6 +14,12 @@ import java.util.HashMap;
 
 
 public class Driver extends Application {
+
+    /**
+     * name is the client's unique identifier
+     * Module is the screen that the client is on
+     */
+
     public String name;
     public NodeCommunicator comm;
 
@@ -21,6 +27,12 @@ public class Driver extends Application {
     private Stage primaryStage;
 
 
+    /**
+     * Starts the whole game
+     * Starts the client off on the ChooseName Screen/module
+     * Reads in all the images for ImageCache
+     * @param primaryStage
+     */
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -38,6 +50,11 @@ public class Driver extends Application {
         timeline.play();
     }
 
+    /**
+     * Sends a ping to the server
+     * Will disconnect the client from the server if the client doesn't ping the server after a while
+     * This will also allow the client to receive any messages that the server has been trying to pass onto the client
+     */
     private void pingServer() {
         ArrayList<HashMap<String, String>> server_msg;
 
@@ -74,6 +91,12 @@ public class Driver extends Application {
         }
     }
 
+    /**
+     * Calls a simple command, which returns a HashMap<String, String>
+     * @param type
+     * @param strings
+     * @return
+     */
     public HashMap<String, String> simpleCommand(String type, String... strings) {
         HashMap<String, String> join_msg = new HashMap<>();
         join_msg.put("type", type);
@@ -89,6 +112,11 @@ public class Driver extends Application {
         return comm.JSONToMap(json).get(0);
     }
 
+    /**
+     * Modules call this to broadcast messages to other players
+     * What the clients do with the messages is handled within the Modules
+     * @param data
+     */
     public void broadcast(HashMap<String, String> data) {
         String msg = comm.escapeJSON(comm.mapToJSON(data));
         if(simpleCommand("broadcast", "msg", msg).get("type").equals("rejected")) {
@@ -96,6 +124,10 @@ public class Driver extends Application {
         }
     }
 
+    /**
+     * Changes the module from one to another
+     * @param m
+     */
     public void setCurrentModule(Module m) {
         currentModule = m;
 

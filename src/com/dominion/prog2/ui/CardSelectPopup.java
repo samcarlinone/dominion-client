@@ -20,6 +20,13 @@ public class CardSelectPopup {
 
     private Game game;
 
+    /**
+     * Constructor for a popUp within Game
+     * Message: tells the user what to do
+     * Source: where the cards for CardGrid comes from
+     * Validator: conditions that need to be met
+     * Game
+     */
     public CardSelectPopup(String message, CardStack source, ValidateCardSelection validator, Game game) {
         this.validator = validator;
         this.game = game;
@@ -50,13 +57,15 @@ public class CardSelectPopup {
         choose.setOnMouseClicked((e) -> chooseClicked());
     }
 
+    /**
+     * Method called when choose button clicked
+     * makes sure the conditions are met before moving on
+     */
     private void chooseClicked() {
         if(validator.validate(selected, game)) {
             game.popupSubmitted();
         }
     }
-
-    public CardStack getSourceStack() { return source; }
     public CardStack getSelectedStack() { return selected; }
 
     public Pane getRootPane()

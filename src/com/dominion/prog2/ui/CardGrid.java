@@ -26,6 +26,14 @@ public class CardGrid {
     private boolean collapseSame;
     private boolean sort;
 
+    /**
+     * Constructor for CardGrid
+     *      Stack: CardStack what cards should be within the Grid
+     *      cardWidth: how wide the cards should be within the grid
+     *      collapseSame: if true- cards with the same name will only show once
+     *                              and the number of those cards will show on top of the card
+     *      sort: if true- sorts the card based off price, then alphabetically
+     */
     public CardGrid(CardStack stack, int cardWidth, boolean collapseSame, boolean sort) {
         this.stack = stack;
         stack.addListener(() -> stackChanged());
@@ -52,11 +60,26 @@ public class CardGrid {
         stackChanged();
     }
 
+    /**
+     * Another Constructor for CardGrid
+     *      collapse is set to false
+     *      sort is set to false
+     */
     public CardGrid(CardStack stack, int cardWidth) {
         this(stack, cardWidth, false, false);
     }
-    public CardGrid(CardStack stack, int cardWidth, boolean collapseSame) { this(stack, cardWidth, true, false); }
 
+    /**
+     *  Another Constructor for CardGrid
+     *      sort is set to false
+     */
+    public CardGrid(CardStack stack, int cardWidth, boolean collapseSame) { this(stack, cardWidth, collapseSame, false); }
+
+    /**
+     *  Method is called when the card is clicked
+     *  handles what to do when the cards are clicked
+     *  Listeners are notified
+     */
     private void handleCardClicked(MouseEvent e) {
         if(e.getSource() instanceof ImageView) {
             Image img = ((ImageView) e.getSource()).getImage();
@@ -79,6 +102,11 @@ public class CardGrid {
         }
     }
 
+    /**
+     * This method is called when the Stack of the CardGrid is changed
+     * Notifies the listeners
+     * makes sure the CardGrid is drawing the cards correctly
+     */
     private void stackChanged() {
         list.getChildren().clear();
 
@@ -152,6 +180,9 @@ public class CardGrid {
 
     public void addListener(CardSelected listener) { listeners.add(listener); }
 
+    /**
+     * Moves a specific card, based off a name from one CardGrid to another
+     */
     static public void move(String name, CardGrid source, CardGrid target) {
         Card card = source.getCardStack().get(name);
 

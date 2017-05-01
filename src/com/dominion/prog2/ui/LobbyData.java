@@ -6,6 +6,11 @@ public class LobbyData {
     private String host;
     private String size;
 
+    /**
+     * Constructor for LobbyData
+     * String data is passed in
+     *      contains name of Lobby, host of Lobby, size of Lobby
+     */
     public LobbyData(String data) {
         String[] fields = data.split(" ");
 
@@ -26,11 +31,17 @@ public class LobbyData {
         return size;
     }
 
+    /**
+     * Generates a hashcode with name, host, size for LobbyData
+     */
     @Override
     public int hashCode() {
         return name.hashCode()+host.hashCode()+size.hashCode();
     }
 
+    /**
+     * Checks if this is the same as the other LobbyData
+     */
     @Override
     public boolean equals(Object other) {
         if(other instanceof LobbyData) {
