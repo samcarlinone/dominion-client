@@ -246,9 +246,10 @@ public class Game extends Module
     }
 
     public void popupSubmitted() {
+        CardStack stack = popup.getSelectedStack();
         stage.getChildren().remove(popup.getRootPane());
-        selector.selected(popup.getSelectedStack(), this);
         popup = null;
+        selector.selected(stack,this);
     }
 
     private void playCard(String name) {
