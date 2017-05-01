@@ -247,8 +247,8 @@ public class Game extends Module
 
     public void popupSubmitted() {
         stage.getChildren().remove(popup.getRootPane());
-        popup = null;
         selector.selected(popup.getSelectedStack(), this);
+        popup = null;
     }
 
     private void playCard(String name) {
@@ -271,6 +271,8 @@ public class Game extends Module
     }
 
     private void playSpecificCard(Card played) {
+        you.played.add(you.hand.remove(played));
+
         if(played instanceof TreasureCard)
             ((TreasureCard)played).play(you, this);
         else
@@ -284,8 +286,6 @@ public class Game extends Module
         buy.put("player", players.get(turn));
         buy.put("cardName", played.getName());
         d.broadcast(buy);
-
-        you.played.add(you.hand.remove(played));
     }
 
     private void buyCard(String name) {
@@ -326,7 +326,7 @@ public class Game extends Module
         return (noProvinces || threeGone);
     }
 
-    private void updateStats()
+    public void updateStats()
     {
         turnAction.setText("Turn Actions: "+you.turnAction);
         turnCoin.setText("Turn Coins: "+you.turnMoney);
@@ -387,7 +387,6 @@ public class Game extends Module
                                 case "Militia":
                                     selectCards("You must pick two to discard", you.hand,
                                             ((stack, game) -> {
-                                                Player you = game.getYou();
                                                 game.getYou().discard.add(stack.getAll());
                                             }),
                                             ((stack, game) -> stack.size() == 2));

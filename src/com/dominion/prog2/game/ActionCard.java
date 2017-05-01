@@ -124,8 +124,8 @@ public class ActionCard extends Card
                                 you.hand.remove(stack.get(0));
                                 g.selectCards("Choose one of these cards", game.getShoppe().filterPrice(stack.get(0).getPrice() + 2),
                                         ((stack2, game2) -> {
-                                            you.discard.add(stack2.get(0));
-                                            game.getShoppe().remove(stack2.get(0));
+                                            game2.getYou().discard.add(stack2.get(0));
+                                            game2.getShoppe().remove(stack2.get(0));
                                         }),
                                         ((stack2, game2) -> stack2.size() > 0));
                             }),
@@ -134,13 +134,20 @@ public class ActionCard extends Card
                 break;
             case "Throne Room":
                 if(p.hand.size() > 0) {
-                    g.selectCards("Pick an Action to Play twice", p.hand,
+                    ArrayList<CardType> types = new ArrayList<>();
+                    types.add(CardType.ACTION);
+                    types.add(CardType.ATTACK);
+                    types.add(CardType.REACTION);
+                    g.selectCards("Pick an Action to Play twice", p.hand.filterType(types),
                             ((stack, game) -> {
-                                Player you = game.getYou();
-                                //TODO: Play the card twice
-                                //TODO: make sure you balance out the actions
+                                ActionCard c = (ActionCard) stack.get(0);
+
+                                c.play(game.getYou(), game);
+                                c.play(game.getYou(), game);
+
+                                game.getYou().discard.add(c);
                             }),
-                            ((stack, game) -> stack.size() > 0));
+                            ((stack, game) -> stack.size() == 1));
                 }
                 break;
             case "Library":
@@ -157,14 +164,14 @@ public class ActionCard extends Card
                             you.hand.remove(stack.get(0).getName());
                             switch(stack.get(0).getName()) {
                                 case "Copper":
-                                    Card s = g.getShoppe().get("Silver");
+                                    Card s = game.getShoppe().get("Silver");
                                     you.hand.add(s);
-                                    g.getShoppe().remove(s);
+                                    game.getShoppe().remove(s);
                                     break;
                                 case "Silver":
-                                    Card gold = g.getShoppe().get("Gold");
+                                    Card gold = game.getShoppe().get("Gold");
                                     you.hand.add(gold);
-                                    g.getShoppe().remove(gold);
+                                    game.getShoppe().remove(gold);
                                     break;
                             }
                         }),
@@ -221,6 +228,8 @@ public class ActionCard extends Card
                         ((stack,game)-> stack.size() < 2));
                 break;
         }
+
+        g.updateStats();
     }
 
     /**
