@@ -1,6 +1,5 @@
 package com.dominion.prog2.game;
 
-
 import com.dominion.prog2.modules.Game;
 
 public class AttackCard extends ActionCard

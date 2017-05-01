@@ -21,6 +21,12 @@ public class TreasureCard extends Card
 
     public void play(Player p, Game g)
     {
+        if(p.playedMerchant && name.equals("Silver"))
+        {
+            p.playedMerchant = false;
+            p.turnMoney += 1;
+        }
+
         p.turnMoney += addCoins;
     }
 

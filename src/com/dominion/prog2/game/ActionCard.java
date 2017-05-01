@@ -2,9 +2,7 @@ package com.dominion.prog2.game;
 
 
 import com.dominion.prog2.modules.Game;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ActionCard extends Card
 {
@@ -75,7 +73,7 @@ public class ActionCard extends Card
                         ((stack,game)-> stack.size() <= 1));
                 break;
             case "Merchant":
-                //TODO: First time u play a silver this turn, +1 Money
+                    p.playedMerchant = true;
                 break;
             case "Vassal":
                 if(p.deck.getPosAsStackIfAttack(0).size() > 0)
@@ -124,7 +122,7 @@ public class ActionCard extends Card
                             ((stack, game) -> {
                                 Player you = game.getYou();
                                 you.hand.remove(stack.get(0));
-                                g.selectCards("", game.getShoppe().filterPrice(stack.get(0).getPrice() + 2),
+                                g.selectCards("Choose one of these cards", game.getShoppe().filterPrice(stack.get(0).getPrice() + 2),
                                         ((stack2, game2) -> {
                                             you.discard.add(stack2.get(0));
                                             game.getShoppe().remove(stack2.get(0));
@@ -144,13 +142,6 @@ public class ActionCard extends Card
                             }),
                             ((stack, game) -> stack.size() > 0));
                 }
-                break;
-            case "Council Room":
-                HashMap<String, String> council = new HashMap<>();
-                council.put("type", "played");
-                council.put("cardName", "council");
-                council.put("player", p.name);
-                g.getDriver().broadcast(council);
                 break;
             case "Library":
                 //TODO: edit: I don't allow player to skip actions

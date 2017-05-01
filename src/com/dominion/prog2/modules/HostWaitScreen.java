@@ -15,10 +15,8 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,27 +26,12 @@ public class HostWaitScreen extends Module
 {
     private Driver d;
     private GridPane root;
-    private Label Title;
 
-    private Button start;
-    private Button leave;
-    private Button clear;
-
-    private Button kick;
     private TableView<String> players;
     private ObservableList<String> playerList;
 
-    private Label kingdomTitle;
-    private Label chosenTitle;
     private CardGrid kingdomCards;
     private CardGrid chosenCards;
-
-    private Button presetFirst;
-    private Button presetSize;
-    private Button presetDeck;
-    private Button presetSleight;
-    private Button presetImprovement;
-    private Button presetSilver;
 
 
     public HostWaitScreen(Driver d, String LobbyName) {
@@ -58,7 +41,7 @@ public class HostWaitScreen extends Module
         root.setPrefSize(600, 600);
         root.setAlignment(Pos.CENTER);
 
-        Title = new Label("Hosting: " + LobbyName);
+        Label Title = new Label("Hosting: " + LobbyName);
         Title.setStyle("-fx-font-size: 24pt");
         GridPane.setHalignment(Title, HPos.CENTER);
         root.add(Title, 0, 0);
@@ -75,24 +58,24 @@ public class HostWaitScreen extends Module
         Label presetsLabel = new Label("Presets: ");
         presetsLabel.setStyle("-fx-font-size: 16pt");
         presets.add(presetsLabel, 0, 0);
-        this.presetFirst = new Button("First Game");
-        this.presetFirst.setOnMouseClicked(a -> presetCards("first"));
-        presets.add(this.presetFirst, 1, 0);
-        this.presetSize = new Button("Size Distortion");
-        this.presetSize.setOnMouseClicked(a -> presetCards("size"));
-        presets.add(this.presetSize, 2, 0);
-        this.presetDeck = new Button("Deck Top");
-        this.presetDeck.setOnMouseClicked(a -> presetCards("deck"));
-        presets.add(this.presetDeck, 3, 0);
-        this.presetSleight = new Button("Sleight of Hand");
-        this.presetSleight.setOnMouseClicked(a -> presetCards("hand"));
-        presets.add(this.presetSleight, 4, 0);
-        this.presetImprovement = new Button("Improvements");
-        this.presetImprovement.setOnMouseClicked(a -> presetCards("improv"));
-        presets.add(this.presetImprovement, 5, 0);
-        this.presetSilver = new Button("Silver & Gold");
-        this.presetSilver.setOnMouseClicked(a -> presetCards("sg"));
-        presets.add(this.presetSilver, 6, 0);
+        Button presetFirst = new Button("First Game");
+        presetFirst.setOnMouseClicked(a -> presetCards("first"));
+        presets.add(presetFirst, 1, 0);
+        Button presetSize = new Button("Size Distortion");
+        presetSize.setOnMouseClicked(a -> presetCards("size"));
+        presets.add(presetSize, 2, 0);
+        Button presetDeck = new Button("Deck Top");
+        presetDeck.setOnMouseClicked(a -> presetCards("deck"));
+        presets.add(presetDeck, 3, 0);
+        Button presetSleight = new Button("Sleight of Hand");
+        presetSleight.setOnMouseClicked(a -> presetCards("hand"));
+        presets.add(presetSleight, 4, 0);
+        Button presetImprovement = new Button("Improvements");
+        presetImprovement.setOnMouseClicked(a -> presetCards("improv"));
+        presets.add(presetImprovement, 5, 0);
+        Button presetSilver = new Button("Silver & Gold");
+        presetSilver.setOnMouseClicked(a -> presetCards("sg"));
+        presets.add(presetSilver, 6, 0);
 
         root.add(presets,0,2);
 
@@ -100,11 +83,11 @@ public class HostWaitScreen extends Module
         cardChoosers.setPrefSize(600, 500);
         cardChoosers.setAlignment(Pos.CENTER);
 
-        kingdomTitle = new Label("Kingdom Cards");
+        Label kingdomTitle = new Label("Kingdom Cards");
         kingdomTitle.setStyle("-fx-font-size: 18pt");
         cardChoosers.setHalignment(kingdomTitle, HPos.CENTER);
         cardChoosers.add(kingdomTitle, 0, 0);
-        chosenTitle = new Label("Chosen Cards");
+        Label chosenTitle = new Label("Chosen Cards");
         chosenTitle.setStyle("-fx-font-size: 18pt");
         cardChoosers.setHalignment(chosenTitle, HPos.CENTER);
         cardChoosers.add(chosenTitle, 1, 0);
@@ -143,17 +126,17 @@ public class HostWaitScreen extends Module
         GridPane buttons = new GridPane();
         buttons.setAlignment(Pos.CENTER);
 
-        this.start = new Button("Start Game");
-        this.start.setOnMouseClicked(a -> startClicked());
-        buttons.add(this.start, 1, 0);
+        Button start = new Button("Start Game");
+        start.setOnMouseClicked(a -> startClicked());
+        buttons.add(start,1,0);
 
-        this.leave = new Button("Close Lobby");
-        this.leave.setOnMouseClicked(a -> leaveClicked());
-        buttons.add(this.leave, 2, 0);
+        Button leave = new Button("Close Lobby");
+        leave.setOnMouseClicked(a -> leaveClicked());
+        buttons.add(leave,2,0);
 
-        this.clear = new Button("Clear Chosen");
-        this.clear.setOnMouseClicked(a -> clearChosen());
-        buttons.add(this.clear, 3, 0);
+        Button clear = new Button("Clear Chosen");
+        clear.setOnMouseClicked(a -> clearChosen());
+        buttons.add(clear,3,0);
 
         root.add(buttons,0,4);
 
@@ -178,10 +161,10 @@ public class HostWaitScreen extends Module
         GridPane.setHalignment(players, HPos.CENTER);
         root.add(players,0,5);
 
-        this.kick = new Button("Kick Player(s)");
-        this.kick.setOnMouseClicked(a -> kickPlayers());
+        Button kick = new Button("Kick Player(s)");
+        kick.setOnMouseClicked(a -> kickPlayers());
         GridPane.setHalignment(kick, HPos.CENTER);
-        root.add(this.kick,0,6);
+        root.add(kick,0,6);
 
         setScene(new Scene(root, 745, 700));
     }

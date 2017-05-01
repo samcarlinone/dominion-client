@@ -307,6 +307,9 @@ public class Game extends Module
                 buy.put("cardName", name);
                 d.broadcast(buy);
 
+                if(checkEnd())
+                    d.setCurrentModule(new GameOver(players, you, d));
+
                 if(you.turnBuys == 0) {
                     endPhase();
                 }
@@ -317,7 +320,6 @@ public class Game extends Module
 
     private boolean checkEnd()
     {
-        //TODO: Check after each buy
         boolean noProvinces = !shop.getCardStack().has("Province");
         boolean threeGone = shop.getCardStack().getNumberTypesOfCards() <= shop.maxCards-3;
 
@@ -366,7 +368,7 @@ public class Game extends Module
                     {
                         playArea.setImage(ImageCache.cardImage.get(played));
 
-                        if(played.equals("council"))
+                        if(played.equals("Council Room"))
                             you.pickUpCards(1);
 
                         //Handle Attack Cards

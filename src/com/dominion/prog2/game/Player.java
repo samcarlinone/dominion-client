@@ -12,7 +12,8 @@ public class Player
     public int turnAction;
     public int turnMoney;
 
-    public boolean actionPhase=true;
+    public boolean playedMerchant = false;
+    public boolean actionPhase = true;
 
     //Todo: figure out what methods we want to include
 
@@ -52,6 +53,8 @@ public class Player
         played.clear();
         discard.add(hand.getAll());
         hand.clear();
+
+        playedMerchant = false;
 
         pickUpCards(5);
     }

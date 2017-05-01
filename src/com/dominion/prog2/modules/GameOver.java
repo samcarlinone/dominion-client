@@ -18,7 +18,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 import javafx.util.Duration;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 

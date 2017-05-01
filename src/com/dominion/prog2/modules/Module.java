@@ -2,13 +2,9 @@ package com.dominion.prog2.modules;
 
 import javafx.scene.Scene;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by cobra on 4/6/2017.
- */
 public abstract class Module {
     private Scene main;
 

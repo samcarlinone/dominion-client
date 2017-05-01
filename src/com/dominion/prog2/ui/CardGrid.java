@@ -12,10 +12,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class CardGrid {
     private CardStack stack;
