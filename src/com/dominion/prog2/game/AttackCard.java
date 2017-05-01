@@ -39,17 +39,17 @@ public class AttackCard extends ActionCard
         {
             case "Bureaucrat":
                 if(g.shoppe.has("Silver"))
-                    p.discard.add(g.shoppe.remove("Silver"));
+                    g.gainCard("Silver");
                 break;
             case "Militia":
                 //Nothing
                 break;
             case "Bandit":
                 if(g.shoppe.has("Gold"))
-                    p.discard.add(g.shoppe.remove("Gold"));
+                    g.gainCard("Gold");
                 break;
             case "Witch":
-                //Nothing
+                g.getShoppe().remove("Curse");
                 break;
         }
     }

@@ -3,6 +3,7 @@ package com.dominion.prog2.game;
 
 import com.dominion.prog2.modules.Game;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ActionCard extends Card
 {
@@ -162,6 +163,14 @@ public class ActionCard extends Card
                                         game.getYou().queuedPlayCards.add(c);
                                     else
                                         c.play(game.getYou(), game);
+
+                                    //Broadcast play twice
+                                    HashMap<String, String> play = new HashMap<>();
+                                    play.put("type", "played");
+                                    play.put("player", game.getYou().name);
+                                    play.put("cardName", c.getName());
+                                    game.getDriver().broadcast(play);
+                                    game.getDriver().broadcast(play);
                                 }
                             }),
                             ((stack, game) -> stack.size() <= 1));

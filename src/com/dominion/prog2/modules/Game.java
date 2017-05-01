@@ -340,11 +340,11 @@ public class Game extends Module
             ((ActionCard)played).play(you, this);
 
         //BroadCast Action
-        HashMap<String, String> buy = new HashMap<>();
-        buy.put("type", "played");
-        buy.put("player", players.get(turn));
-        buy.put("cardName", played.getName());
-        d.broadcast(buy);
+        HashMap<String, String> play = new HashMap<>();
+        play.put("type", "played");
+        play.put("player", players.get(turn));
+        play.put("cardName", played.getName());
+        d.broadcast(play);
         
         updateStats();
     }
@@ -639,5 +639,12 @@ public class Game extends Module
      */
     public CardStack getShoppe(){
         return shoppe;
+    }
+
+    /**
+     * Get the driver
+     */
+    public Driver getDriver() {
+        return d;
     }
 }
