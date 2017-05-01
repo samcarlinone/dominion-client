@@ -42,7 +42,7 @@ public class Game extends Module
 
     private CardGrid hand;
     public CardStack shoppe;
-    private CardGrid shop;
+    public CardGrid shop;
     private ImageView discard;
     private ImageView playArea;
 
@@ -317,6 +317,7 @@ public class Game extends Module
 
     private boolean checkEnd()
     {
+        //TODO: Check after each buy
         boolean noProvinces = !shop.getCardStack().has("Province");
         boolean threeGone = shop.getCardStack().getNumberTypesOfCards() <= shop.maxCards-3;
 

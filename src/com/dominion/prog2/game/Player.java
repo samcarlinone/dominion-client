@@ -44,7 +44,7 @@ public class Player
      */
     public void nextTurn()
     {
-        turnBuys = 1;
+        turnBuys = 100;//1;
         turnAction = 1;
         turnMoney = 199;//0;
         actionPhase = true;

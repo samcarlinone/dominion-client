@@ -106,7 +106,14 @@ public class ActionCard extends Card
                         ((stack,game)-> stack.size() <= 1));
                 break;
             case "Poacher":
-                //g.selectCards("",source,((stack,game)-> {}),((stack,game)-> {}));
+                int numToDiscard = g.shop.maxCards-g.shoppe.getNumberTypesOfCards();
+
+                g.selectCards("Discard "+numToDiscard+" cards",p.hand,
+                        ((stack,game)-> {
+                            Player you = game.getYou();
+                            you.discard.add(stack.getAll());
+                        }),
+                        ((stack,game)-> stack.size() == numToDiscard));
                 break;
             case "Remodel":
                 //g.selectCards("",source,((stack,game)-> {}),((stack,game)-> {}));
