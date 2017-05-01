@@ -247,8 +247,8 @@ public class Game extends Module
 
     public void popupSubmitted() {
         stage.getChildren().remove(popup.getRootPane());
-        popup = null;
         selector.selected(popup.getSelectedStack(), this);
+        popup = null;
     }
 
     private void playCard(String name) {
@@ -271,12 +271,12 @@ public class Game extends Module
     }
 
     private void playSpecificCard(Card played) {
+        you.played.add(you.hand.remove(played));
+
         if(played instanceof TreasureCard)
             ((TreasureCard)played).play(you, this);
         else
             ((ActionCard)played).play(you, this);
-
-        updateStats();
 
         //BroadCast Action
         HashMap<String, String> buy = new HashMap<>();
@@ -284,8 +284,6 @@ public class Game extends Module
         buy.put("player", players.get(turn));
         buy.put("cardName", played.getName());
         d.broadcast(buy);
-
-        you.played.add(you.hand.remove(played));
     }
 
     private void buyCard(String name) {
@@ -326,7 +324,7 @@ public class Game extends Module
         return (noProvinces || threeGone);
     }
 
-    private void updateStats()
+    public void updateStats()
     {
         turnAction.setText("Turn Actions: "+you.turnAction);
         turnCoin.setText("Turn Coins: "+you.turnMoney);
@@ -383,11 +381,9 @@ public class Game extends Module
                                         }
                                     }
                                     break;
-
                                 case "Militia":
                                     selectCards("You must pick two to discard", you.hand,
                                             ((stack, game) -> {
-                                                Player you = game.getYou();
                                                 game.getYou().discard.add(stack.getAll());
                                             }),
                                             ((stack, game) -> stack.size() == 2));
@@ -395,6 +391,23 @@ public class Game extends Module
                                 case "Witch":
                                     Card c = shoppe.remove("Curse");
                                     you.discard.add(c);
+                                    break;
+                                case "Bandit":
+                                    CardStack top2 = new CardStack(you.deck.splice(0, 2));
+
+                                    if(top2.has("Silver")) {
+                                      top2.remove("Silver");
+                                      you.discard.add(top2.get(0));
+                                      break;
+                                    }
+
+                                    if(top2.has("Gold")) {
+                                        top2.remove("Gold");
+                                        you.discard.add(top2.get(0));
+                                        break;
+                                    }
+
+                                    you.discard.add(top2.getAll());
                                     break;
                             }
                         }
