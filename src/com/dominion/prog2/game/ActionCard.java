@@ -144,16 +144,20 @@ public class ActionCard extends Card
                     types.add(CardType.ACTION);
                     types.add(CardType.ATTACK);
                     types.add(CardType.REACTION);
-                    g.selectCards("Pick an Action to Play twice", p.hand.filterType(types),
+                    g.selectCards("Pick an Action to play twice", p.hand.filterType(types),
                             ((stack, game) -> {
-                                ActionCard c = (ActionCard) stack.get(0);
+                                if(stack.size() == 1) {
+                                    ActionCard c = (ActionCard) stack.get(0);
+                                    game.getYou().played.add(game.getYou().hand.remove(c));
+                                    c.play(game.getYou(), game);
 
-                                c.play(game.getYou(), game);
-                                c.play(game.getYou(), game);
-
-                                game.getYou().discard.add(c);
+                                    if (game.popup != null)
+                                        game.getYou().queuedPlayCards.add(c);
+                                    else
+                                        c.play(game.getYou(), game);
+                                }
                             }),
-                            ((stack, game) -> stack.size() > 0));
+                            ((stack, game) -> stack.size() <= 1));
                 }
                 break;
             case "Library":

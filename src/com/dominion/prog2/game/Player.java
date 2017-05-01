@@ -1,5 +1,7 @@
 package com.dominion.prog2.game;
 
+import java.util.ArrayList;
+
 public class Player
 {
     public CardStack deck;
@@ -7,6 +9,7 @@ public class Player
     public CardStack discard;
     public CardStack played;
     public String name;
+    public ArrayList<ActionCard> queuedPlayCards;
 
     public int turnBuys;
     public int turnAction;
@@ -28,6 +31,7 @@ public class Player
         hand = new CardStack();
         discard = new CardStack();
         played = new CardStack();
+        queuedPlayCards = new ArrayList<>();
 
         //Initializes Deck
         for(int i = 0; i < 7; i ++)
@@ -45,9 +49,9 @@ public class Player
      */
     public void nextTurn()
     {
-        turnBuys = 1;
-        turnAction = 1;
-        turnMoney = 0;
+        turnBuys = 100;//1;
+        turnAction = 100;//1;
+        turnMoney = 100;//0;
         actionPhase = true;
         discard.add(played.getAll());
         played.clear();

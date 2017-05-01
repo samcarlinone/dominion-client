@@ -4,6 +4,7 @@ import com.dominion.prog2.game.CardStack;
 import com.dominion.prog2.modules.Game;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
@@ -28,6 +29,8 @@ public class CardSelectPopup {
 
         root = new GridPane();
         root.setStyle("-fx-background-color: #ffffff; -fx-border-width: 6px; -fx-border-color: #8c000a;");
+        root.getColumnConstraints().add(new ColumnConstraints());
+        root.getColumnConstraints().get(0).setPercentWidth(50);
 
         Label msg = new Label(message);
         msg.setStyle("-fx-font-size: 18pt");

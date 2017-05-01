@@ -33,7 +33,7 @@ public class Game extends Module
     private ObservableList<String> players;
     private ArrayList<Label> playerLabels;
 
-    private CardSelectPopup popup;
+    public CardSelectPopup popup;
     private SelectCards selector;
 
     private Label turnAction;
@@ -250,6 +250,17 @@ public class Game extends Module
         stage.getChildren().remove(popup.getRootPane());
         popup = null;
         selector.selected(stack,this);
+
+        if(you.queuedPlayCards.size() > 0 && popup == null) {
+            ActionCard c = you.queuedPlayCards.get(0);
+            you.queuedPlayCards.remove(c);
+
+            if(you.played.has(c)) {
+                you.hand.add(you.played.remove(c));
+            }
+
+            playSpecificCard(c);
+        }
     }
 
     private void playCard(String name) {
