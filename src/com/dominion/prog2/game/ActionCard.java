@@ -124,18 +124,17 @@ public class ActionCard extends Card
             case "Remodel":
                 if(p.hand.size() > 0) {
                     g.selectCards("Choose a Card to Trash", p.hand,
-                            ((stack, game) -> {
+                            (stack, game) -> {
                                 Player you = game.getYou();
                                 if(stack.size() > 0) {
                                 }
                                     you.hand.remove(stack.get(0));
-                                    g.selectCards("Choose one of these cards", game.getShoppe().filterPrice(stack.get(0).getPrice() + 2),
-                                            ((stack2, game2) -> {
+                                    g.selectCards("Choose one of these cards", game.getShoppe().filterPrice(stack.get(0).getPrice() + 2), (stack2, game2) -> {
                                                 you.discard.add(stack2.get(0));
                                                 game.getShoppe().remove(stack2.get(0));
-                                            ((stack2, game2) -> stack2.size() <= 1));
-                                            }),
-                            }),
+                                            }
+                                            ,((stack2, game2) -> stack2.size() <= 1));
+                            },
                             ((stack, game) -> stack.size() <= 1));
                 }
                 break;
