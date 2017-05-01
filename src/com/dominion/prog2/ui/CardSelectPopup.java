@@ -33,9 +33,9 @@ public class CardSelectPopup {
         msg.setStyle("-fx-font-size: 18pt");
         root.add(msg, 0, 0);
 
-        sourceGrid = new CardGrid(source, 150);
+        sourceGrid = new CardGrid(source, 150, true);
         sourceGrid.addListener(cardName -> CardGrid.move(cardName, sourceGrid, selectedGrid));
-        selectedGrid = new CardGrid(selected, 150);
+        selectedGrid = new CardGrid(selected, 150, true);
         selectedGrid.addListener(cardName -> CardGrid.move(cardName, selectedGrid, sourceGrid));
 
         root.add(sourceGrid.getRootPane(), 0, 1);

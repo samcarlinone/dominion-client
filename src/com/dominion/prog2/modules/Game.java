@@ -382,11 +382,13 @@ public class Game extends Module
                                     }
                                     break;
                                 case "Militia":
-                                    selectCards("You must pick two to discard", you.hand,
-                                            ((stack, game) -> {
-                                                game.getYou().discard.add(stack.getAll());
-                                            }),
-                                            ((stack, game) -> stack.size() == 2));
+                                    if(you.hand.size() > 3) {
+                                        selectCards("You must pick down to three", you.hand,
+                                                ((stack, game) -> {
+                                                    game.getYou().discard.add(stack.getAll());
+                                                }),
+                                                ((stack, game) -> game.getYou().hand.size() == 3));
+                                    }
                                     break;
                                 case "Witch":
                                     Card c = shoppe.remove("Curse");
