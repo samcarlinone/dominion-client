@@ -3,6 +3,9 @@ package com.dominion.prog2.game;
 
 import com.dominion.prog2.modules.Game;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class ActionCard extends Card
 {
     private int addCoins;
@@ -79,8 +82,8 @@ public class ActionCard extends Card
                 g.selectCards("Play this card?",p.deck.getPosAsStackIfAttack(0),
                         ((stack,game)-> {
                             Player you = game.getYou();
-                            you.turnAction += 1;
-                            //TODO: Play the Card
+                            //TODO: Play the card
+                            //TODO: make sure you balance out the actions
                         }),
                         ((stack,game)-> true));
                 break;
@@ -116,25 +119,115 @@ public class ActionCard extends Card
                         ((stack,game)-> stack.size() == numToDiscard));
                 break;
             case "Remodel":
-                //g.selectCards("",source,((stack,game)-> {}),((stack,game)-> {}));
+                if(p.hand.size() > 0) {
+                    g.selectCards("Choose a Card to Trash", p.hand,
+                            ((stack, game) -> {
+                                Player you = game.getYou();
+                                you.hand.remove(stack.get(0));
+                                g.selectCards("", game.getShoppe().filterPrice(stack.get(0).getPrice() + 2),
+                                        ((stack2, game2) -> {
+                                            you.discard.add(stack2.get(0));
+                                            game.getShoppe().remove(stack2.get(0));
+                                        }),
+                                        ((stack2, game2) -> stack2.size() > 0));
+                            }),
+                            ((stack, game) -> stack.size() > 0));
+                }
                 break;
             case "Throne Room":
-                //g.selectCards("",source,((stack,game)-> {}),((stack,game)-> {}));
+                if(p.hand.size() > 0) {
+                    g.selectCards("Pick an Action to Play twice", p.hand,
+                            ((stack, game) -> {
+                                Player you = game.getYou();
+                                //TODO: Play the card twice
+                                //TODO: make sure you balance out the actions
+                            }),
+                            ((stack, game) -> stack.size() > 0));
+                }
                 break;
             case "Council Room":
-                //g.selectCards("",source,((stack,game)-> {}),((stack,game)-> {}));
+                HashMap<String, String> council = new HashMap<>();
+                council.put("type", "played");
+                council.put("cardName", "council");
+                council.put("player", p.name);
+                g.getDriver().broadcast(council);
                 break;
             case "Library":
-                //g.selectCards("",source,((stack,game)-> {}),((stack,game)-> {}));
+                //TODO: edit: I don't allow player to skip actions
+                    while(p.hand.size() < 7)
+                        p.pickUpCards(1);
                 break;
             case "Mine":
-                //g.selectCards("",source,((stack,game)-> {}),((stack,game)-> {}));
+                ArrayList<CardType> type = new ArrayList<>();
+                type.add(CardType.TREASURE);
+                g.selectCards("Trash a Treasure for a better Treasure",p.hand.filterType(type),
+                        ((stack,game)-> {
+                            Player you = game.getYou();
+                            you.hand.remove(stack.get(0).getName());
+                            switch(stack.get(0).getName()) {
+                                case "Copper":
+                                    Card s = g.getShoppe().get("Silver");
+                                    you.hand.add(s);
+                                    g.getShoppe().remove(s);
+                                    break;
+                                case "Silver":
+                                    Card gold = g.getShoppe().get("Gold");
+                                    you.hand.add(gold);
+                                    g.getShoppe().remove(gold);
+                                    break;
+                            }
+                        }),
+                        ((stack,game)-> stack.size() < 2));
                 break;
             case "Sentry":
-                //g.selectCards("",source,((stack,game)-> {}),((stack,game)-> {}));
+                //TODO: edit: I don't allow player to order their cards
+                CardStack twoCards = new CardStack();
+                if(p.deck.size() >= 2){
+                    twoCards.add(p.deck.get(0));
+                    twoCards.add(p.deck.get(1));
+                }
+                else {
+                    p.resetFromDiscard();
+                    twoCards.add(p.deck.get(0));
+                    twoCards.add(p.deck.get(1));
+                }
+                g.selectCards("Do you want to trash any of these?",twoCards,
+                        ((stack,game)-> {
+                            Player you = g.getYou();
+                            for(Card c: stack) {
+                                you.deck.remove(stack.get(c.getName()));
+                                twoCards.remove(c);
+                            }
+                        }),
+                        ((stack,game)-> true));
+                if(twoCards.size() > 0)
+                    g.selectCards("Do you want to discard any of these?",twoCards,
+                            ((stack,game)-> {
+                                Player you = g.getYou();
+                                for(Card c: stack) {
+                                    you.deck.remove(stack.get(c.getName()));
+                                    you.discard.add(c);
+                                    twoCards.remove(c);
+                                }
+                            }),((stack,game)-> true));
                 break;
             case "Artisan":
-                //g.selectCards("",source,((stack,game)-> {}),((stack,game)-> {}));
+                g.selectCards("Gain a Card costing up to 5",g.getShoppe().filterPrice(5),
+                        ((stack,game)-> {
+                            Player you = game.getYou();
+                            Card c = game.getShoppe().get(stack.get(0).getName());
+                            you.hand.add(c);
+                            game.getShoppe().remove(c);
+                        }),
+                        ((stack,game)-> stack.size() < 2));
+                g.selectCards("Put a card from hand onto your deck",p.hand,
+                        ((stack,game)-> {
+                            Player you = game.getYou();
+                            Card c = stack.get(0);
+                            you.hand.remove(c);
+                            you.deck.addTop(c);
+                        }),
+                        ((stack,game)-> stack.size() < 2));
                 break;
         }
     }

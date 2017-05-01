@@ -22,9 +22,14 @@ public class VictoryCard extends Card
      * Getter for the Victory Value
      * @return Victory Value (int)
      */
-    public int getVictoryValue()
+    public int getVictoryValue(int totalCards)
     {
-        return victoryValue;
+        if(name.equals("Curse"))
+            return -1;
+        else if(name.equals("Garden"))
+            return totalCards/10;
+        else
+            return victoryValue;
     }
 
 }

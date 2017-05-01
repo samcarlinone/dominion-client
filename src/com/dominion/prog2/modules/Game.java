@@ -361,30 +361,36 @@ public class Game extends Module
                     String played = msg.get("cardName");
                     String player = msg.get("player");
 
+
                     if(!player.equals(you.name))
+                    {
                         playArea.setImage(ImageCache.cardImage.get(played));
 
-                    //Handle Attack Cards
-                    if(!player.equals(you.name) && !you.hand.has("Moat")) {
-                        switch (played) {
-                            case "Bureaucrat":
-                                for (int i = 0; i < you.hand.size(); i++) {
-                                    Card c = you.hand.get(i);
-                                    if (c instanceof VictoryCard) {
-                                        you.deck.add(you.hand.remove(c));
-                                        break;
-                                    }
-                                }
-                                break;
+                        if(played.equals("council"))
+                            you.pickUpCards(1);
 
-                            case "Militia":
-                                selectCards("You must pick two to discard", you.hand,
-                                        ((stack, game) -> {
-                                            Player you = game.getYou();
-                                            game.getYou().discard.add(stack.getAll());
-                                        }),
-                                        ((stack, game) -> stack.size() == 2));
-                                break;
+                        //Handle Attack Cards
+                        if(!you.hand.has("Moat")) {
+                            switch (played) {
+                                case "Bureaucrat":
+                                    for (int i = 0; i < you.hand.size(); i++) {
+                                        Card c = you.hand.get(i);
+                                        if (c instanceof VictoryCard) {
+                                            you.deck.add(you.hand.remove(c));
+                                            break;
+                                        }
+                                    }
+                                    break;
+
+                                case "Militia":
+                                    selectCards("You must pick two to discard", you.hand,
+                                            ((stack, game) -> {
+                                                Player you = game.getYou();
+                                                game.getYou().discard.add(stack.getAll());
+                                            }),
+                                            ((stack, game) -> stack.size() == 2));
+                                    break;
+                            }
                         }
                     }
                     break;
@@ -415,6 +421,10 @@ public class Game extends Module
     public Player getYou() { return you; }
     public CardStack getShoppe(){
         return shoppe;
+    }
+    public Driver getDriver()
+    {
+        return d;
     }
 
 }

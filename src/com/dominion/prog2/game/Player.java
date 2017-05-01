@@ -64,14 +64,17 @@ public class Player
             hand.add(deck.splice(0,numCards));
         else
         {
-            discard.shuffle();
-            deck.add(discard.getAll());
-            discard.clear();
-
+            resetFromDiscard();
             hand.add(deck.splice(0,numCards));
         }
     }
 
+    public void resetFromDiscard()
+    {
+        discard.shuffle();
+        deck.add(discard.getAll());
+        discard.clear();
+    }
     public void addCard(String location, String cardName, Card Card)
     {
         Card newC;
@@ -93,24 +96,43 @@ public class Player
         }
     }
 
+    private int getTotalCards()
+    {
+        int count = 0;
+        for(Card c: deck) {
+            count ++;
+        }
+        for(Card c: hand) {
+            count ++;
+        }
+        for(Card c: discard) {
+            count ++;
+        }
+        for(Card c: played) {
+            count ++;
+        }
+        return count;
+    }
+
     public int getTotalScore()
     {
         int score = 0;
+        int totalCards = getTotalCards();
         for(Card c: deck) {
             if(c instanceof VictoryCard)
-                score += ((VictoryCard) c).getVictoryValue();
+                score += ((VictoryCard) c).getVictoryValue(totalCards);
         }
         for(Card c: hand) {
             if(c instanceof VictoryCard)
-                score += ((VictoryCard) c).getVictoryValue();
+                score += ((VictoryCard) c).getVictoryValue(totalCards);
         }
         for(Card c: discard) {
             if(c instanceof VictoryCard)
-                score += ((VictoryCard) c).getVictoryValue();
+                score += ((VictoryCard) c).getVictoryValue(totalCards);
         }
         for(Card c: played) {
             if(c instanceof VictoryCard)
-                score += ((VictoryCard) c).getVictoryValue();
+                score += ((VictoryCard) c).getVictoryValue(totalCards);
         }
 
         return score;
