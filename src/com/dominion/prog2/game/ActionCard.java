@@ -12,8 +12,14 @@ public class ActionCard extends Card
     private int addBuy;
 
     /**
-     * Constructor for Treasure Card
-     * @param name
+     * Constructor for Action Card
+     *      Child class of Card
+     *      Parent class of ReactionCard and AttackCards
+     * Finds values using CardInfo, based off the name of the card
+     * AddCoins: if card played, this will add coins to the player for that turn
+     * AddAction: if card played, this will add actions to the player for that turn
+     * AddBuy: if card played, this will add buys to the player for that turn
+     * AddCard: if card played, the player will pick up the specific amount of cards
      */
     public ActionCard(String name)
     {
@@ -28,9 +34,10 @@ public class ActionCard extends Card
 
 
     /**
-     * Plays the card based off the variables of the card
-     * @param p player
-     * @param g game
+     * This method plays the card.
+     * All the basic variables are used for the player
+     * Since many of the ActionCards have extra actions based off the card,
+     *      there are specific instructions per those cards
      */
     public void play(Player p, Game g)
     {
@@ -161,7 +168,7 @@ public class ActionCard extends Card
                 }
                 break;
             case "Library":
-                //TODO: edit: I don't allow player to skip actions
+                //edit: I don't allow player to skip actions
                     while(p.hand.size() < 7)
                         p.pickUpCards(1);
                 break;
@@ -187,7 +194,7 @@ public class ActionCard extends Card
                         ((stack,game)-> stack.size() <= 1));
                 break;
             case "Sentry":
-                //TODO: edit: I don't allow player to order their cards
+                //edit: I don't allow player to order their cards
                 CardStack twoCards = new CardStack();
                 if(p.deck.size() >= 2){
                     twoCards.add(p.deck.get(0));
@@ -237,32 +244,5 @@ public class ActionCard extends Card
         }
 
         g.updateStats();
-    }
-
-    /**
-     * Getter for number of Cards to be picked up
-     * @return cards to be picked up (int)
-     */
-    public int getAddCard() {return addCard;}
-
-    /**
-     * Getter for buys added
-     * @return buys added (int)
-     */
-    public int getAddBuy() {return addBuy;}
-
-    /**
-     * Getter for Action added
-     * @return Action added (int)
-     */
-    public int getAddAction() {return addAction;}
-
-    /**
-     * Getter for the Coin Value
-     * @return Coin Value (int)
-     */
-    public int getAddCoins()
-    {
-        return addCoins;
     }
 }

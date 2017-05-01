@@ -11,16 +11,19 @@ public class CardStack implements Iterable<Card> {
     private ArrayList<StackChanged> listeners = new ArrayList<>();
 
     /**
-     *initializes the arraylist for the cards in the stack
+     * Constructor of Card Stack
+     *      This class is an arrayList of Cards
+     * Used mainly in CardGrid
      */
     public CardStack() {
         cards = new ArrayList<>();
     }
 
     /**
-     *initializes the arraylist for the cards in the stack
-     * sets the cards based off the param
-     * @param cards ArrayList of Cards
+     * Constructor of Card Stack
+     *      This class is an arrayList of Cards
+     *      Copies the passed in ArrayList to the Card variable
+     * Used mainly in CardGrid
      */
     public CardStack(ArrayList<Card> cards) {
         this.cards = new ArrayList<>();
@@ -29,7 +32,10 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
-     * Initializes card stack from list of names
+     * Constructor of Card Stack
+     *      This class is an arrayList of Cards
+     *      Creates and Adds Cards based off the list of names that were passed in
+     * Used mainly in CardGrid
      */
     public CardStack(String[] names) {
         cards = new ArrayList<>();
@@ -40,9 +46,8 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
-     * Gets a card stack of only the name
-     * @param name
-     * @return Card stack
+     * This method returns a CardStack with only cards with the passed in name
+     * Used for playing a card within Action
      */
     public CardStack getStackOfName(String name)
     {
@@ -55,15 +60,14 @@ public class CardStack implements Iterable<Card> {
 
     /**
      * Implement Iterable interface to allow enhanced for loops
-     * @return
      */
     public Iterator<Card> iterator() {
         return new CardStackIterator(this);
     }
 
     /**
-     * adds cards to the list
-     * @param cards ArrayList of cards
+     * Adds an ArrayList of Cards to the list of Cards that is already in the CardStack
+     *      adds to the end of the List
      */
     public void add(ArrayList<Card> cards) {
         for(Card c : cards) {
@@ -74,8 +78,8 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
-     * adds individual card
-     * @param c card
+     * Adds a specific Card to the list of Cards that is already in the CardStack
+     *      adds to the end of the List
      */
     public void add(Card c) {
         this.cards.add(c);
@@ -83,8 +87,7 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
-     * Add a card to the top of the deck
-     * @param c Card
+     * Add a specific card to the top of the CardStack
      */
     public void addTop(Card c)
     {
@@ -96,6 +99,7 @@ public class CardStack implements Iterable<Card> {
 
     /**
      * Adds an arbitrary number of new cards by name
+     *      Used mainly for creating the shop, and making sure there is a correct amount of each card
      */
     public void addMultiple(String name, int number) {
         for(int i=0; i<number; i++) {
@@ -105,9 +109,8 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
-     * removed a specific card
-     * @param c card
-     * @return the card that was passed in
+     * Removes a specific Card
+     * Returns the card that was removed
      */
     public Card remove(Card c) {
         this.cards.remove(c);
@@ -116,8 +119,8 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
-     * removed a card by name
-     * @param name of card
+     * Removed the first Card that has the specified name
+     * Returns the card that was removed;
      */
     public Card remove(String name) {
         for(int i = 0; i < cards.size(); i ++)
@@ -134,10 +137,8 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
-     * splices the list, REMOVES the card too
-     * @param startIndex int
-     * @param number of cards to include
-     * @return the new arraylist
+     * splices the list, REMOVES the card(s) too
+     * Returns the spliced list
      */
     public ArrayList<Card> splice(int startIndex, int number) {
         ArrayList<Card> result = new ArrayList<>();
@@ -150,12 +151,12 @@ public class CardStack implements Iterable<Card> {
         }
 
         notifyListeners();
-
         return result;
     }
 
     /**
-     * shuffles all the cards
+     * Shuffles all the cards
+     * Used by Player
      */
     public void shuffle() {
         Collections.shuffle(cards);
@@ -163,25 +164,25 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
-     * gets a specific card
-     * @param i index of the card
-     * @return the card requested
+     * Getter for the card at the specified index
+     * return null if the Index is larger than the ArrayList within CardStack
      */
     public Card get(int i) {
-        return cards.get(i);
+        if(i > cards.size())
+            return null;
+        else
+            return cards.get(i);
     }
 
     /**
-     * Sees if the Arraylist has the card
-     * @param c card
-     * @return true or false if the array has the card
+     * Sees if the CardStack contains the specified card
+     * returns false if it does not
      */
     public boolean has(Card c) { return cards.contains(c); }
 
     /**
-     * Sees if the ArrayList has a card with a specific name
-     * @param name string
-     * @return true of false if array has a card with the name
+     * Sees if the CardStack contains a Card with a specific name
+     * returns false if it does not
      */
     public boolean has(String name)
     {
@@ -192,9 +193,8 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
-     * Sees if the ArrayList has a card with a specific type
-     * @param type CardType
-     * @return true if the array has card with the type, else returns false
+     * Sees if the CardStack contains a Card with a specific Type
+     * returns false if it does not
      */
     public boolean has(CardType type)
     {
@@ -205,8 +205,8 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
-     * Get card by name or returns null if not found
-     * @return First card in array with given name or null
+     * Gets the first Card with the specified name
+     * returns null if there is no card with that name
      */
     public Card get(String name) {
         for(Card card : cards) {
@@ -219,9 +219,8 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
-     * gets all the cards that have a specific card type
-     * @param type CardType
-     * @return arraylist of cards
+     * Gets all the cards within the CardStack that has a specific type
+     *  returns empty ArrayList if there is none with that type
      */
     public ArrayList<Card> get(CardType type) {
         ArrayList<Card> result = new ArrayList<>();
@@ -236,9 +235,8 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
-     * Gets a card and returns as a whole stack
-     * @param pos of card
-     * @return Stack.
+     * Gets a CardStack that only has the Card at specified position
+     * Used within ActionCard for one of the extra functions
      */
     public CardStack getPosAsStack(int pos)
     {
@@ -248,9 +246,9 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
-     * Gets a card and returns as a whole stack
-     * @param pos of card
-     * @return Stack.
+     * Gets a CardStack that only has the Card at specified position
+     *      Only if the card has a type Action
+     * Used within ActionCard for one of the extra functions
      */
     public CardStack getPosAsStackIfAttack(int pos)
     {
@@ -261,8 +259,7 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
-     * gets all the cards in the CardStack
-     * @return arraylist of cards
+     * Gets all the cards in the CardStack
      */
     public ArrayList<Card> getAll() {
         ArrayList<Card> result = new ArrayList<>();
@@ -275,7 +272,7 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
-     * getter for the size of the arraylist
+     * Getter for the size of the ArrayList of Cards
      */
     public int size() {
         return cards.size();
@@ -298,7 +295,7 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
-     * gets hashmap of name as key and value is the number of those cards within the cardStack
+     * Gets hashMap of name as key and value is the number of those cards within the cardStack
      */
     public HashMap<String, Integer> getCounts() {
         HashMap<String, Integer> result = new HashMap<>();
@@ -306,24 +303,6 @@ public class CardStack implements Iterable<Card> {
         for(Card c : cards) {
             result.put(c.getName(), result.getOrDefault(c.getName(), 0)+1);
         }
-
-        return result;
-    }
-
-    /**
-     * merges two card Stack
-     * @param map1 HashMap(String, Integer)
-     * @param map2 HashMap(String, Integer)
-     * @return the merged stack
-     */
-    public static HashMap<String, Integer> mergeCounts(HashMap<String, Integer> map1, HashMap<String, Integer> map2) {
-        HashMap<String, Integer> result = new HashMap<>();
-
-        result.putAll(map1);
-
-        map2.forEach((k, v) -> {
-            result.merge(k, v, (v1, v2) -> v1 + v2);
-        });
 
         return result;
     }

@@ -9,7 +9,9 @@ public class TreasureCard extends Card
 
     /**
      * Constructor for Treasure Card
-     * @param name
+     *      Child class of Card
+     * Finds values using CardInfo, based off the name of the card
+     * AddCoins: if card played, this will add coins to the player for that turn
      */
     public TreasureCard(String name)
     {
@@ -19,6 +21,11 @@ public class TreasureCard extends Card
         addCoins = vals[3];
     }
 
+    /**
+     *This method plays the card.
+     * All the basic variables are used for the player
+     * There is only one card (Merchant), which would affect how these cards are played
+     */
     public void play(Player p, Game g)
     {
         if(p.playedMerchant && name.equals("Silver"))
@@ -28,14 +35,5 @@ public class TreasureCard extends Card
         }
 
         p.turnMoney += addCoins;
-    }
-
-    /**
-     * Getter for the Coin Value
-     * @return Coin Value (int)
-     */
-    public int getAddCoins()
-    {
-        return addCoins;
     }
 }

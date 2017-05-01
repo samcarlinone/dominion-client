@@ -5,7 +5,8 @@ import java.util.HashMap;
 
 public class CardInfo {
     /**
-     * Card Names
+     * This is the overall List of card names
+     * Includes all CardTypes of the Cards
      */
     public static String[] allCardNames = {
             "Artisan","Bandit","Bureaucrat",
@@ -22,14 +23,27 @@ public class CardInfo {
             "Witch","Workshop"
     };
 
+    /**
+     * This is a list of only Treasure Cards
+     * Their card type is only Treasure
+     */
     public static String[] treasureCardNames = {
             "Copper","Silver","Gold"
     };
 
+    /**
+     * This is a list of only Victory Cards
+     * Their card type is only Victory
+     */
     public static String[] victoryCardNames = {
             "Curse","Estate","Duchy","Province"
     };
 
+    /**
+     * This is a list of Kingdom Cards
+     * Their card type are one of the following: Action, Reaction, Attack
+     * The exception is Garden, since the host has to choose to play with the card
+     */
     public static String[] kingdomCardNames = {
             "Artisan","Bandit","Bureaucrat",
             "Cellar","Chapel","Council Room",
@@ -42,6 +56,11 @@ public class CardInfo {
             "Witch","Workshop"
     };
 
+    /**
+     * This is a list of extra cards
+     * These are images within the Res/Cards Folder
+     *      Card Back, Trash
+     */
     public static String[] extraCardNames = {
             "Card_back", "Trash"
     };
@@ -50,14 +69,21 @@ public class CardInfo {
      * Card Data
      * stored in format
      * [type, price, victoryValue, addCoins, addAction, addBuy, addCard]
+     * The card classes will get their information from this variable
      */
     private static HashMap<String, int[]> data;
 
     /**
      * Sets the data of the card into hashMap
+     * Key: Name of the Card
+     * Value: List of Integers
+     * using the format:
+     *      [type, price, victoryValue, addCoins, addAction, addBuy, addCard]
      */
     private static void populate() {
         //[type, price, victoryValue, addCoins, addAction, addBuy, addCard]
+
+        //If data already has been made, early return
         if(data != null)
             return;
 
@@ -102,30 +128,25 @@ public class CardInfo {
     }
 
     /**
-     * generates data based off the values of the card
-     * @param type CardType
-     * @param price int (to buy)
-     * @param victoryValue int (to win)
-     * @param addCoins int
-     * @param addAction int
-     * @param addBuy int
-     * @param addCard int
-     * @return list of int based off the data
+     * Generates the List of ints, which will be put into the hashmap
+     * This is the value to the key (name)
      */
     private static int[] genData(CardType type, int price, int victoryValue, int addCoins, int addAction, int addBuy, int addCard) {
         return new int[] {type.ordinal(), price, victoryValue, addCoins, addAction, addBuy, addCard};
     }
 
     /**
-     * get the values based off the name
-     * @param name of Card(String)
-     * @return list of integers based on values
+     * Getter for the Value in the Hashmap with the Key = name
      */
     public static int[] getVals(String name){
         populate();
         return data.get(name);
     }
 
+    /**
+     * This Creates and Returns a card based off the name
+     * Using the Value of the card, it determines which Card class to use
+     */
     public static Card getCard(String name) {
         int[] vals = CardInfo.getVals(name);
 
@@ -149,8 +170,14 @@ public class CardInfo {
         return null;
     }
 
+    /**
+     * Class for comparing the names
+     */
     public static class NameComparator implements Comparator<String>
     {
+        /**
+         * Compares two Strings and tells if they are the same
+         */
         public int compare(String name1, String name2)
         {
             int[] vals1 = CardInfo.getVals(name1);

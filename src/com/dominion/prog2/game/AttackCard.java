@@ -9,7 +9,10 @@ public class AttackCard extends ActionCard
 
     /**
      * Constructor for Attack Card
-     * @param name
+     *      Child class of Action Card
+     * Finds values using CardInfo, based off the name of the card
+     * AddCoins: if card played, this will add coins to the player for that turn
+     * AddCard: if card played, the player will pick up the specific amount of cards
      */
     public AttackCard(String name)
     {
@@ -21,9 +24,11 @@ public class AttackCard extends ActionCard
     }
 
     /**
-     * Plays the card based off the variables of the card
-     * @param p player
-     * @param g game
+     * This method plays the card.
+     * All the basic variables are used for the player
+     * Since many of the Attack Cards have extra actions based off the card,
+     *      there are specific instructions per those cards
+     * Attack cards are mostly handled in the Game, since the other players are affected.
      */
     public void play(Player p, Game g)
     {
@@ -47,21 +52,5 @@ public class AttackCard extends ActionCard
                 //Nothing
                 break;
         }
-    }
-
-
-    /**
-     * Getter for number of Cards to be picked up
-     * @return cards to be picked up (int)
-     */
-    public int getAddCard() { return addCard; }
-
-    /**
-     * Getter for the Coin Value
-     * @return Coin Value (int)
-     */
-    public int getAddCoins()
-    {
-        return addCoins;
     }
 }

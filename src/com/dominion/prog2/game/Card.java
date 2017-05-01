@@ -8,8 +8,12 @@ public class Card
     protected int price;
 
     /**
-     * Creates a card and adds values based off the card name
-     * @param name
+     * Constructor for Card
+     *      Parent class of Action Card, Treasure Card, and Victory Card
+     * Finds values using CardInfo, based off the name of the card
+     * Price: This is the price of the card, set through CardInfo
+     *      Used for buying cards, or trading cards
+     * Type: This is the CardType. Victory, Treasure, Action, Reaction, Attack
      */
     public Card(String name) {
         this.name = name;
@@ -22,31 +26,28 @@ public class Card
 
     /**
      * Deep copy of a card
-     * @param c card to be copied
      */
     public Card(Card c) {
         this(c.getName());
     }
 
     /**
-     * getter of name
-     * @return the name of the card
+     * Getter of the name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * getter of the type of card
-     * @return card type based off the enum
+     * Getter for the type of card
+     * Victory, Treasure, Action, Reaction or Attack
      */
     public CardType getType() {
         return type;
     }
 
     /**
-     * getter of the price of the card
-     * @return price (int)
+     * Getter for the price of the card
      */
     public int getPrice() {
         return price;

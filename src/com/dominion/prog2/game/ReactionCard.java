@@ -1,19 +1,24 @@
 package com.dominion.prog2.game;
 
-
 import com.dominion.prog2.modules.Game;
 
 public class ReactionCard extends ActionCard
 {
+
+    /**
+     * Constructor for Reaction Card
+     *      Child class of ActionCard
+     */
     public ReactionCard(String name)
     {
         super(name);
     }
 
+
     /**
-     * Plays the card based off the variables of the card and the card
-     * @param p player
-     * @param g game
+     *  This method plays the card.
+     *  This card blocks any attacks (handled within Game)
+     *  Also the player will pick up 2 cards
      */
     @Override
     public void play(Player p, Game g)

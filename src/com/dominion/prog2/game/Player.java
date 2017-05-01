@@ -18,11 +18,22 @@ public class Player
     public boolean playedMerchant = false;
     public boolean actionPhase = true;
 
-    //Todo: figure out what methods we want to include
-
     /**
-     * Creates a new Player
-     * @param name ID of Player
+     * Constructor for Player
+         * Name: An identifier for the player, each player's username is unique
+         * Deck: CardStack this is where the user pulls cards from, cards move from here to Hand
+         * Hand: CardStack of what cards the player can see and what cards they can use, cards move from here to Played
+         * Played: CardStack of what cards are played during the turn, cards move from here to Discard
+         * Discard: CardStack of what cards were played already in past turns. If the deck doesn't have enough cards
+         *          the discard pile will shuffle its cards and put them into the Deck
+         * queuedPlayCards: ArrayList of Action cards that are in a queue.  This is used for keeping track of which cards are played
+         * turnBuys: How many Cards the player can buy from the shop that turn. Starts off each turn with 1
+         * turnAction: How many Action Cards that player can use that turn. Starts off each turn with 1
+         * turnMoney: How much money the player has that turn. Used to buy cards. Starts off each turn with 0
+         * playedMerchant: boolean.  If the merchant is played that turn, used for extra functionality of the card Merchant
+         * actionPhase: What phase the player is on that turn
+         *          true: can play Action Cards(till they run out of turnActions) or Treasure Cards
+         *          false: Buy phase, this is where the player can buy cards from the shop
      */
     public Player(String name)
     {
@@ -45,13 +56,18 @@ public class Player
     }
 
     /**
-     * Resets the player so they are ready for their turn
+     * The player progresses onto the next turn
+     * resets turnBuys, turnAction, turnMoney
+     * ActionPhase is set to true
+     * playedMerchant is reset back to false
+     * Cards move from played to Discard, from Hand to Discard
+     * Will pick up 5 cards
      */
     public void nextTurn()
     {
-        turnBuys = 100;//1;
-        turnAction = 100;//1;
-        turnMoney = 100;//0;
+        turnBuys = 1;
+        turnAction = 1;
+        turnMoney = 0;
         actionPhase = true;
         discard.add(played.getAll());
         played.clear();
@@ -63,6 +79,10 @@ public class Player
         pickUpCards(5);
     }
 
+    /**
+     * Transfers a set amount of cards from Deck to Hand
+     * if there is not enough cards in Deck, discard will shuffle and transfer its cards to Deck
+     */
     public void pickUpCards(int numCards)
     {
         int deckSize = deck.size();
@@ -76,33 +96,20 @@ public class Player
         }
     }
 
+    /**
+     * Shuffles Deck and adds to Deck
+     */
     public void resetFromDiscard()
     {
         discard.shuffle();
         deck.add(discard.getAll());
         discard.clear();
     }
-    public void addCard(String location, String cardName, Card Card)
-    {
-        Card newC;
-        if(Card == null && !cardName.equals(""))
-            newC = CardInfo.getCard(cardName);
-        else
-            newC = Card;
-        if(location.equals("hand"))
-        {
-            hand.add(newC);
-        }
-        else if(location.equals("deck"))
-        {
-            deck.add(newC);
-        }
-        else if(location.equals("discard"))
-        {
-            discard.add(newC);
-        }
-    }
 
+    /**
+     * Getter for the total amount of cards the player has, no matter the CardType
+     * Used for Gardens in the getTotalScore()
+     */
     private int getTotalCards()
     {
         int count = 0;
@@ -121,6 +128,10 @@ public class Player
         return count;
     }
 
+    /**
+     * Tallies up all Victory Cards that the Player has
+     * Used at the end of the Game to find final score
+     */
     public int getTotalScore()
     {
         int score = 0;
