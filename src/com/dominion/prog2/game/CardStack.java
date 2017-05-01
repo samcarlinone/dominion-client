@@ -186,10 +186,21 @@ public class CardStack implements Iterable<Card> {
     public boolean has(String name)
     {
         for(Card c: cards)
-        {
             if(c.getName().equals(name))
                 return true;
-        }
+        return false;
+    }
+
+    /**
+     * Sees if the ArrayList has a card with a specific type
+     * @param type CardType
+     * @return true if the array has card with the type, else returns false
+     */
+    public boolean has(CardType type)
+    {
+        for(Card c: cards)
+            if(c.getType().equals(type))
+                return true;
         return false;
     }
 

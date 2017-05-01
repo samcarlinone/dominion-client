@@ -279,6 +279,19 @@ public class Game extends Module
         else
             ((ActionCard)played).play(you, this);
 
+        //Ends the play phase if:
+        //1. Hand is empty
+        //2. Player has no TurnActions, and no Treasure
+        //3. Hand only has Victory Cards
+        CardStack tempHand = hand.getCardStack();
+        if(tempHand.size() == 0)
+            endPhase();
+        else if(you.turnAction == 0 && !tempHand.has(CardType.TREASURE))
+            endPhase();
+        else if(!tempHand.has(CardType.TREASURE) && !tempHand.has(CardType.ACTION)
+                && !tempHand.has(CardType.REACTION) && !tempHand.has(CardType.ATTACK))
+            endPhase();
+
         //BroadCast Action
         HashMap<String, String> buy = new HashMap<>();
         buy.put("type", "played");
