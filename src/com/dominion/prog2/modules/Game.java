@@ -98,6 +98,7 @@ public class Game extends Module
         GridPane second = new GridPane();
         //shop
         shoppe = new CardStack();
+        //TODO: add watcher for sync
         addCardsToShop(finalShopList);
 
         shop = new CardGrid(shoppe,150, true);
@@ -335,6 +336,7 @@ public class Game extends Module
     @Override
     public void serverMsg(ArrayList<HashMap<String, String>> server_msg)
     {
+        //TODO: game not ending?
         for(HashMap<String, String> msg : server_msg) {
             switch (msg.get("type")) {
                 case "endTurn":

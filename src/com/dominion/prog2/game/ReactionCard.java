@@ -21,6 +21,7 @@ public class ReactionCard extends ActionCard
         switch(name)
         {
             case "moat":
+                //TODO: Check working?
                 p.pickUpCards(2);
                 break;
         }
