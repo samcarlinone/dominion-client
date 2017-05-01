@@ -48,8 +48,8 @@ public class Game extends Module
     private Label turnBuys;
 
     private CardGrid hand;
-    public CardStack shoppe;
-    public CardGrid shop;
+    private CardStack shoppe;
+    private CardGrid shop;
     private ImageView discard;
     private ImageView playArea;
 
@@ -639,6 +639,13 @@ public class Game extends Module
      */
     public CardStack getShoppe(){
         return shoppe;
+    }
+
+    /**
+     * Gets the shop card grid
+     */
+    public CardGrid getShop() {
+        return shop;
     }
 
     /**

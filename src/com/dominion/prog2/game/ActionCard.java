@@ -70,15 +70,17 @@ public class ActionCard extends Card
                         ((stack,game)-> stack.size() <= 4));
                 break;
             case "Harbinger":
-                g.selectCards("Choose a card from Discard",p.discard,
-                        ((stack,game)-> {
-                            Player you = game.getYou();
-                            if(stack.size() > 0) {
-                                you.discard.remove(stack.get(0));
-                                you.deck.addTop(stack.get(0));
-                            }
-                        }),
-                        ((stack,game)-> stack.size() <= 1));
+                if(p.discard.size() > 0) {
+                    g.selectCards("Choose a card from Discard", p.discard,
+                            ((stack, game) -> {
+                                Player you = game.getYou();
+                                if (stack.size() > 0) {
+                                    you.discard.remove(stack.get(0));
+                                    you.deck.addTop(stack.get(0));
+                                }
+                            }),
+                            ((stack, game) -> stack.size() <= 1));
+                }
                 break;
             case "Merchant":
                     p.playedMerchant = true;
@@ -119,7 +121,7 @@ public class ActionCard extends Card
                         ((stack,game)-> stack.size() <= 1));
                 break;
             case "Poacher":
-                int numToDiscard = g.shop.maxCards-g.shoppe.getNumberTypesOfCards();
+                int numToDiscard = g.getShop().maxCards-g.getShoppe().getNumberTypesOfCards();
 
                 g.selectCards("Discard "+numToDiscard+" cards",p.hand,
                         ((stack,game)-> {

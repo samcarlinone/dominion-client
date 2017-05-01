@@ -2,6 +2,8 @@ package com.dominion.prog2.game;
 
 import com.dominion.prog2.modules.Game;
 
+import java.util.HashMap;
+
 public class AttackCard extends ActionCard
 {
     private int addCoins;
@@ -38,14 +40,22 @@ public class AttackCard extends ActionCard
         switch(name)
         {
             case "Bureaucrat":
-                if(g.shoppe.has("Silver"))
-                    g.gainCard("Silver");
+                if(g.getShoppe().has("Silver")) {
+                    //Broadcast silver taken
+                    HashMap<String, String> buy = new HashMap<>();
+                    buy.put("type", "gained");
+                    buy.put("player", p.name);
+                    buy.put("cardName", "Silver");
+                    g.getDriver().broadcast(buy);
+
+                    p.deck.addTop(g.getShoppe().get("Silver"));
+                }
                 break;
             case "Militia":
                 //Nothing
                 break;
             case "Bandit":
-                if(g.shoppe.has("Gold"))
+                if(g.getShoppe().has("Gold"))
                     g.gainCard("Gold");
                 break;
             case "Witch":
