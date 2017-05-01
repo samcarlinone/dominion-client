@@ -306,8 +306,7 @@ public class Game extends Module
                 buy.put("cardName", name);
                 d.broadcast(buy);
 
-                if(checkEnd())
-                    d.setCurrentModule(new GameOver(players, you, d));
+                checkEnd();
 
                 if(you.turnBuys == 0) {
                     endPhase();
@@ -328,12 +327,17 @@ public class Game extends Module
         d.broadcast(buy);
     }
 
-    private boolean checkEnd()
+    private void checkEnd()
     {
         boolean noProvinces = !shop.getCardStack().has("Province");
         boolean threeGone = shop.getCardStack().getNumberTypesOfCards() <= shop.maxCards-3;
 
-        return (noProvinces || threeGone);
+        if(noProvinces || threeGone)
+        {
+            HashMap<String, String> endGame = new HashMap<>();
+            endGame.put("type", "endGame");
+            d.broadcast(endGame);
+        }
     }
 
     public void updateStats()
@@ -346,7 +350,6 @@ public class Game extends Module
     @Override
     public void serverMsg(ArrayList<HashMap<String, String>> server_msg)
     {
-        //TODO: game not ending?
         for(HashMap<String, String> msg : server_msg) {
             switch (msg.get("type")) {
                 case "endTurn":
@@ -359,10 +362,12 @@ public class Game extends Module
                     if(turn == youIndex)
                         endPhase.setVisible(true);
 
-                    if(checkEnd())
-                        d.setCurrentModule(new GameOver(players, you, d));
+                    checkEnd();
 
                     playArea.setImage(null);
+                    break;
+                case "endGame":
+                        d.setCurrentModule(new GameOver(players, you, d));
                     break;
                 case "bought":
                     String bought = msg.get("cardName");
