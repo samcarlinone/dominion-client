@@ -77,11 +77,16 @@ public class ActionCard extends Card
                 break;
             case "Vassal":
                 if(p.deck.getPosAsStackIfAttack(0).size() > 0)
-                g.selectCards("Play this card?",p.deck.getPosAsStackIfAttack(0),
+                g.selectCards("Play this card?", new CardStack(new String[]{p.deck.get(0).getName()}),
                         ((stack,game)-> {
                             Player you = game.getYou();
-                            //TODO: Play the card
-                            //TODO: make sure you balance out the actions
+
+                            if(stack.size() == 1) {
+                                ActionCard c = (ActionCard) stack.get(0);
+                                c.play(you, game);
+                            }
+
+                            you.discard.add(you.deck.remove(you.deck.get(0)));
                         }),
                         ((stack,game)-> stack.size() <= 1));
                 break;
