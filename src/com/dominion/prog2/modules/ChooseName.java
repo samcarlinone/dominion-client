@@ -46,6 +46,8 @@ public class ChooseName extends Module {
         name.addEventFilter(KeyEvent.KEY_TYPED, InputFilters.nameFilter());
         name.addEventFilter(KeyEvent.KEY_TYPED, InputFilters.lengthFilter(12));
         name.setPromptText("Nickname");
+        GridPane.setHalignment(name,HPos.CENTER);
+        name.setMaxWidth(140);
         name.setFocusTraversable(false);
         root.add(name, 0, 1);
 
