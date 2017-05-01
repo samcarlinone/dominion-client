@@ -318,6 +318,17 @@ public class Game extends Module
         }
     }
 
+    public void gainCard(String name) {
+        //Move card
+        you.discard.add(shoppe.remove(shoppe.get(name)));
+        //BroadCast Gains
+        HashMap<String, String> buy = new HashMap<>();
+        buy.put("type", "gained");
+        buy.put("player", players.get(turn));
+        buy.put("cardName", name);
+        d.broadcast(buy);
+    }
+
     private boolean checkEnd()
     {
         boolean noProvinces = !shop.getCardStack().has("Province");
@@ -360,10 +371,15 @@ public class Game extends Module
                     if(!buyer.equals(you.name))
                         shop.getCardStack().remove(bought);
                     break;
+                case "gained":
+                    String gained = msg.get("cardName");
+                    String gainer = msg.get("player");
+                    if(!gainer.equals(you.name))
+                        shoppe.remove(gained);
+                    break;
                 case "played":
                     String played = msg.get("cardName");
                     String player = msg.get("player");
-
 
                     if(!player.equals(you.name))
                     {

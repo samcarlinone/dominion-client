@@ -93,9 +93,8 @@ public class ActionCard extends Card
             case "Workshop":
                 g.selectCards("Gain one of these Cards",g.getShoppe().filterPrice(4),
                         ((stack,game)-> {
-                            Player you = game.getYou();
-                            you.discard.add(stack.get(0));
-                            game.getShoppe().remove(stack.get(0).getName());
+                            if(stack.size() == 1)
+                                game.gainCard(stack.get(0).getName());
                         }),
                         ((stack,game)-> stack.size() <= 1));
                 break;
@@ -219,10 +218,8 @@ public class ActionCard extends Card
             case "Artisan":
                 g.selectCards("Gain a Card costing up to 5",g.getShoppe().filterPrice(5),
                         ((stack,game)-> {
-                            Player you = game.getYou();
-                            Card c = game.getShoppe().get(stack.get(0).getName());
-                            you.hand.add(c);
-                            game.getShoppe().remove(c);
+                            if(stack.size() == 1)
+                                game.gainCard(stack.get(0).getName());
                         }),
                         ((stack,game)-> stack.size() <= 1));
                 g.selectCards("Put a card from hand onto your deck",p.hand,
