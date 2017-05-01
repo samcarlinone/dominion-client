@@ -171,14 +171,12 @@ public class ActionCard extends Card
                                 you.hand.remove(stack.get(0).getName());
                             switch(stack.get(0).getName()) {
                                 case "Copper":
-                                    Card s = game.getShoppe().get("Silver");
-                                    you.hand.add(s);
-                                    game.getShoppe().remove(s);
+                                    game.gainCard("Silver");
+                                    you.hand.add(you.discard.remove("Silver"));
                                     break;
                                 case "Silver":
-                                    Card gold = game.getShoppe().get("Gold");
-                                    you.hand.add(gold);
-                                    game.getShoppe().remove(gold);
+                                    game.gainCard("Gold");
+                                    you.hand.add(you.discard.remove("Gold"));
                                     break;
                             }
                         }),
