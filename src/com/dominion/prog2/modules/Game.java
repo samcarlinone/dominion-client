@@ -55,10 +55,15 @@ public class Game extends Module
 
     private Button endPhase;
 
+    /**
+     * Constructor for Game module
+     * @param d Driver access for communications
+     * @param finalShopList a CardStack containing the cards chosen by the host for this game
+     * @param userNames a list of names of players that were in the lobby
+     */
     public Game(Driver d, CardStack finalShopList, ObservableList<String> userNames)
     {
         this.d = d;
-
 
         this.players = userNames;
         for(int i=0; i<userNames.size(); i++) {
@@ -179,6 +184,9 @@ public class Game extends Module
         setScene(new Scene(stage, 1600, 1000));
     }
 
+    /**
+     * Takes the cards passed in from the wait screen and populates the shop
+     */
     private void addCardsToShop(CardStack finalShopList)
     {
         for(String name: CardInfo.treasureCardNames) {
@@ -221,6 +229,12 @@ public class Game extends Module
         }
     }
 
+    /**
+     * Called when the user is done the action phase and the buy phase
+     * Called when button clicked or may be
+     * triggered automatically based on various conditions
+     * such as no remaining treasure, buys, etc.
+     */
     private void endPhase()
     {
         if(popup == null) {
@@ -243,6 +257,9 @@ public class Game extends Module
         }
     }
 
+    /**
+     * Initializes and presents and appropriate popup when user is required to select cards
+     */
     public void selectCards(String msg, CardStack source, SelectCards callback, ValidateCardSelection validate) {
         selector = callback;
         popup = new CardSelectPopup(msg, source, validate, this);
@@ -252,6 +269,10 @@ public class Game extends Module
         popup.getRootPane().setLayoutY(200);
     }
 
+    /**
+     * This method is called when popup has selected a valid stack of cards
+     * Creates new popups if action cards are queued (when Throne Room is used)
+     */
     public void popupSubmitted() {
         CardStack stack = popup.getSelectedStack();
         stage.getChildren().remove(popup.getRootPane());
@@ -270,6 +291,9 @@ public class Game extends Module
         }
     }
 
+    /**
+     * Validates an attempted play from hand
+     */
     private void playCard(String name) {
         if(turn == youIndex && you.actionPhase && popup == null) {
             Card tryPlay = you.hand.get(name);
@@ -302,6 +326,10 @@ public class Game extends Module
         updateStats();
     }
 
+    /**
+     * Actually plays a specified card
+     * Called from playCard and various other action cards
+     */
     private void playSpecificCard(Card played) {
         you.played.add(you.hand.remove(played));
         animateCardPlayed(you.name, played.getName());
@@ -321,70 +349,10 @@ public class Game extends Module
         updateStats();
     }
 
-    public void animateCardPlayed(String playerName, String cardName) {
-        if(playerName.equals(you.name)) {
-            animateImage(cardName, hand.getRootPane(), playArea);
-        } else {
-            Label playerLabel=new Label();
-
-            for(Label l : playerLabels) {
-                if(l.getText().equals(playerName)) {
-                    playerLabel = l;
-                    break;
-                }
-            }
-
-            animateImage(cardName, playerLabel, playArea);
-        }
-    }
-
-    public void animateCardFromStore(String playerName, String cardName) {
-        if(playerName.equals(you.name)) {
-            animateImage(cardName, shop.getRootPane(), discard);
-        } else {
-            Label playerLabel=new Label();
-
-            for(Label l : playerLabels) {
-                if(l.getText().equals(playerName)) {
-                    playerLabel = l;
-                    break;
-                }
-            }
-
-            animateImage(cardName, shop.getRootPane(), playerLabel);
-        }
-    }
-
-    public void animateImage(String cardName, Node start, Node end) {
-        ImageView image = new ImageView();
-        image.setImage(ImageCache.cardImage.get(cardName));
-        image.setPreserveRatio(true);
-        image.setFitWidth(100);
-        stage.getChildren().add(image);
-
-        Bounds begin = start.localToScene(start.getBoundsInLocal());
-        image.setLayoutX(begin.getMinX());
-        image.setLayoutY(begin.getMinY());
-        Bounds finish = end.localToScene(end.getBoundsInLocal());
-
-        Timeline timeline = new Timeline();
-        int time = (int)(Math.random()*500) + 500;
-        //Target Pos
-        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(image.layoutXProperty(), finish.getMinX())));
-        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(image.layoutYProperty(), finish.getMinY())));
-        //Hide Image (we must hide first, then wait before deleting, otherwise javafx will not properly repaint the scene)
-        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(time+2), event -> {
-            stage.getChildren().remove(image);
-            stage.setTranslateX(Math.random()*0.01);
-        }));
-        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(time+20), event -> {
-            stage.getChildren().remove(image);
-            stage.setTranslateX(0);
-        }));
-        //Begin Anim
-        timeline.play();
-    }
-
+    /**
+     * Attempts to buy a card and place it in a users discard
+     * Performs all necessary validation
+     */
     private void buyCard(String name) {
         if(turn == youIndex && !you.actionPhase) {
             Card wanted = shop.getCardStack().get(name);
@@ -415,6 +383,10 @@ public class Game extends Module
         }
     }
 
+    /**
+     * Only called from various action cards
+     * similar to buy, but no validation required
+     */
     public void gainCard(String name) {
         //Move card
         you.discard.add(shoppe.remove(shoppe.get(name)));
@@ -427,6 +399,84 @@ public class Game extends Module
         d.broadcast(buy);
     }
 
+    /**
+     * Creates a card animation when a card is played by any user
+     */
+    public void animateCardPlayed(String playerName, String cardName) {
+        if(playerName.equals(you.name)) {
+            animateImage(cardName, hand.getRootPane(), playArea);
+        } else {
+            Label playerLabel=new Label();
+
+            for(Label l : playerLabels) {
+                if(l.getText().equals(playerName)) {
+                    playerLabel = l;
+                    break;
+                }
+            }
+
+            animateImage(cardName, playerLabel, playArea);
+        }
+    }
+
+    /**
+     * Creates a card animation when a user gets a card from the store
+     * Either through a purchase or gain via action card
+     */
+    public void animateCardFromStore(String playerName, String cardName) {
+        if(playerName.equals(you.name)) {
+            animateImage(cardName, shop.getRootPane(), discard);
+        } else {
+            Label playerLabel=new Label();
+
+            for(Label l : playerLabels) {
+                if(l.getText().equals(playerName)) {
+                    playerLabel = l;
+                    break;
+                }
+            }
+
+            animateImage(cardName, shop.getRootPane(), playerLabel);
+        }
+    }
+
+    /**
+     * Animate an image of a specified card from start node's position to end node's position
+     */
+    public void animateImage(String cardName, Node start, Node end) {
+        ImageView image = new ImageView();
+        image.setImage(ImageCache.cardImage.get(cardName));
+        image.setPreserveRatio(true);
+        image.setFitWidth(100);
+        stage.getChildren().add(image);
+
+        Bounds begin = start.localToScene(start.getBoundsInLocal());
+        image.setLayoutX(begin.getMinX());
+        image.setLayoutY(begin.getMinY());
+        Bounds finish = end.localToScene(end.getBoundsInLocal());
+
+        Timeline timeline = new Timeline();
+        int time = (int)(Math.random()*500) + 500;
+        //Target Pos
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(image.layoutXProperty(), finish.getMinX())));
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(image.layoutYProperty(), finish.getMinY())));
+        //Hide Image (we must hide first, then wait before deleting, otherwise javafx will not properly repaint the scene)
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(time+2), event -> {
+            stage.getChildren().remove(image);
+            //Scene repainting hackery
+            stage.setTranslateX(Math.random()*0.01);
+        }));
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(time+20), event -> {
+            stage.getChildren().remove(image);
+            stage.setTranslateX(0);
+        }));
+        //Begin Anim
+        timeline.play();
+    }
+
+    /**
+     * Checks the various game over conditions and broadcasts if game is over
+     */
     private void checkEnd()
     {
         boolean noProvinces = !shop.getCardStack().has("Province");
@@ -440,6 +490,9 @@ public class Game extends Module
         }
     }
 
+    /**
+     * Updates the labels displaying user stats for the turn
+     */
     public void updateStats()
     {
         turnAction.setText("Turn Actions: "+you.turnAction);
@@ -447,6 +500,11 @@ public class Game extends Module
         turnBuys.setText("Turn Buys: "+you.turnBuys);
     }
 
+    /**
+     * Handle messages from the server / other players
+     * Basic stuff, also handles the parts of attack cards that
+     * affect everyone else
+     */
     @Override
     public void serverMsg(ArrayList<HashMap<String, String>> server_msg)
     {
@@ -557,6 +615,9 @@ public class Game extends Module
         }
     }
 
+    /**
+     * Open the pdf containing the board game instructions
+     */
     public void helpClicked()
     {
         try {
@@ -568,13 +629,15 @@ public class Game extends Module
         }
     }
 
+    /**
+     * Get the player object, used from lambdas in card actions
+     */
     public Player getYou() { return you; }
+
+    /**
+     * Gets the shop, also used in card action lambdas
+     */
     public CardStack getShoppe(){
         return shoppe;
     }
-    public Driver getDriver()
-    {
-        return d;
-    }
-
 }
