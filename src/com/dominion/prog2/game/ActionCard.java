@@ -84,7 +84,6 @@ public class ActionCard extends Card
                             if(stack.size() == 1) {
                                 ActionCard c = (ActionCard) stack.get(0);
                                 c.play(you, game);
-                                return;
                             }
 
                             you.discard.add(you.deck.remove(you.deck.get(0)));
