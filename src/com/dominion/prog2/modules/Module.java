@@ -9,6 +9,12 @@ public abstract class Module {
     private Scene main;
 
     /**
+     * Abstract Class Module
+     *      Classes that extend Module:
+     *          ChooseLobby,ChooseName,Game,GameOver,HostWaitScreen, and WaitScreen
+     */
+
+    /**
      * Feeds server messages to current module
      * @param server_msg the array list of hashmaps representing new messages from the server
      */

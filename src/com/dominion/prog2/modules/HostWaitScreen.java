@@ -33,7 +33,21 @@ public class HostWaitScreen extends Module
     private CardGrid kingdomCards;
     private CardGrid chosenCards;
 
-
+    /**
+     * Constructor for HostWaitScreen
+     *      Parent Class: Module
+     * This is the screen where the Host chooses the cards to be played within the Lobby's game
+     * There are presets for the host to choose if they want.
+     * the Host can kick Players. also the host starts the game
+     *
+     * Players is the table with the users in the lobby
+     * PlayerList is the players that are within the Player table
+     *
+     * KingdomCards is the cardGrid with all the different cards that the host can add for the game
+     *      when clicked, the cards switch over to chosenCards
+     * chosenCards is the cardGrid with all the chosenCards for the game
+     *      when clicked, the cards switch over to KingdomCards.  There is a max limit of 10 cards
+     */
     public HostWaitScreen(Driver d, String LobbyName) {
         this.d = d;
 
@@ -169,18 +183,26 @@ public class HostWaitScreen extends Module
         setScene(new Scene(root, 745, 700));
     }
 
+    /**
+     * The host selects players from the table and presses the kick player button
+     *      sends a kick message out with the player(s) name
+     */
     public void kickPlayers()
     {
         ObservableList<String> selected = players.getSelectionModel().getSelectedItems();
 
         for(String name : selected) {
             if(name != null) {
-                System.out.println(name);
                 d.simpleCommand("kick", "player_name", name);
             }
         }
     }
 
+    /**
+     * This clears the chosenCard CardGrid and moves them back over to KingdomCards
+     *      There is a clear button, but also the presets clear the chosenCards before adding the preset cards
+     * Sends a message to others in the lobby of which cards were removed
+     */
     public void clearChosen()
     {
         //resets all cards
@@ -197,6 +219,11 @@ public class HostWaitScreen extends Module
         }
     }
 
+    /**
+     * Adds a group of preset cards to the ChosenCard from KingdomCards
+     * The method takes in a string, which correlates to specific presets
+     * sends a message to others in lobby of which cards were added
+     */
     public void presetCards(String n)
     {
         List<String> preset = new ArrayList<>();
@@ -246,6 +273,15 @@ public class HostWaitScreen extends Module
         }
     }
 
+    /**
+     * This method is called from the Start button.
+     * sends a message out to others in the lobby to start the game
+     *
+     * changes module in Driver to Game(passes Driver, chosenCard Cardstack, list of players in lobby)
+     *
+     * The Host must have chosen 10 cards to be in use within the game, and there must be atleast one
+     *      other person in the lobby for the Host to start the game
+     */
     public void startClicked()
     {
         if(chosenCards.getCardStack().size() == 10 && playerList.size() > 1) {
@@ -267,6 +303,12 @@ public class HostWaitScreen extends Module
             }
         }
     }
+
+    /**
+     * This closes the Lobby
+     * Sends out a message to the people in lobby that the lobby is closing
+     * changes module in Driver to ChooseLobby(passes Driver, null for reason)
+     */
     public void leaveClicked()
     {
         HashMap<String, String> result = d.simpleCommand("leave");
@@ -278,6 +320,15 @@ public class HostWaitScreen extends Module
         }
     }
 
+    /**
+     * This method parses out the different messages that are passed to the client
+     *      Receives the "join" and adds the user to the list of players in lobby
+     *      Receives the "disconnect" and remove people from list of players in lobby
+     *      Receives the "getChosenCards", which is sent from people in lobby when they first join
+     *          this gets them an up to-date copy of what cards the Host has chosen so far
+     *          Broadcasts the up to-date copy of ChosenCards
+     * @param server_msg the array list of hashmaps representing new messages from the server
+     */
     @Override
     public void serverMsg(ArrayList<HashMap<String, String>> server_msg) {
         for(HashMap<String, String> msg : server_msg) {

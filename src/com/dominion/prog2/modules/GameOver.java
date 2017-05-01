@@ -25,10 +25,17 @@ public class GameOver extends Module
 {
     private Driver d;
     private Player p;
-    private GridPane root;
     private TableView<String> players;
     private ObservableList<String> nameScores;
 
+    /**
+     * Constructor for GameOver
+     *      Parent Class: Module
+     * This is the screen where the final scores for each user is displayed
+     * Players is the table where the scores will be kept
+     * nameScores is the strings that are put in the tables ("*name* has a score of: *score*")
+     * The plays have the option of quiting the whole game or going back to the lobby
+     */
     public GameOver(ObservableList<String> userNames, Player p, Driver d)
     {
         this.d = d;
@@ -36,7 +43,7 @@ public class GameOver extends Module
 
         boolean host = d.name.equals(userNames.get(0));
 
-        root = new GridPane();
+        GridPane root = new GridPane();
         root.setPrefSize(400, 600);
         root.setAlignment(Pos.CENTER);
 
@@ -87,6 +94,10 @@ public class GameOver extends Module
         }
     }
 
+    /**
+     * The Host calls this method when they first get to this screen
+     * This sends out a message to the players and says requesting scores
+     */
     private void readyForScores()
     {
         HashMap<String, String> ready = new HashMap<>();
@@ -94,6 +105,10 @@ public class GameOver extends Module
         d.broadcast(ready);
     }
 
+    /**
+     * The Play again Button has the player leave the lobby and go back to the Lobby List Screen
+     * changes module in Driver to ChooseLobby(passes Driver, "Game Finished")
+     */
     private void playAgainClicked() {
         HashMap<String, String> result = d.simpleCommand("leave");
 
@@ -104,7 +119,9 @@ public class GameOver extends Module
         }
     }
 
-
+    /**
+     * The players broadcast a message that contains their name and their score, which they get from Player.getTotalScore()
+     */
     private void submitScores()
     {
         HashMap<String, String> submit = new HashMap<>();
@@ -114,6 +131,12 @@ public class GameOver extends Module
         d.broadcast(submit);
     }
 
+    /**
+     * This method parses out the different messages that are passed to the client
+     *      Receives the "ready for scores" from host, which calls Submit scores
+     *      Receives the "submit Scores" from everyone, and adds their name and score to the table
+     * @param server_msg the array list of hashmaps representing new messages from the server
+     */
     @Override
     public void serverMsg(ArrayList<HashMap<String, String>> server_msg) {
         for(HashMap<String, String> msg : server_msg) {

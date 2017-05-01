@@ -14,6 +14,7 @@ public class NodeCommunicator {
 
     /**
      * Creates the NodeCommunicator Object
+     * Has the url to connect to the server for dominion game
      */
     public NodeCommunicator() {
         //this.url = "http://localhost/";

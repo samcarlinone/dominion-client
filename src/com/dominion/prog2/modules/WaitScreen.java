@@ -20,17 +20,23 @@ import java.util.HashMap;
 public class WaitScreen extends Module
 {
     private Driver d;
-    private GridPane root;
-    private Label Title;
 
-    private Label chosenTitle;
     private CardGrid chosenCards;
 
     private TableView<String> players;
     private ObservableList<String> playerList;
 
-    private Button leave;
-
+    /**
+     * Constructor for WaitScreen
+     *      Parent Class: Module
+     * This is the screen where the player waits for the host to choose the cards to be played within the Lobby's game
+     * Also waits for the host to start the game
+     *
+     * Players is the table with the users in the lobby
+     * PlayerList is the players that are within the Player table
+     *
+     * chosenCards is the cardGrid with all the chosenCards for the game, set by the host of the lobby
+     */
     public WaitScreen(Driver d, String LobbyName, String userNames) {
         this.d = d;
 
@@ -38,12 +44,12 @@ public class WaitScreen extends Module
         requestCards.put("type", "getChosenCards");
         d.broadcast(requestCards);
 
-        root = new GridPane();
+        GridPane root = new GridPane();
         root.setPrefSize(400, 600);
         root.setAlignment(Pos.CENTER);
 
         //Title
-        Title = new Label("Lobby: " + LobbyName + " | Waiting to Start");
+        Label Title = new Label("Lobby: " + LobbyName + " | Waiting to Start");
         Title.setStyle("-fx-font-size: 18pt");
         GridPane.setHalignment(Title, HPos.CENTER);
         root.add(Title, 0, 0);
@@ -53,7 +59,7 @@ public class WaitScreen extends Module
         cardChoosers.setPrefSize(600, 500);
         cardChoosers.setAlignment(Pos.CENTER);
 
-        chosenTitle = new Label("Chosen Cards");
+        Label chosenTitle = new Label("Chosen Cards");
         chosenTitle.setStyle("-fx-font-size: 18pt");
         cardChoosers.setHalignment(chosenTitle, HPos.CENTER);
         cardChoosers.add(chosenTitle, 1, 0);
@@ -95,15 +101,19 @@ public class WaitScreen extends Module
         GridPane buttons = new GridPane();
         buttons.setAlignment(Pos.CENTER);
 
-        this.leave = new Button("Leave Lobby");
-        this.leave.setOnMouseClicked(a -> leaveClicked());
-        buttons.add(this.leave, 0, 1);
+        Button leave = new Button("Leave Lobby");
+        leave.setOnMouseClicked(a -> leaveClicked());
+        buttons.add(leave,0,1);
 
         root.add(buttons,0,5);
 
         setScene(new Scene(root, 745, 700));
     }
 
+    /**
+     * This is called when the player clicks the leave lobby button
+     * changes module in Driver to ChooseLobby(passes Driver, null)
+     */
     public void leaveClicked()
     {
         HashMap<String, String> result = d.simpleCommand("leave");
@@ -115,6 +125,17 @@ public class WaitScreen extends Module
         }
     }
 
+    /**
+     * This method parses out the different messages that are passed to the client
+     *      Receives the "join" and adds the user to the list of players in lobby
+     *      Receives the "disconnect" and remove people from list of players in lobby
+     *      Receives the "setCardGrid", which is sent from the host when you join
+     *          this has an up to-date CardStack of chosenCards.  ChosenCards is set to this new stack
+     *      Receives the "AddCardGrid", which adds a single card to chosenCard
+     *      Receives the "RemoveCardGrid", which removes a single card from chosenCard
+     *      Receives the "StartGame", which changes module in Driver to Game(passes Driver, chosenCard Cardstack, list of players in lobby)
+     * @param server_msg the array list of hashmaps representing new messages from the server
+     */
     @Override
     public void serverMsg(ArrayList<HashMap<String, String>> server_msg) {
         for(HashMap<String, String> msg : server_msg) {
