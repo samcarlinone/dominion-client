@@ -40,6 +40,20 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
+     * Gets a card stack of only the name
+     * @param name
+     * @return Card stack
+     */
+    public CardStack getStackOfName(String name)
+    {
+        CardStack names = new CardStack();
+        for(Card c: cards)
+            if(c.getName().equals(name))
+                names.add(c);
+        return names;
+    }
+
+    /**
      * Implement Iterable interface to allow enhanced for loops
      * @return
      */
@@ -66,6 +80,18 @@ public class CardStack implements Iterable<Card> {
     public void add(Card c) {
         this.cards.add(c);
         notifyListeners();
+    }
+
+    /**
+     * Add a card to the top of the deck
+     * @param c Card
+     */
+    public void addTop(Card c)
+    {
+        ArrayList<Card> before = cards;
+        cards.clear();
+        cards.add(c);
+        cards.addAll(before);
     }
 
     /**
@@ -199,6 +225,31 @@ public class CardStack implements Iterable<Card> {
     }
 
     /**
+     * Gets a card and returns as a whole stack
+     * @param pos of card
+     * @return Stack.
+     */
+    public CardStack getPosAsStack(int pos)
+    {
+        CardStack stack = new CardStack();
+        stack.add(cards.get(pos));
+        return stack;
+    }
+
+    /**
+     * Gets a card and returns as a whole stack
+     * @param pos of card
+     * @return Stack.
+     */
+    public CardStack getPosAsStackIfAttack(int pos)
+    {
+        CardStack stack = new CardStack();
+        if(cards.get(pos).type.equals(CardType.ACTION))
+            stack.add(cards.get(pos));
+        return stack;
+    }
+
+    /**
      * gets all the cards in the CardStack
      * @return arraylist of cards
      */
@@ -279,6 +330,33 @@ public class CardStack implements Iterable<Card> {
         return names.size();
     }
 
+    /**
+     * Filters a CardStack to have cards with the price or less
+     * @param price int
+     * @return CardStack based off Prices
+     */
+    public CardStack filterPrice(int price)
+    {
+        CardStack filtered = new CardStack();
+        for(Card c: cards)
+            if(c.getPrice() <= price)
+                filtered.add(c);
+        return filtered;
+    }
+
+    /**
+     * Filters a Cardstack based off cardType
+     * @param types Array of CardTypes
+     * @return Cardstack which only has the CardTypes
+     */
+    public CardStack filterType(ArrayList<CardType> types)
+    {
+        CardStack filtered = new CardStack();
+        for(Card c: cards)
+            if(types.contains(c.getType()))
+                filtered.add(c);
+        return filtered;
+    }
 
     /**
      * Clears the arrayList of Cards

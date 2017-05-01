@@ -20,9 +20,9 @@ public class TreasureCard extends Card
     }
 
     public void play(Player p, Game g)
-{
-    p.turnMoney += addCoins;
-}
+    {
+        p.turnMoney += addCoins;
+    }
 
     /**
      * Getter for the Coin Value

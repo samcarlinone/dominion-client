@@ -15,7 +15,6 @@ public class VictoryCard extends Card
         super(name);
 
         int[] vals = CardInfo.getVals(name);
-
         victoryValue = vals[2];
     }
 

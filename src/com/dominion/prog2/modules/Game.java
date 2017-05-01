@@ -388,5 +388,8 @@ public class Game extends Module
     }
 
     public Player getYou() { return you; }
+    public CardStack getShoppe(){
+        return shoppe;
+    }
 
 }

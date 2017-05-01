@@ -53,8 +53,7 @@ public class AttackCard extends ActionCard
      * Getter for number of Cards to be picked up
      * @return cards to be picked up (int)
      */
-    public int getAddCard() {   return addCard;
-    }
+    public int getAddCard() { return addCard; }
 
     /**
      * Getter for the Coin Value
