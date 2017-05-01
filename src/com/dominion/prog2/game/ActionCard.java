@@ -125,14 +125,15 @@ public class ActionCard extends Card
                     g.selectCards("Choose a Card to Trash", p.hand,
                             (stack, game) -> {
                                 Player you = game.getYou();
+
                                 if(stack.size() > 0) {
-                                }
                                     you.hand.remove(stack.get(0));
                                     game.selectCards("Choose one of these cards", game.getShoppe().filterPrice(stack.get(0).getPrice() + 2), (stack2, game2) -> {
-                                                game2.getYou().discard.add(stack2.get(0));
-                                                game2.getShoppe().remove(stack2.get(0));
-                                            }
-                                            ,((stack2, game2) -> stack2.size() <= 1));
+                                        if (stack2.size() == 1)
+                                            game2.gainCard(stack2.get(0).getName());
+                                    }
+                                    , ((stack2, game2) -> stack2.size() <= 1));
+                                }
                             },
                             ((stack, game) -> stack.size() <= 1));
                 }
