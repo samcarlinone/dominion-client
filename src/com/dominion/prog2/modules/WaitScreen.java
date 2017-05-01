@@ -58,7 +58,7 @@ public class WaitScreen extends Module
         cardChoosers.setHalignment(chosenTitle, HPos.CENTER);
         cardChoosers.add(chosenTitle, 1, 0);
 
-        chosenCards = new CardGrid(new CardStack(),125);
+        chosenCards = new CardGrid(new CardStack(),125, false, true);
         chosenCards.getRootPane().setPrefWidth(300);
         chosenCards.getRootPane().setPrefHeight(500);
         cardChoosers.add(chosenCards.getRootPane(),1,1);

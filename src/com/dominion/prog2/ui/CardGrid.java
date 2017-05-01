@@ -24,12 +24,14 @@ public class CardGrid {
 
     private int cardWidth;
     private boolean collapseSame;
+    private boolean sort;
 
-    public CardGrid(CardStack stack, int cardWidth, boolean collapseSame) {
+    public CardGrid(CardStack stack, int cardWidth, boolean collapseSame, boolean sort) {
         this.stack = stack;
         stack.addListener(() -> stackChanged());
         this.cardWidth = cardWidth;
         this.collapseSame = collapseSame;
+        this.sort = sort;
 
         if(stack.has("Witch"))
             maxCards = 17;
@@ -51,8 +53,9 @@ public class CardGrid {
     }
 
     public CardGrid(CardStack stack, int cardWidth) {
-        this(stack, cardWidth, false);
+        this(stack, cardWidth, false, false);
     }
+    public CardGrid(CardStack stack, int cardWidth, boolean collapseSame) { this(stack, cardWidth, true, false); }
 
     private void handleCardClicked(MouseEvent e) {
         if(e.getSource() instanceof ImageView) {
@@ -107,14 +110,35 @@ public class CardGrid {
                 list.getChildren().add(group);
             }
         } else {
-            for (Card card : stack) {
-                ImageView img = new ImageView();
-                img.setImage(ImageCache.cardImage.get(card.getName()));
-                img.setFitWidth(cardWidth);
-                img.setPreserveRatio(true);
-                img.setOnMouseClicked((event) -> handleCardClicked(event));
+            if(sort) {
+                ArrayList<Card> cards = stack.getAll();
+                ArrayList<String> names = new ArrayList<>();
 
-                list.getChildren().add(img);
+                for(Card c : cards) {
+                    names.add(c.getName());
+                }
+
+                names.sort(new CardInfo.NameComparator());
+
+                for (String name : names) {
+                    ImageView img = new ImageView();
+                    img.setImage(ImageCache.cardImage.get(name));
+                    img.setFitWidth(cardWidth);
+                    img.setPreserveRatio(true);
+                    img.setOnMouseClicked((event) -> handleCardClicked(event));
+
+                    list.getChildren().add(img);
+                }
+            } else {
+                for (Card card : stack) {
+                    ImageView img = new ImageView();
+                    img.setImage(ImageCache.cardImage.get(card.getName()));
+                    img.setFitWidth(cardWidth);
+                    img.setPreserveRatio(true);
+                    img.setOnMouseClicked((event) -> handleCardClicked(event));
+
+                    list.getChildren().add(img);
+                }
             }
         }
     }
