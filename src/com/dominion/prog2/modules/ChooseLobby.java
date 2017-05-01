@@ -15,27 +15,29 @@ import javafx.scene.layout.GridPane;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 public class ChooseLobby extends Module {
     private Driver d;
-    private GridPane root;
 
     private TableView<LobbyData> list;
     private ObservableList<LobbyData> lobby_list;
 
-    private Button host;
     private TextField game_name;
-    private Button join;
-    private Label roomShutdown;
+    private Label userReason;
 
     /**
-     * Creates ChooseLobby Object
-     * @param d Driver
+     * Constructor for ChooseLobby
+     *      Parent Class: Module
+     * This is the screen where the users create or join a lobby
+     * The reason is if the user is coming from somewhere other than ChooseName
+     * List: Table of the Lobbies that the user is allowed to connect to
+     *      contains: Lobby name, Host name, How many players are in the Lobby (max 4)
+     * lobby_List: The actual data on the lobbies that users are able to connect to
+     * Game_name: If a user is hosting a lobby, this is where the user would put in the lobby Name
      */
     public ChooseLobby(Driver d, String reason) {
         this.d = d;
 
-        root = new GridPane();
+        GridPane root = new GridPane();
         root.setPrefSize(400, 600);
         root.setAlignment(Pos.CENTER);
 
@@ -74,25 +76,31 @@ public class ChooseLobby extends Module {
         buttons.add(game_name, 0, 0);
 
         //Button for Hosting
-        this.host = new Button("Host a Lobby");
-        this.host.setOnMouseClicked(a -> hostClicked());
-        buttons.add(this.host, 1, 0);
+        Button hostButton = new Button("Host a Lobby");
+        hostButton.setOnMouseClicked(a -> hostClicked());
+        buttons.add(hostButton, 1, 0);
 
         //Button for Joining Lobby
-        join = new Button("Join a Lobby");
+        Button join = new Button("Join a Lobby");
         join.setOnMouseClicked(a -> joinClicked());
         buttons.add(join, 2, 0);
 
         if(reason != null) {
-            roomShutdown = new Label(reason);
-            roomShutdown.setStyle("-fx-text-fill: #F00");
-            GridPane.setHalignment(roomShutdown, HPos.CENTER);
-            root.add(roomShutdown, 0, 2);
+            userReason = new Label(reason);
+            userReason.setStyle("-fx-text-fill: #F00");
+            GridPane.setHalignment(userReason, HPos.CENTER);
+            root.add(userReason, 0, 2);
         }
 
         setScene(new Scene(root, 745, 700));
     }
 
+    /**
+     * This is called by the Host a Lobby Button
+     * Makes sure there is a name within Game_name;
+     * Sends out a message to all the people that there is a new lobby, also sends out the information on the lobby
+     * Changes Module in Driver to HostWaitScreen(passes Driver, and the Lobby name)
+     */
     private void hostClicked() {
         if(game_name.getText().length() == 0)
             return;
@@ -110,6 +118,13 @@ public class ChooseLobby extends Module {
         }
     }
 
+    /**
+     * This is called by the Join a Lobby Button
+     * Makes sure the user selected a lobby from the list
+     * Sends out message that you are joining the lobby
+     * if you can join the Lobby:
+     *      changes module in Driver to WaitScreen(passes Driver, Lobby name, and the players who are in the lobby already)
+     */
     private void joinClicked() {
         LobbyData selected = list.getSelectionModel().getSelectedItem();
 
@@ -124,9 +139,9 @@ public class ChooseLobby extends Module {
     }
 
     /**
-     * Updates the Module
-     * @param server_msg
-     * @return Module
+     * This method parses out the different messages that are passed to the client
+     *      Adds Lobbies if there is a message that adds a lobby
+     * @param server_msg the array list of hashmaps representing new messages from the server
      */
     @Override
     public void serverMsg(ArrayList<HashMap<String, String>> server_msg) {
