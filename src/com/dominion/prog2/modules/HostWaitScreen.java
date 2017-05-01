@@ -171,6 +171,7 @@ public class HostWaitScreen extends Module
                 return new ReadOnlyObjectWrapper(p.getValue());
             }
         });
+        users.setSortable(false);
 
         players.getColumns().addAll(users);
 

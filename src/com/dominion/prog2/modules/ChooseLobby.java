@@ -49,12 +49,15 @@ public class ChooseLobby extends Module {
         TableColumn<LobbyData,String> name = new TableColumn<>("Name");
         name.setPrefWidth(400/3);
         name.setCellValueFactory(new PropertyValueFactory("name"));
+        name.setSortable(false);
         TableColumn<LobbyData,String> host = new TableColumn<>("Host");
         host.setPrefWidth(400/3);
         host.setCellValueFactory(new PropertyValueFactory("host"));
+        host.setSortable(false);
         TableColumn<LobbyData,String> size = new TableColumn<>("Players");
         size.setPrefWidth(400/3);
         size.setCellValueFactory(new PropertyValueFactory("size"));
+        size.setSortable(false);
         list.getColumns().setAll(name, host, size);
 
         list.setPrefWidth(400);

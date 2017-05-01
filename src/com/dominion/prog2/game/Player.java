@@ -46,7 +46,7 @@ public class Player
     {
         turnBuys = 1;
         turnAction = 1;
-        turnMoney = 0;
+        turnMoney = 199;//0;
         actionPhase = true;
         discard.add(played.getAll());
         played.clear();

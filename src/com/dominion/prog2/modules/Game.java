@@ -41,7 +41,7 @@ public class Game extends Module
     private Label turnBuys;
 
     private CardGrid hand;
-    private CardStack shoppe;
+    public CardStack shoppe;
     private CardGrid shop;
     private ImageView discard;
     private ImageView playArea;
@@ -87,8 +87,7 @@ public class Game extends Module
                 playerLabels.add(new Label(name + " (you)"));
         }
 
-        for(int i = 0; i < playerLabels.size(); i ++){
-            Label l = playerLabels.get(i);
+        for(Label l : playerLabels){
             l.setStyle("-fx-font-size: 20pt; -fx-border-color: black; -fx-border-width: 3px; -fx-background-color: #fff");
             l.setPadding(new Insets(0, 6, 0, 6));
             first.getChildren().add(l);
@@ -153,7 +152,7 @@ public class Game extends Module
             if(you.discard.size() > 0)
                 discard.setImage(ImageCache.cardImage.get(you.discard.get(you.discard.size()-1).getName()));
             else
-                discard.setVisible(false);
+                discard.setImage(null);
         });
         discard.setPreserveRatio(true);
         discard.setFitWidth(100);
@@ -173,7 +172,7 @@ public class Game extends Module
         setScene(new Scene(stage, 1600, 1000));
     }
 
-    public void addCardsToShop(CardStack finalShopList)
+    private void addCardsToShop(CardStack finalShopList)
     {
         for(String name: CardInfo.treasureCardNames) {
             switch(name){
@@ -215,7 +214,7 @@ public class Game extends Module
         }
     }
 
-    public void endPhase()
+    private void endPhase()
     {
         if(popup == null) {
             if (you.actionPhase) {
@@ -241,7 +240,7 @@ public class Game extends Module
         selector = callback;
         popup = new CardSelectPopup(msg, source, validate, this);
         stage.getChildren().add(popup.getRootPane());
-        popup.getRootPane().setPrefSize(500, 400);
+        popup.getRootPane().setPrefSize(800, 600);
         popup.getRootPane().setLayoutX(200);
         popup.getRootPane().setLayoutY(200);
     }
@@ -316,7 +315,7 @@ public class Game extends Module
         }
     }
 
-    public boolean checkEnd()
+    private boolean checkEnd()
     {
         boolean noProvinces = !shop.getCardStack().has("Province");
         boolean threeGone = shop.getCardStack().getNumberTypesOfCards() <= shop.maxCards-3;
@@ -324,7 +323,7 @@ public class Game extends Module
         return (noProvinces || threeGone);
     }
 
-    public void updateStats()
+    private void updateStats()
     {
         turnAction.setText("Turn Actions: "+you.turnAction);
         turnCoin.setText("Turn Coins: "+you.turnMoney);
@@ -353,15 +352,40 @@ public class Game extends Module
                     break;
                 case "bought":
                     String bought = msg.get("cardName");
-                    String Buyer = msg.get("player");
-                    if(!Buyer.equals(you.name))
+                    String buyer = msg.get("player");
+                    if(!buyer.equals(you.name))
                         shop.getCardStack().remove(bought);
                     break;
                 case "played":
                     String played = msg.get("cardName");
-                    String Player = msg.get("player");
-                    if(!Player.equals(you.name))
+                    String player = msg.get("player");
+
+                    if(!player.equals(you.name))
                         playArea.setImage(ImageCache.cardImage.get(played));
+
+                    //Handle Attack Cards
+                    if(!player.equals(you.name) && !you.hand.has("Moat")) {
+                        switch (played) {
+                            case "Bureaucrat":
+                                for (int i = 0; i < you.hand.size(); i++) {
+                                    Card c = you.hand.get(i);
+                                    if (c instanceof VictoryCard) {
+                                        you.deck.add(you.hand.remove(c));
+                                        break;
+                                    }
+                                }
+                                break;
+
+                            case "Militia":
+                                selectCards("You must pick two to discard", you.hand,
+                                        ((stack, game) -> {
+                                            Player you = game.getYou();
+                                            game.getYou().discard.add(stack.getAll());
+                                        }),
+                                        ((stack, game) -> stack.size() == 2));
+                                break;
+                        }
+                    }
                     break;
                 case "disconnect":
                     HashMap<String, String> result = d.simpleCommand("leave");

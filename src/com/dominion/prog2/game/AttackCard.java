@@ -34,10 +34,11 @@ public class AttackCard extends ActionCard
         switch(name)
         {
             case "Bureaucrat":
-
+                if(g.shoppe.has("Silver"))
+                    p.discard.add(g.shoppe.remove("Silver"));
                 break;
             case "Militia":
-
+                //Nothing
                 break;
             case "Bandit":
 
