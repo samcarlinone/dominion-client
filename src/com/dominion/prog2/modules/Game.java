@@ -3,16 +3,23 @@ package com.dominion.prog2.modules;
 import com.dominion.prog2.Driver;
 import com.dominion.prog2.game.*;
 import com.dominion.prog2.ui.*;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.geometry.*;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.util.Duration;
+
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
@@ -297,6 +304,7 @@ public class Game extends Module
 
     private void playSpecificCard(Card played) {
         you.played.add(you.hand.remove(played));
+        animateCardPlayed(you.name, played.getName());
 
         if(played instanceof TreasureCard)
             ((TreasureCard)played).play(you, this);
@@ -313,12 +321,77 @@ public class Game extends Module
         updateStats();
     }
 
+    public void animateCardPlayed(String playerName, String cardName) {
+        if(playerName.equals(you.name)) {
+            animateImage(cardName, hand.getRootPane(), playArea);
+        } else {
+            Label playerLabel=new Label();
+
+            for(Label l : playerLabels) {
+                if(l.getText().equals(playerName)) {
+                    playerLabel = l;
+                    break;
+                }
+            }
+
+            animateImage(cardName, playerLabel, playArea);
+        }
+    }
+
+    public void animateCardFromStore(String playerName, String cardName) {
+        if(playerName.equals(you.name)) {
+            animateImage(cardName, shop.getRootPane(), discard);
+        } else {
+            Label playerLabel=new Label();
+
+            for(Label l : playerLabels) {
+                if(l.getText().equals(playerName)) {
+                    playerLabel = l;
+                    break;
+                }
+            }
+
+            animateImage(cardName, shop.getRootPane(), playerLabel);
+        }
+    }
+
+    public void animateImage(String cardName, Node start, Node end) {
+        ImageView image = new ImageView();
+        image.setImage(ImageCache.cardImage.get(cardName));
+        image.setPreserveRatio(true);
+        image.setFitWidth(100);
+        stage.getChildren().add(image);
+
+        Bounds begin = start.localToScene(start.getBoundsInLocal());
+        image.setLayoutX(begin.getMinX());
+        image.setLayoutY(begin.getMinY());
+        Bounds finish = end.localToScene(end.getBoundsInLocal());
+
+        Timeline timeline = new Timeline();
+        int time = (int)(Math.random()*500) + 500;
+        //Target Pos
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(image.layoutXProperty(), finish.getMinX())));
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(image.layoutYProperty(), finish.getMinY())));
+        //Hide Image (we must hide first, then wait before deleting, otherwise javafx will not properly repaint the scene)
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(time+2), event -> {
+            stage.getChildren().remove(image);
+            stage.setTranslateX(Math.random()*0.01);
+        }));
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(time+20), event -> {
+            stage.getChildren().remove(image);
+            stage.setTranslateX(0);
+        }));
+        //Begin Anim
+        timeline.play();
+    }
+
     private void buyCard(String name) {
         if(turn == youIndex && !you.actionPhase) {
             Card wanted = shop.getCardStack().get(name);
 
             if(you.turnBuys > 0 && wanted.getPrice() <= you.turnMoney) {
                 you.discard.add(shop.getCardStack().remove(wanted));
+                animateCardFromStore(you.name, name);
 
                 you.turnMoney -= wanted.getPrice();
                 you.turnBuys--;
@@ -345,6 +418,7 @@ public class Game extends Module
     public void gainCard(String name) {
         //Move card
         you.discard.add(shoppe.remove(shoppe.get(name)));
+        animateCardFromStore(you.name, name);
         //BroadCast Gains
         HashMap<String, String> buy = new HashMap<>();
         buy.put("type", "gained");
@@ -398,14 +472,19 @@ public class Game extends Module
                 case "bought":
                     String bought = msg.get("cardName");
                     String buyer = msg.get("player");
-                    if(!buyer.equals(you.name))
+
+                    if(!buyer.equals(you.name)) {
                         shop.getCardStack().remove(bought);
+                        animateCardFromStore(buyer, bought);
+                    }
                     break;
                 case "gained":
                     String gained = msg.get("cardName");
                     String gainer = msg.get("player");
-                    if(!gainer.equals(you.name))
+                    if(!gainer.equals(you.name)) {
                         shoppe.remove(gained);
+                        animateCardFromStore(gainer, gained);
+                    }
                     break;
                 case "played":
                     String played = msg.get("cardName");
@@ -414,6 +493,7 @@ public class Game extends Module
                     if(!player.equals(you.name))
                     {
                         playArea.setImage(ImageCache.cardImage.get(played));
+                        animateCardPlayed(player, played);
 
                         if(played.equals("Council Room"))
                             you.pickUpCards(1);
